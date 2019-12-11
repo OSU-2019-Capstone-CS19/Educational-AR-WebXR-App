@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+		    <meta charset="utf-8">
+		      <title>My first three.js app</title>
+		        <style>
+			           body { margin: 0; }
+			           canvas { width: 100%; height: 100% }
+		        </style>
+	  </head>
+	  <body>
+		    <script>
+/*
+			     // Init
+           var scene = new THREE.Scene();
+           var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
+
+           var renderer = new THREE.WebGLRenderer();
+           renderer.setSize( window.innerWidth, window.innerHeight );
+           document.body.appendChild( renderer.domElement );
+
+           // Planet Models
+           // var loader = new THREE.GLTFLoader();
+           //
+           // loader.load('./PlanetsMars.glb',
+           // function (glb) {
+           //   //scene.add(gltf.scene);
+           // });
+
+           //Geometry
+           var sun_geometry = new THREE.SphereGeometry( 4, 32, 32 );
+           var geometry = new THREE.SphereGeometry( 2, 20, 20 );
+
+           //Material
+           var yellowMaterial = new THREE.MeshBasicMaterial({color: 0xffff00});
+           var blueMaterial = new THREE.MeshBasicMaterial({color: 0x0f03fc});
+           var redMaterial = new THREE.MeshBasicMaterial({color: 0xfc0b03});
+
+           //Mesh
+           var sphere1 = new THREE.Mesh(sun_geometry, yellowMaterial);
+           var sphere2 = new THREE.Mesh(geometry, blueMaterial);
+           var sphere3 = new THREE.Mesh(geometry, redMaterial);
+           var sphere4 = new THREE.Mesh(geometry, blueMaterial);
+           var sphere5 = new THREE.Mesh(geometry, redMaterial);
+           var sphere6 = new THREE.Mesh(geometry, blueMaterial);
+           var sphere7 = new THREE.Mesh(geometry, redMaterial);
+
+           //Pivot Points
+           var sphere2_Pivot = new THREE.Object3D();
+           var sphere3_Pivot = new THREE.Object3D();
+           var sphere4_Pivot = new THREE.Object3D();
+           var sphere5_Pivot = new THREE.Object3D();
+           var sphere6_Pivot = new THREE.Object3D();
+           var sphere7_Pivot = new THREE.Object3D();
+
+           //Scene Hierachy
+           scene.add(sphere1);
+           scene.add(sphere2_Pivot);
+           scene.add(sphere3_Pivot);
+           scene.add(sphere4_Pivot);
+           scene.add(sphere5_Pivot);
+           scene.add(sphere6_Pivot);
+           scene.add(sphere7_Pivot);
+
+           sphere2_Pivot.add(sphere2);
+           sphere3_Pivot.add(sphere3);
+           sphere4_Pivot.add(sphere4);
+           sphere5_Pivot.add(sphere5);
+           sphere6_Pivot.add(sphere6);
+           sphere7_Pivot.add(sphere7);
+
+           //position
+           camera.position.set(0, 30, 50);
+           camera.lookAt(sphere1.position);
+
+           sphere2.position.set(10, 0, 10);
+           sphere3.position.set(15, 0, 15);
+           sphere4.position.set(20, 0, 20);
+           sphere5.position.set(25, 0, 25);
+           sphere6.position.set(30, 0, 30);
+           sphere7.position.set(35, 0, 35);
+
+
+           var render = function () {
+             requestAnimationFrame( render );
+
+             //Orbit
+             sphere2_Pivot.rotation.y += 0.06;
+             sphere3_Pivot.rotation.y += 0.05;
+             sphere4_Pivot.rotation.y += 0.04;
+             sphere5_Pivot.rotation.y += 0.03;
+             sphere6_Pivot.rotation.y += 0.02;
+             sphere7_Pivot.rotation.y += 0.01;
+
+             renderer.render( scene, camera );
+           };
+
+           render();
+*/
+		    </script>
+	   </body>
+  </html>

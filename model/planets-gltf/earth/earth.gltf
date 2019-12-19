@@ -1,0 +1,187 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "Microsoft GLTF Exporter 2.4.2.5"
+  },
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5123,
+      "count": 54720,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 36475,
+      "type": "VEC3",
+      "max": [
+        100,
+        100,
+        100
+      ],
+      "min": [
+        -100,
+        -100,
+        -100
+      ]
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 36475,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 36475,
+      "type": "VEC2"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 109440,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 109440,
+      "byteLength": 437700,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 547140,
+      "byteLength": 437700,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 984840,
+      "byteLength": 291800,
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "uri": "earth_data.bin",
+      "byteLength": 1276640
+    }
+  ],
+  "images": [
+    {
+      "uri": "earth_img0.png"
+    },
+    {
+      "uri": "earth_img1.png"
+    },
+    {
+      "uri": "earth_img2.png"
+    }
+  ],
+  "materials": [
+    {
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 1
+        },
+        "metallicRoughnessTexture": {
+          "index": 2
+        }
+      },
+      "alphaMode": "MASK",
+      "name": "52",
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_pbrSpecularGlossiness": {
+          "diffuseTexture": {
+            "index": 0
+          },
+          "specularFactor": [
+            0.49803921580314636,
+            0.49803921580314636,
+            0.49803921580314636
+          ],
+          "glossinessFactor": 0.1882352977991104
+        }
+      },
+      "extras": {
+        "MSFT_sRGBFactors": true
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "mesh_id33",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 1,
+            "NORMAL": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 0,
+          "material": 0
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "name": "root"
+    },
+    {
+      "translation": [
+        0.008305131457746029,
+        0.25450000166893005,
+        -0.003044189652428031
+      ],
+      "scale": [
+        0.002560000168159604,
+        0.002560000168159604,
+        0.002560000168159604
+      ],
+      "mesh": 0,
+      "name": "node_id32"
+    }
+  ],
+  "samplers": [
+    {
+      "minFilter": 9985
+    }
+  ],
+  "scenes": [
+    {
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "scene": 0,
+  "textures": [
+    {
+      "name": "texture5",
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "name": "52_bc",
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "name": "52_mr",
+      "sampler": 0,
+      "source": 2
+    }
+  ],
+  "extensionsUsed": [
+    "KHR_materials_pbrSpecularGlossiness"
+  ]
+}

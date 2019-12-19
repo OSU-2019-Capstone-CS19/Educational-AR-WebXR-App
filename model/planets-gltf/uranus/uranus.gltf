@@ -1,0 +1,361 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "Microsoft GLTF Exporter 2.4.2.5"
+  },
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5123,
+      "count": 59400,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5123,
+      "count": 1200,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 10199,
+      "type": "VEC3",
+      "max": [
+        10,
+        10,
+        9.999999046325684
+      ],
+      "min": [
+        -9.999996185302734,
+        -10,
+        -9.999995231628418
+      ]
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 402,
+      "type": "VEC3",
+      "max": [
+        -4.3777570724487305,
+        9.404884640171196e-15,
+        0.49711012840270996
+      ],
+      "min": [
+        -8.35463809967041,
+        -9.24024938731222e-15,
+        -0.49711012840270996
+      ]
+    },
+    {
+      "bufferView": 4,
+      "componentType": 5126,
+      "count": 10199,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 5,
+      "componentType": 5126,
+      "count": 402,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 6,
+      "componentType": 5126,
+      "count": 10199,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 7,
+      "componentType": 5126,
+      "count": 402,
+      "type": "VEC2"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 118800,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 118800,
+      "byteLength": 2400,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 121200,
+      "byteLength": 122388,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 243588,
+      "byteLength": 4824,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 248412,
+      "byteLength": 122388,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 370800,
+      "byteLength": 4824,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 375624,
+      "byteLength": 81592,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 457216,
+      "byteLength": 3216,
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "uri": "uranus_data.bin",
+      "byteLength": 460432
+    }
+  ],
+  "images": [
+    {
+      "uri": "uranus_img0.png"
+    },
+    {
+      "uri": "uranus_img1.png"
+    },
+    {
+      "uri": "uranus_img2.png"
+    },
+    {
+      "uri": "uranus_img3.png"
+    },
+    {
+      "uri": "uranus_img4.png"
+    },
+    {
+      "uri": "uranus_img5.png"
+    }
+  ],
+  "materials": [
+    {
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 1
+        },
+        "metallicRoughnessTexture": {
+          "index": 2
+        }
+      },
+      "alphaMode": "MASK",
+      "name": "33",
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_pbrSpecularGlossiness": {
+          "diffuseTexture": {
+            "index": 0
+          },
+          "specularFactor": [
+            0.07450980693101883,
+            0.07450980693101883,
+            0.07450980693101883
+          ],
+          "glossinessFactor": 0.10980392247438431
+        }
+      },
+      "extras": {
+        "MSFT_sRGBFactors": true
+      }
+    },
+    {
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 4
+        },
+        "metallicRoughnessTexture": {
+          "index": 5
+        }
+      },
+      "alphaMode": "MASK",
+      "name": "34",
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_pbrSpecularGlossiness": {
+          "diffuseTexture": {
+            "index": 3
+          },
+          "specularFactor": [
+            0.49803921580314636,
+            0.49803921580314636,
+            0.49803921580314636
+          ],
+          "glossinessFactor": 0.1882352977991104
+        }
+      },
+      "extras": {
+        "MSFT_sRGBFactors": true
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "node_id6",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 2,
+            "NORMAL": 4,
+            "TEXCOORD_0": 6
+          },
+          "indices": 0,
+          "material": 0
+        }
+      ]
+    },
+    {
+      "name": "node_id8",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 3,
+            "NORMAL": 5,
+            "TEXCOORD_0": 7
+          },
+          "indices": 1,
+          "material": 1
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "name": "root"
+    },
+    {
+      "children": [
+        2,
+        3
+      ],
+      "translation": [
+        0.003890262683853507,
+        0.16628897190093994,
+        0.006659637670964003
+      ],
+      "rotation": [
+        0.020112743601202965,
+        -0.11226145923137665,
+        -0.3715023100376129,
+        0.9214004874229431
+      ],
+      "scale": [
+        0.0010000000474974513,
+        0.0009999999310821295,
+        0.0009999999310821295
+      ],
+      "name": "node_id11"
+    },
+    {
+      "translation": [
+        -8.468196028843522e-7,
+        -0.00020128587493672967,
+        256.0000305175781
+      ],
+      "rotation": [
+        0,
+        0,
+        0.7071067690849304,
+        0.7071067690849304
+      ],
+      "scale": [
+        12.530078887939453,
+        12.530078887939453,
+        12.530080795288086
+      ],
+      "mesh": 0,
+      "name": "node_id5"
+    },
+    {
+      "translation": [
+        -8.468196028843522e-7,
+        819.6103515625,
+        256.0000305175781
+      ],
+      "rotation": [
+        0,
+        0,
+        0.7071067690849304,
+        0.7071067690849304
+      ],
+      "scale": [
+        128.7440948486328,
+        128.7440948486328,
+        514.9765014648438
+      ],
+      "mesh": 1,
+      "name": "node_id7"
+    }
+  ],
+  "samplers": [
+    {
+      "minFilter": 9985
+    }
+  ],
+  "scenes": [
+    {
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "scene": 0,
+  "textures": [
+    {
+      "name": "texture3",
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "name": "33_bc",
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "name": "33_mr",
+      "sampler": 0,
+      "source": 2
+    },
+    {
+      "name": "texture4",
+      "sampler": 0,
+      "source": 3
+    },
+    {
+      "name": "34_bc",
+      "sampler": 0,
+      "source": 4
+    },
+    {
+      "name": "34_mr",
+      "sampler": 0,
+      "source": 5
+    }
+  ],
+  "extensionsUsed": [
+    "KHR_materials_pbrSpecularGlossiness"
+  ]
+}

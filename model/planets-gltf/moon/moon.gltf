@@ -1,0 +1,198 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "Microsoft GLTF Exporter 2.4.2.8"
+  },
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5123,
+      "count": 9216,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 1832,
+      "type": "VEC3",
+      "max": [
+        100,
+        100,
+        100
+      ],
+      "min": [
+        -100,
+        -100,
+        -100
+      ]
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 1832,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 1832,
+      "type": "VEC2"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 18432,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 18432,
+      "byteLength": 21984,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 40416,
+      "byteLength": 21984,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 62400,
+      "byteLength": 14656,
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "uri": "moon_data.bin",
+      "byteLength": 77056
+    }
+  ],
+  "images": [
+    {
+      "uri": "moon_img0.png"
+    },
+    {
+      "uri": "moon_img1.png"
+    },
+    {
+      "uri": "moon_img2.png"
+    },
+    {
+      "uri": "moon_img3.png"
+    }
+  ],
+  "materials": [
+    {
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 2
+        },
+        "metallicRoughnessTexture": {
+          "index": 3
+        }
+      },
+      "alphaMode": "MASK",
+      "name": "47",
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_pbrSpecularGlossiness": {
+          "diffuseTexture": {
+            "index": 0
+          },
+          "specularGlossinessTexture": {
+            "index": 1
+          }
+        }
+      },
+      "extras": {
+        "MSFT_sRGBFactors": false
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "mesh_id32",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 1,
+            "NORMAL": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 0,
+          "material": 0
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "translation": [
+        2.3460388831608725e-7,
+        -3.051757957450718e-8,
+        0.280386358499527
+      ],
+      "rotation": [
+        -0.2669924795627594,
+        0.35883256793022156,
+        -0.026588208973407745,
+        0.8940063118934631
+      ],
+      "scale": [
+        0.0016032118583098054,
+        0.0016843504272401333,
+        0.0016032109269872308
+      ],
+      "mesh": 0,
+      "name": "node_id31"
+    },
+    {
+      "children": [
+        0
+      ],
+      "name": "root"
+    }
+  ],
+  "samplers": [
+    {
+      "minFilter": 9985
+    }
+  ],
+  "scenes": [
+    {
+      "nodes": [
+        1
+      ]
+    }
+  ],
+  "scene": 0,
+  "textures": [
+    {
+      "name": "texture5",
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "name": "texture6",
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "name": "47_bc",
+      "sampler": 0,
+      "source": 2
+    },
+    {
+      "name": "47_mr",
+      "sampler": 0,
+      "source": 3
+    }
+  ],
+  "extensionsUsed": [
+    "KHR_materials_pbrSpecularGlossiness"
+  ]
+}

@@ -3,6 +3,16 @@ var sunObj, mercuryObj, venusObj, earthObj, moonObj, marsObj, saturnObj, jupiter
 var sunPivot, mercuryPivot, venusPivot, earthPivot, moonPivot, marsObj, saturnPivot, jupiterPivot, uranusPivot, neptunePivot, plutoPivot;
 var solarObj;
 
+//JSON
+var jsonObj;
+
+var request = new XMLHttpRequest();
+  request.open("GET", "./solarSystem.json", false);
+  request.send(null)
+  jsonObj = JSON.parse(request.responseText);
+
+console.log(jsonObj.planets);
+
 //Scene & camera
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
@@ -41,14 +51,14 @@ var render = () => {
   //   }
   // }
 
-  if (mercuryObj){
-    mercuryObj.rotation.y += 0.02;
-  }
-
-  //Orbit
-  if (mercuryPivot){
-    mercuryPivot.rotation.y += 0.02;
-  }
+  // if (mercuryObj){
+  //   mercuryObj.rotation.y += 0.02;
+  // }
+  //
+  // //Orbit
+  // if (mercuryPivot){
+  //   mercuryPivot.rotation.y += 0.02;
+  // }
 
   renderer.render( scene, camera );
 };
@@ -59,7 +69,7 @@ var loader = new THREE.GLTFLoader();
 var onLoad = ( gltf ) => {
   mercuryObj = gltf.scene;
   //mercury.scale.set(100, 100, 100);
-  mercuryObj.position.set(mercuryPivot.position.x+2, mercuryPivot.position.y, mercuryPivot.position.z);
+  mercuryObj.position.set(mercuryPivot.position.x, mercuryPivot.position.y, mercuryPivot.position.z);
   //scene.add( mercury );
   mercuryPivot.add(mercuryObj);
   console.log("model loaded");
@@ -73,10 +83,6 @@ var onError = (errorMessage) => {
   console.log(errorMessage);
 };
 
-// loader.load( './model/planets-gltf/sun/sun.gltf',
-//     (gltf) => onLoad( gltf ),
-//     xhr => onProgress(xhr), error => onError(error)
-//     );
 
 loader.load(
   //NOTE cant seem to load glb files from NASA website (missing textures)

@@ -1,0 +1,104 @@
+{
+   "planets":[
+      {
+         "name":"Mercury",
+         "file":"./Planets/Mercury.glb",
+         "radius":1516,
+         "DistanceFromSun":35.98,
+         "Orbit":88,
+         "Orbit Inclination":7,
+         "Rotation":59,
+         "RotationAngle":2
+      },
+      {
+         "name":"Venus",
+         "file":"./Planets/Venus.glb",
+         "radius":3760.4,
+         "DistanceFromSun":67.24,
+         "Orbit":225,
+         "Orbit Inclination":3.4,
+         "Rotation":243,
+         "RotationAngle":177
+      },
+      {
+         "name":"Earth",
+         "file":"./Planets/Earth.glb",
+         "radius":3958.8,
+         "DistanceFromSun":92.96,
+         "Orbit":365,
+         "Orbit Inclination":0,
+         "Rotation":1,
+         "RotationAngle":23.5,
+         "Moon":{
+            "name":"Moon",
+            "file":"./Planets/Moon.glb",
+            "radius":1079.4,
+            "DistanceFromEarth":238855,
+            "Orbit":27,
+            "Orbit Inclination":5,
+            "Rotation":27,
+            "RotationAngle":1.5
+         }
+      },
+      {
+         "name":"Mars",
+         "file":"./Planets/Mars.glb",
+         "radius":2106.1,
+         "DistanceFromSun":141.6,
+         "Orbit":687,
+         "Orbit Inclination":1.85,
+         "Rotation":1.025,
+         "RotationAngle":25
+      },
+      {
+         "name":"Jupiter",
+         "file":"./Planets/Jupiter.glb",
+         "radius":43441,
+         "DistanceFromSun":483.8,
+         "Orbit":4380,
+         "Orbit Inclination":1.31,
+         "Rotation":0.4125,
+         "RotationAngle":3
+      },
+      {
+         "name":"Saturn",
+         "file":"./Planets/Saturn.glb",
+         "radius":36184,
+         "DistanceFromSun":890.8,
+         "Orbit":10585,
+         "Orbit Inclination":2.48,
+         "Rotation":0.4458,
+         "RotationAngle":26.7
+      },
+      {
+         "name":"Uranus",
+         "file":"./Planets/Uranus.glb",
+         "radius":15759,
+         "DistanceFromSun":1.784,
+         "Orbit":30660,
+         "Orbit Inclination":0.772,
+         "Rotation":0.708,
+         "RotationAngle":98
+      },
+      {
+         "name":"Neptune",
+         "file":"./Planets/Neptune.glb",
+         "radius":15299,
+         "DistanceFromSun":2.793,
+         "Orbit":60225,
+         "Orbit Inclination":1.77,
+         "Rotation":0.67125,
+         "RotationAngle":30
+      },
+      {
+         "name":"Pluto",
+         "file":"./Planets/Pluto.glb",
+         "radius":738.38,
+         "DistanceFromSun":3670050000,
+         "Orbit":90520,
+         "Orbit Inclination":17,
+         "Rotation":6.39,
+         "RotationAngle":120
+      }
+   ]
+}

@@ -1,30 +1,31 @@
-//Load in all the planets
-var sunObj, mercuryObj, venusObj, earthObj, moonObj, marsObj, saturnObj, jupiterObj, uranusObj, neptuneObj, plutoObj;
-var sunPivot, mercuryPivot, venusPivot, earthPivot, moonPivot, marsObj, saturnPivot, jupiterPivot, uranusPivot, neptunePivot, plutoPivot;
-var solarObj;
+//3D Objects
+var planets = [];
+var pivots = [];
+var sunObj, astronautObj;
 
 //JSON
 var jsonObj;
-
 var request = new XMLHttpRequest();
   request.open("GET", "./solarSystem.json", false);
   request.send(null)
   jsonObj = JSON.parse(request.responseText);
 
-console.log(jsonObj.planets);
-
-//Scene & camera
+//Camera
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
-console.log("height: " + window.innerHeight + " width: " + window.innerWidth);
-camera.position.z = 3;
-camera.position.y = 2;
+camera.position.z = 10;
+camera.position.y = 5;
 camera.lookAt(new THREE.Vector3( 0, 0, 0));
 
-solarObj = new THREE.Object3D();
-mercuryPivot = new THREE.Object3D();
-scene.add(solarObj);
-solarObj.add(mercuryPivot);
+//Scene
+sunObj = new THREE.Object3D();
+astronautObj = new THREE.Object3D();
+
+for (var i=0; i<5; i++){ //will use jsonObj.numElements
+  pivots[i] = new THREE.Object3D();
+  pivots[i].position.set(i+1, 0, 0);
+  scene.add(pivots[i]);
+}
 
 //Lights
 var sunLight = new THREE.PointLight( 0xff000, 1, 1000, 1);
@@ -38,8 +39,8 @@ scene.add(pointLight);
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
-renderer.gammaOutput = true;
-renderer.gammaFactor = 2.2;
+// renderer.gammaOutput = true;
+// renderer.gammaFactor = 2.2;
 
 var render = () => {
   requestAnimationFrame( render );
@@ -66,14 +67,25 @@ var render = () => {
 //Load Models
 var loader = new THREE.GLTFLoader();
 
-var onLoad = ( gltf ) => {
-  mercuryObj = gltf.scene;
-  //mercury.scale.set(100, 100, 100);
-  mercuryObj.position.set(mercuryPivot.position.x, mercuryPivot.position.y, mercuryPivot.position.z);
-  //scene.add( mercury );
-  mercuryPivot.add(mercuryObj);
-  console.log("model loaded");
-}
+var loadSun = ( gltf ) => {
+  sunObj = gltf.scene;
+  sunObj.position.set(0, 0, 0);
+  scene.add(sunObj);
+};
+
+var loadAstronaut = ( gltf ) => {
+  astronautObj = gltf.scene;
+  astronautObj.position.set(0, 5, 0);
+  astronautObj.scale.set(100, 100, 100);
+  scene.add(astronautObj);
+};
+
+var loadPlanet = ( gltf ) => {
+  planets[num] = gltf.scene;
+  planets[num].position.set(pivots[num].position.x, pivots[num].position.y, pivots[num].position.z);
+  pivots[num].add(planets[num]);
+  num++;
+};
 
 var onProgress = (xhr) => {
   console.log(( xhr.loaded / xhr.total * 100 ) + '% loaded');
@@ -83,16 +95,34 @@ var onError = (errorMessage) => {
   console.log(errorMessage);
 };
 
-
+//Sun
 loader.load(
   //NOTE cant seem to load glb files from NASA website (missing textures)
-  //'./model/planets-glb/mercury/Mercury.glb'
-  //'./model/planets-gltf/sun/sun.gltf'
-  './model/planets-gltf/mercury/mercury.gltf'
-  , (gltf) => onLoad( gltf ),
-  xhr => onProgress(xhr), error => onError(error)
+  jsonObj.sun.file,
+  gltf => loadSun( gltf ),
+  xhr => onProgress(xhr),
+  error => onError(error)
+);
+
+//Astronaut
+loader.load(
+  //NOTE cant seem to load glb files from NASA website (missing textures)
+  jsonObj.astronaut.file,
+  gltf => loadAstronaut( gltf ),
+  xhr => onProgress(xhr),
+  error => onError(error)
+);
+
+//Planets
+var num=0;
+for (var i=0; i<5 ; i++){    //will use jsonObj.numElements
+  loader.load(
+    //NOTE cant seem to load glb files from NASA website (missing textures)
+    jsonObj.planets[i].file,
+    gltf => loadPlanet( gltf ),
+    xhr => onProgress(xhr),
+    error => onError(error)
   );
-
-
+}
 
 render();

@@ -13,6 +13,7 @@ var request = new XMLHttpRequest();
 //Camera
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
+camera.position.x = -10
 camera.position.z = 10;
 camera.position.y = 5;
 camera.lookAt(new THREE.Vector3( 0, 0, 0));
@@ -21,9 +22,9 @@ camera.lookAt(new THREE.Vector3( 0, 0, 0));
 sunObj = new THREE.Object3D();
 astronautObj = new THREE.Object3D();
 
-for (var i=0; i<5; i++){ //will use jsonObj.numElements
+for (var i=0; i < jsonObj.numPlanets; i++){ //need to add pluto
   pivots[i] = new THREE.Object3D();
-  pivots[i].position.set(i+1, 0, 0);
+  pivots[i].position.set(0, 0, 0);
   scene.add(pivots[i]);
 }
 
@@ -56,9 +57,11 @@ var render = () => {
   //   mercuryObj.rotation.y += 0.02;
   // }
   //
-  // //Orbit
-  // if (mercuryPivot){
-  //   mercuryPivot.rotation.y += 0.02;
+  //Orbit
+  // for (var i=0; i<5; i++){ //will use jsonObj.numElements
+  //   if (pivots[i]){
+  //     pivots[i].rotation.y += 0.02; //be based on the rotation within jsonObj
+  //   }
   // }
 
   renderer.render( scene, camera );
@@ -75,15 +78,21 @@ var loadSun = ( gltf ) => {
 
 var loadAstronaut = ( gltf ) => {
   astronautObj = gltf.scene;
-  astronautObj.position.set(0, 5, 0);
-  astronautObj.scale.set(100, 100, 100);
+  astronautObj.position.set(0, 0, 0);
+  astronautObj.scale.set(3, 3, 3);
   scene.add(astronautObj);
 };
 
 var loadPlanet = ( gltf ) => {
   planets[num] = gltf.scene;
-  planets[num].position.set(pivots[num].position.x, pivots[num].position.y, pivots[num].position.z);
+  planets[num].position.set(pivots[num].position.x + jsonObj.planets[num].DistanceFromSun/jsonObj.distanceScale,
+                            pivots[num].position.y,
+                            pivots[num].position.z);
+  planets[num].scale.set((jsonObj.planets[num].radius/jsonObj.sizeScale),
+                          (jsonObj.planets[num].radius/jsonObj.sizeScale),
+                          (jsonObj.planets[num].radius/jsonObj.sizeScale));
   pivots[num].add(planets[num]);
+  console.log(jsonObj.planets[num].name);
   num++;
 };
 
@@ -115,7 +124,7 @@ loader.load(
 
 //Planets
 var num=0;
-for (var i=0; i<5 ; i++){    //will use jsonObj.numElements
+for (var i=0; i < jsonObj.numPlanets; i++){    //need to add pluto
   loader.load(
     //NOTE cant seem to load glb files from NASA website (missing textures)
     jsonObj.planets[i].file,

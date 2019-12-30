@@ -63,6 +63,38 @@ var loadAstronaut = ( gltf ) => {
 };
 
 var loadPlanet = ( gltf ) => {
+
+  //Order based on what comes through
+  switch (gltf.parser.options.path){
+    case "./model/planets-gltf/mercury/":
+      num = 0;
+      break;
+    case "./model/planets-gltf/venus/":
+      num = 1;
+      break;
+    case "./model/planets-gltf/earth/":
+      num = 2;
+      break;
+    case "./model/planets-gltf/mars/":
+      num = 3;
+      break;
+    case "./model/planets-gltf/jupiter/":
+      num = 4;
+      break;
+    case "./model/planets-gltf/saturn/":
+      num = 5;
+      break;
+    case "./model/planets-gltf/uranus/":
+      num = 6;
+      break;
+    case "./model/planets-gltf/neptune/":
+      num = 7;
+      break;
+    default:
+      console.log("Bad Case");
+      break;
+  }
+
   planets[num] = gltf.scene;
   planets[num].position.set(pivots[num].position.x + jsonObj.planets[num].DistanceFromSun/jsonObj.distanceScale,
                             pivots[num].position.y,
@@ -71,7 +103,6 @@ var loadPlanet = ( gltf ) => {
                           (jsonObj.planets[num].radius/jsonObj.sizeScale),
                           (jsonObj.planets[num].radius/jsonObj.sizeScale));
   pivots[num].add(planets[num]);
-  console.log(jsonObj.planets[num].name);
   num++;
 };
 
@@ -93,16 +124,18 @@ loader.load(
 );
 
 //Astronaut
-loader.load(
-  //NOTE cant seem to load glb files from NASA website (missing textures)
-  jsonObj.astronaut.file,
-  gltf => loadAstronaut( gltf ),
-  xhr => onProgress(xhr),
-  error => onError(error)
-);
+// loader.load(
+//   //NOTE cant seem to load glb files from NASA website (missing textures)
+//   jsonObj.astronaut.file,
+//   gltf => loadAstronaut( gltf ),
+//   xhr => onProgress(xhr),
+//   error => onError(error)
+// );
 
 //Planets
 var num=0;
+
+//NOTE: Loads planets in the wrong order
 for (var i=0; i < jsonObj.numPlanets; i++){    //need to add pluto
   loader.load(
     //NOTE cant seem to load glb files from NASA website (missing textures)

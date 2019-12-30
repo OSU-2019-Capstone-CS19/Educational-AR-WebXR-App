@@ -12,10 +12,10 @@ var request = new XMLHttpRequest();
 
 //Camera
 var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
+var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 10000 );
 //camera.position.x = -30
-camera.position.z = 300;
-camera.position.y = 300;
+camera.position.z = 100;
+//camera.position.y = 200;
 camera.lookAt(new THREE.Vector3( 0, 0, 0));
 
 //Scene
@@ -156,10 +156,10 @@ var render = () => {
   //   }
   // }
 
-  //Orbit
+  //Orbit (rad/day)
   for (var i=0; i<jsonObj.numPlanets; i++){ //will use jsonObj.numElements
     if (pivots[i]){
-      pivots[i].rotation.y += jsonObj.planets[i].Rotation / jsonObj.rotationScale;
+      pivots[i].rotation.y += jsonObj.planets[i].Orbit / jsonObj.orbitScale;
     }
   }
 

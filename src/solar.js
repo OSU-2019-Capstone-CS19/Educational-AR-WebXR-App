@@ -13,9 +13,9 @@ var request = new XMLHttpRequest();
 //Camera
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 10000 );
-//camera.position.x = -30
-camera.position.z = 100;
-//camera.position.y = 200;
+//camera.position.x = 200
+camera.position.z =  500;
+camera.position.y = 500;
 camera.lookAt(new THREE.Vector3( 0, 0, 0));
 
 //Scene
@@ -43,24 +43,37 @@ var renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
+//Camera Controls
+var cameraControls = new THREE.OrbitControls(camera, renderer.domElement);
+cameraControls.update();
+
 //Load Models
 var loader = new THREE.GLTFLoader();
 
 var loadSun = ( gltf ) => {
   sunObj = gltf.scene;
-  sunObj.position.set(0, 0, 0);
   sunObj.scale.set((jsonObj.sun.radius/jsonObj.sizeScale/10), //10 for testing
                     (jsonObj.sun.radius/jsonObj.sizeScale/10),
                     (jsonObj.sun.radius/jsonObj.sizeScale/10));
+
+  //Center gltf Obj
+  //sunObj.position.set(0, -sunObj.scale.y/4, -sunObj.scale.z/4);
+
+  console.log(sunObj);
+
+  //testing
+  // var axisHelper = new THREE.AxesHelper(100);
+  // scene.add(axisHelper);
+
   scene.add(sunObj);
 };
 
-var loadAstronaut = ( gltf ) => {
-  astronautObj = gltf.scene;
-  astronautObj.position.set(0, 0, 0);
-  astronautObj.scale.set(0, 0, 0);
-  scene.add(astronautObj);
-};
+// var loadAstronaut = ( gltf ) => {
+//   astronautObj = gltf.scene;
+//   astronautObj.position.set(0, 0, 0);
+//   astronautObj.scale.set(0, 0, 0);
+//   scene.add(astronautObj);
+// };
 
 var loadPlanet = ( gltf ) => {
 
@@ -95,15 +108,16 @@ var loadPlanet = ( gltf ) => {
       break;
   }
 
-  planets[num] = gltf.scene;
-  planets[num].position.set(pivots[num].position.x + jsonObj.planets[num].DistanceFromSun/jsonObj.distanceScale,
-                            pivots[num].position.y,
-                            pivots[num].position.z);
+  planets[num] = gltf.scene
   planets[num].scale.set((jsonObj.planets[num].radius/jsonObj.sizeScale),
                           (jsonObj.planets[num].radius/jsonObj.sizeScale),
                           (jsonObj.planets[num].radius/jsonObj.sizeScale));
+  planets[num].position.set(pivots[num].position.x + jsonObj.planets[num].DistanceFromSun/jsonObj.distanceScale,
+                            pivots[num].position.y,
+                            pivots[num].position.z);
   pivots[num].add(planets[num]);
   num++;
+
 };
 
 var onProgress = (xhr) => {
@@ -149,10 +163,15 @@ for (var i=0; i < jsonObj.numPlanets; i++){    //need to add pluto
 var render = () => {
   requestAnimationFrame( render );
 
-  //rotation
-  // for (var i=0; i<sunObj.children.length(); i++){
-  //   if (sunObj.children[i]){
-  //       sunObj.children[i].rotation.y += 0.02;
+  //Sun Rotation
+  if (sunObj){
+    //sunObj.rotation.y += 0.01;
+  }
+
+  //Planet Rotation (rad/day)
+  // for (var i=0; i<jsonObj.numPlanets; i++){
+  //   if (planets[i]){
+  //       planets[i].rotation.y += jsonObj.planets[i].Rotation / jsonObj.rotationScale;
   //   }
   // }
 
@@ -162,6 +181,8 @@ var render = () => {
       pivots[i].rotation.y += jsonObj.planets[i].Orbit / jsonObj.orbitScale;
     }
   }
+
+  cameraControls.update();
 
   renderer.render( scene, camera );
 };

@@ -10,7 +10,8 @@
      "rotation":2
    },
    "astronaut": {
-      "file": "./model/astronaut/scene.gltf"
+      "file": "./model/astronaut/scene.gltf",
+      "Orbit":0.0014
    },
    "planets":[
       {

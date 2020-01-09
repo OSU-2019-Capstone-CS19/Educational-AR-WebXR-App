@@ -1,6 +1,7 @@
 //3D Objects
 var planets = [];
 var pivots = [];
+var cameraPivot;
 var sunObj, astronautObj;
 
 //JSON
@@ -16,7 +17,7 @@ var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeig
 //camera.position.x = 200
 camera.position.z =  500;
 camera.position.y = 500;
-camera.lookAt(new THREE.Vector3( 0, 0, 0));
+//camera.lookAt(new THREE.Vector3( 0, 0, 0));
 
 //Scene
 sunObj = new THREE.Object3D();
@@ -27,6 +28,13 @@ for (var i=0; i < jsonObj.numPlanets; i++){ //need to add pluto
   pivots[i].position.set(0, 0, 0);
   scene.add(pivots[i]);
 }
+
+//Camera pivot
+cameraPivot = new THREE.Object3D();
+//cameraPivot.position.copy(camera.position);
+cameraPivot.position.set(camera.position.x, camera.position.y, camera.position.z);
+scene.add(cameraPivot);
+console.log(cameraPivot.position);
 
 //Lights
 var sunLight = new THREE.PointLight( 0xfffff, 1, 1000, 2);
@@ -68,12 +76,16 @@ var loadSun = ( gltf ) => {
   scene.add(sunObj);
 };
 
-// var loadAstronaut = ( gltf ) => {
-//   astronautObj = gltf.scene;
-//   astronautObj.position.set(0, 0, 0);
-//   astronautObj.scale.set(0, 0, 0);
-//   scene.add(astronautObj);
-// };
+var loadAstronaut = ( gltf ) => {
+  astronautObj = gltf.scene;
+  //astronautObj.position.set(10, 10, 10);
+  //astronautObj.scale.set(.05, .05, .05);
+  cameraPivot.add(astronautObj);
+  astronautObj.position.set(100, 0, 500);
+  //scene.add(astronautObj);
+  console.log(astronautObj.position);
+  console.log(camera.position);
+};
 
 var loadPlanet = ( gltf ) => {
 
@@ -138,13 +150,13 @@ loader.load(
 );
 
 //Astronaut
-// loader.load(
-//   //NOTE cant seem to load glb files from NASA website (missing textures)
-//   jsonObj.astronaut.file,
-//   gltf => loadAstronaut( gltf ),
-//   xhr => onProgress(xhr),
-//   error => onError(error)
-// );
+loader.load(
+  //NOTE cant seem to load glb files from NASA website (missing textures)
+  jsonObj.astronaut.file,
+  gltf => loadAstronaut( gltf ),
+  xhr => onProgress(xhr),
+  error => onError(error)
+);
 
 //Planets
 var num=0;
@@ -180,6 +192,11 @@ var render = () => {
     if (pivots[i]){
       pivots[i].rotation.y += jsonObj.planets[i].Orbit / jsonObj.orbitScale;
     }
+  }
+
+  //Rotate Astronaut
+  if(cameraPivot){
+  	cameraPivot.rotation.y += jsonObj.astronaut.Orbit;
   }
 
   cameraControls.update();

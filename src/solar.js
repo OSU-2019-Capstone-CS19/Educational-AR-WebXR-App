@@ -15,7 +15,7 @@ var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 10000 );
 //camera.position.x = 200
 camera.position.z =  500;
-camera.position.y = 500;
+//camera.position.y = 500;
 camera.lookAt(new THREE.Vector3( 0, 0, 0));
 
 //Scene
@@ -59,8 +59,6 @@ var loadSun = ( gltf ) => {
   //Center gltf Obj
   //sunObj.position.set(0, -sunObj.scale.y/4, -sunObj.scale.z/4);
 
-  console.log(sunObj);
-
   //testing
   // var axisHelper = new THREE.AxesHelper(100);
   // scene.add(axisHelper);
@@ -70,8 +68,8 @@ var loadSun = ( gltf ) => {
 
 // var loadAstronaut = ( gltf ) => {
 //   astronautObj = gltf.scene;
-//   astronautObj.position.set(0, 0, 0);
-//   astronautObj.scale.set(0, 0, 0);
+//   astronautObj.position.set(100, 1000, 1000);
+//   astronautObj.scale.set(200, 200, 200);
 //   scene.add(astronautObj);
 // };
 
@@ -116,6 +114,8 @@ var loadPlanet = ( gltf ) => {
                             pivots[num].position.y,
                             pivots[num].position.z);
   pivots[num].add(planets[num]);
+
+  pivots[num].rotation.z += jsonObj.planets[num].OrbitInclination;
   num++;
 
 };

@@ -19,7 +19,7 @@
          "radius":2439.7,
          "DistanceFromSun":69.633,
          "Orbit":0.0714,
-         "Orbit Inclination":7,
+         "OrbitInclination":0.1223476,
          "Rotation":0.1065,
          "RotationAngle":2
       },
@@ -29,7 +29,7 @@
          "radius":6051.8,
          "DistanceFromSun":108.73,
          "Orbit":0.0279,
-         "Orbit Inclination":3.4,
+         "OrbitInclination":0.059,
          "Rotation":0.0259,
          "RotationAngle":177
       },
@@ -39,7 +39,7 @@
          "radius":6371,
          "DistanceFromSun":147.12,
          "Orbit":0.0172,
-         "Orbit Inclination":0,
+         "OrbitInclination":0,
          "Rotation":6.28,
          "RotationAngle":23.5,
          "Moon":{
@@ -48,7 +48,7 @@
             "radius":1079.4,
             "DistanceFromEarth":238855,
             "Orbit":27,
-            "Orbit Inclination":5,
+            "OrbitInclination":5,
             "Rotation":27,
             "RotationAngle":1.5
          }
@@ -59,7 +59,7 @@
          "radius":3389.5,
          "DistanceFromSun":240.01,
          "Orbit":0.00915,
-         "Orbit Inclination":1.85,
+         "OrbitInclination":0.032288,
          "Rotation":6.1299,
          "RotationAngle":25
       },
@@ -69,7 +69,7 @@
          "radius":69911,
          "DistanceFromSun":782.67,
          "Orbit":0.00143,
-         "Orbit Inclination":1.31,
+         "OrbitInclination":0.02286,
          "Rotation":15.232,
          "RotationAngle":3
       },
@@ -79,7 +79,7 @@
          "radius":58232,
          "DistanceFromSun":1498.4,
          "Orbit":0.0005936,
-         "Orbit Inclination":2.48,
+         "OrbitInclination":0.04328,
          "Rotation":14.094,
          "RotationAngle":26.7
       },
@@ -89,7 +89,7 @@
          "radius":25362,
          "DistanceFromSun":2965,
          "Orbit":0.000205,
-         "Orbit Inclination":0.772,
+         "OrbitInclination":0.01347,
          "Rotation":8.875,
          "RotationAngle":98
       },
@@ -99,7 +99,7 @@
          "radius":24622,
          "DistanceFromSun":4477.2,
          "Orbit":0.000104,
-         "Orbit Inclination":1.77,
+         "OrbitInclination":0.003089,
          "Rotation":8.875,
          "RotationAngle":30
       },
@@ -109,7 +109,7 @@
          "radius":1188.3,
          "DistanceFromSun":5906.38,
          "Orbit":90520,
-         "Orbit Inclination":17,
+         "OrbitInclination":17,
          "Rotation":6.39,
          "RotationAngle":120
       }

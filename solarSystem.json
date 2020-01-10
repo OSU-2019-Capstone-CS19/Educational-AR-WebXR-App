@@ -45,9 +45,9 @@
          "Moon":{
             "name":"Moon",
             "file":"./model/planets-gltf/moon/moon.gltf",
-            "radius":1079.4,
-            "DistanceFromEarth":238855,
-            "Orbit":27,
+            "radius":1737.12,
+            "DistanceFromEarth":0.384399,
+            "Orbit":0.01721,
             "OrbitInclination":5,
             "Rotation":27,
             "RotationAngle":1.5

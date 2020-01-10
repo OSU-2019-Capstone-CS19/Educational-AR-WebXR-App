@@ -1,25 +1,35 @@
 //3D Objects
 var planets = [];
 var pivots = [];
-var sunObj, astronautObj;
+var sunObj, moonObj, moonPivot;
+var astronautObj;
 
-//JSON
+/**********
+Load up JSON file
+**********/
 var jsonObj;
 var request = new XMLHttpRequest();
   request.open("GET", "./solarSystem.json", false);
   request.send(null)
   jsonObj = JSON.parse(request.responseText);
 
-//Camera
-var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 10000 );
-//camera.position.x = 200
-camera.position.z =  500;
-//camera.position.y = 500;
-camera.lookAt(new THREE.Vector3( 0, 0, 0));
 
-//Scene
+/**********
+Create Renderer
+**********/
+var renderer = new THREE.WebGLRenderer();
+renderer.setSize( window.innerWidth, window.innerHeight );
+document.body.appendChild( renderer.domElement );
+
+
+/**********
+Create Scene
+Load 3D objects
+**********/
+var scene = new THREE.Scene();
 sunObj = new THREE.Object3D();
+moonObj = new THREE.Object3D();
+moonPivot = new THREE.Object3D();
 astronautObj = new THREE.Object3D();
 
 for (var i=0; i < jsonObj.numPlanets; i++){ //need to add pluto
@@ -28,7 +38,25 @@ for (var i=0; i < jsonObj.numPlanets; i++){ //need to add pluto
   scene.add(pivots[i]);
 }
 
-//Lights
+
+/**********
+Create Camera
+Camera Controls
+**********/
+var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 10000 );
+var cameraControls = new THREE.OrbitControls(camera, renderer.domElement);
+
+cameraControls.update();
+
+//camera.position.x = 200
+camera.position.z =  500;
+camera.position.y = 500;
+camera.lookAt(new THREE.Vector3( 0, 0, 0));
+
+
+/**********
+Create Lights
+**********/
 var sunLight = new THREE.PointLight( 0xfffff, 1, 1000, 2);
 sunLight.position.set( 0, 0, 0);
 scene.add(sunLight);
@@ -38,34 +66,56 @@ var pointLight = new THREE.DirectionalLight(0xffffff, 1);
 pointLight.position.set(camera.position.x, camera.position.y, camera.position.z);
 scene.add(pointLight);
 
-//Renderer
-var renderer = new THREE.WebGLRenderer();
-renderer.setSize( window.innerWidth, window.innerHeight );
-document.body.appendChild( renderer.domElement );
 
-//Camera Controls
-var cameraControls = new THREE.OrbitControls(camera, renderer.domElement);
-cameraControls.update();
-
-//Load Models
+/**********
+Load Models
+**********/
 var loader = new THREE.GLTFLoader();
 
-var loadSun = ( gltf ) => {
-  sunObj = gltf.scene;
-  sunObj.scale.set((jsonObj.sun.radius/jsonObj.sizeScale/10), //10 for testing
-                    (jsonObj.sun.radius/jsonObj.sizeScale/10),
-                    (jsonObj.sun.radius/jsonObj.sizeScale/10));
+//Astronaut
+// loader.load(
+//   //NOTE cant seem to load glb files from NASA website (missing textures)
+//   jsonObj.astronaut.file,
+//   gltf => loadAstronaut( gltf ),
+//   xhr => onProgress(xhr),
+//   error => onError(error)
+// );
 
-  //Center gltf Obj
-  //sunObj.position.set(0, -sunObj.scale.y/4, -sunObj.scale.z/4);
+//Sun
+loader.load(
+  //NOTE cant seem to load glb files from NASA website (missing textures)
+  jsonObj.sun.file,
+  gltf => loadSun( gltf ),
+  xhr => onProgress(xhr),
+  error => onError(error)
+);
 
-  //testing
-  // var axisHelper = new THREE.AxesHelper(100);
-  // scene.add(axisHelper);
+//Planets
+var num=0;
 
-  scene.add(sunObj);
-};
+//NOTE: Loads planets in the wrong order
+for (var i=0; i < jsonObj.numPlanets; i++){    //need to add pluto
+  loader.load(
+    //NOTE cant seem to load glb files from NASA website (missing textures)
+    jsonObj.planets[i].file,
+    gltf => loadPlanet( gltf ),
+    xhr => onProgress(xhr),
+    error => onError(error)
+  );
+}
 
+//Earths Moon
+loader.load(
+  jsonObj.planets[2].Moon.file,
+  gltf => loadMoon( gltf ),
+  xhr => onProgress(xhr),
+  error => onError(error)
+);
+
+
+/**********
+Load Model Functions
+**********/
 // var loadAstronaut = ( gltf ) => {
 //   astronautObj = gltf.scene;
 //   astronautObj.position.set(100, 1000, 1000);
@@ -73,9 +123,20 @@ var loadSun = ( gltf ) => {
 //   scene.add(astronautObj);
 // };
 
+//Load Sun Model
+var loadSun = ( gltf ) => {
+  sunObj = gltf.scene;
+  sunObj.scale.set( jsonObj.sun.radius/jsonObj.sizeScale/10, //10 for testing
+                    jsonObj.sun.radius/jsonObj.sizeScale/10,
+                    jsonObj.sun.radius/jsonObj.sizeScale/10);
+
+  scene.add(sunObj);
+};
+
+//Load Planet Models
 var loadPlanet = ( gltf ) => {
 
-  //Order based on what comes through
+  //Order Planets
   switch (gltf.parser.options.path){
     case "./model/planets-gltf/mercury/":
       num = 0;
@@ -114,52 +175,55 @@ var loadPlanet = ( gltf ) => {
                             pivots[num].position.y,
                             pivots[num].position.z);
   pivots[num].add(planets[num]);
-
   pivots[num].rotation.z += jsonObj.planets[num].OrbitInclination;
-  num++;
 
+  //Draw Orbit Lines
+  material = new THREE.LineBasicMaterial({ color:0xffffa1 });
+  orbitCircle = new THREE.CircleGeometry(jsonObj.planets[num].DistanceFromSun/jsonObj.distanceScale, 100);
+  orbitCircle.vertices.shift();
+  orbitCircle.rotateX(Math.PI * 0.5); //Fix oriantation
+  orbitCircle.rotateZ(jsonObj.planets[num].OrbitInclination);
+  scene.add( new THREE.LineLoop( orbitCircle, material ));
+
+  num++;
 };
 
+//Load Moon Model
+var loadMoon = ( gltf ) => {
+  moonObj = gltf.scene;
+
+  moonPivot.position.set( moonPivot.position.x + jsonObj.planets[2].DistanceFromSun/jsonObj.distanceScale,
+                          moonPivot.position.y,
+                          moonPivot.position.z);
+
+  moonObj.scale.set((jsonObj.planets[2].Moon.radius/jsonObj.sizeScale),
+                    (jsonObj.planets[2].Moon.radius/jsonObj.sizeScale),
+                    (jsonObj.planets[2].Moon.radius/jsonObj.sizeScale));
+
+  moonObj.position.set( jsonObj.planets[2].Moon.DistanceFromEarth/jsonObj.distanceScale,
+                        moonPivot.position.y,
+                        moonPivot.position.z);
+
+  pivots[2].add(moonPivot);
+  moonPivot.add(moonObj);
+
+  moonPivot.rotation.z += jsonObj.planets[2].Moon.OrbitInclination;
+};
+
+//Model Load Progress
 var onProgress = (xhr) => {
   console.log(( xhr.loaded / xhr.total * 100 ) + '% loaded');
 };
 
+//Model Load Error
 var onError = (errorMessage) => {
   console.log(errorMessage);
 };
 
-//Sun
-loader.load(
-  //NOTE cant seem to load glb files from NASA website (missing textures)
-  jsonObj.sun.file,
-  gltf => loadSun( gltf ),
-  xhr => onProgress(xhr),
-  error => onError(error)
-);
 
-//Astronaut
-// loader.load(
-//   //NOTE cant seem to load glb files from NASA website (missing textures)
-//   jsonObj.astronaut.file,
-//   gltf => loadAstronaut( gltf ),
-//   xhr => onProgress(xhr),
-//   error => onError(error)
-// );
-
-//Planets
-var num=0;
-
-//NOTE: Loads planets in the wrong order
-for (var i=0; i < jsonObj.numPlanets; i++){    //need to add pluto
-  loader.load(
-    //NOTE cant seem to load glb files from NASA website (missing textures)
-    jsonObj.planets[i].file,
-    gltf => loadPlanet( gltf ),
-    xhr => onProgress(xhr),
-    error => onError(error)
-  );
-}
-
+/**********
+Render/Animate Function
+**********/
 var render = () => {
   requestAnimationFrame( render );
 
@@ -180,6 +244,11 @@ var render = () => {
     if (pivots[i]){
       pivots[i].rotation.y += jsonObj.planets[i].Orbit / jsonObj.orbitScale;
     }
+  }
+
+  //Moon Orbit (rad/day)
+  if (moonPivot){
+    moonPivot.rotation.y += jsonObj.planets[2].Moon.Orbit / jsonObj.orbitScale;
   }
 
   cameraControls.update();

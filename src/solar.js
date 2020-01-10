@@ -45,7 +45,6 @@ Camera Controls
 **********/
 var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 10000 );
 var cameraControls = new THREE.OrbitControls(camera, renderer.domElement);
-
 cameraControls.update();
 
 //camera.position.x = 200
@@ -65,6 +64,18 @@ scene.add(sunLight);
 var pointLight = new THREE.DirectionalLight(0xffffff, 1);
 pointLight.position.set(camera.position.x, camera.position.y, camera.position.z);
 scene.add(pointLight);
+
+
+/**********
+Raycasting and Mouse
+**********/
+var raycaster = new THREE.Raycaster();
+var mouse = new THREE.Vector2();
+
+// function onMouseClick(event){
+//   mouse.x = (event.clientX / window.innerWidth) *2 -1;
+//   mouse.y = - (event.clientY / window.innerHeight) *2 -1;
+// }
 
 
 /**********
@@ -256,4 +267,21 @@ var render = () => {
   renderer.render( scene, camera );
 };
 
+/**********
+Click Event Listener
+**********/
+window.addEventListener( 'mousedown', () => {
+    mouse.x = (event.clientX / window.innerWidth) *2 -1;
+    mouse.y = - (event.clientY / window.innerHeight) *2 +1;
+    console.log(mouse);
+
+    raycaster.setFromCamera( mouse, camera );
+	  var intersects = raycaster.intersectObjects(planets, true);
+    if (intersects.length > 0){
+     console.log("intersects: " + intersects.length);
+     for ( var i = 0; i < intersects.length; i++ ){
+       intersects[ i ].object.material.color.set( 0xff0000 );
+	   }
+    }
+  }, false );
 render();

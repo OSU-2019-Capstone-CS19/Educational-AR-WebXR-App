@@ -2,9 +2,10 @@
    "numPlanets":8,
    "sizeScale":1000,
    "distanceScale": 1,
-   "orbitScale": 1,
+   "orbitScale": 10,
    "rotationScale": 1,
    "sun": {
+     "name": "Sun",
      "file": "./model/planets-gltf/sun/sun.gltf",
      "radius":695510,
      "rotation":2

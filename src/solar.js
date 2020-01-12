@@ -1,4 +1,3 @@
-//3D Objects
 var planets = [];
 var pivots = [];
 var sunObj, moonObj, moonPivot;
@@ -140,7 +139,7 @@ var loadSun = ( gltf ) => {
   sunObj.scale.set( jsonObj.sun.radius/jsonObj.sizeScale/10, //10 for testing
                     jsonObj.sun.radius/jsonObj.sizeScale/10,
                     jsonObj.sun.radius/jsonObj.sizeScale/10);
-
+  sunObj.name = jsonObj.sun.name;
   scene.add(sunObj);
 };
 
@@ -185,6 +184,7 @@ var loadPlanet = ( gltf ) => {
   planets[num].position.set(pivots[num].position.x + jsonObj.planets[num].DistanceFromSun/jsonObj.distanceScale,
                             pivots[num].position.y,
                             pivots[num].position.z);
+  planets[num].name = jsonObj.planets[num].name;
   pivots[num].add(planets[num]);
   pivots[num].rotation.z += jsonObj.planets[num].OrbitInclination;
 
@@ -214,7 +214,7 @@ var loadMoon = ( gltf ) => {
   moonObj.position.set( jsonObj.planets[2].Moon.DistanceFromEarth/jsonObj.distanceScale,
                         moonPivot.position.y,
                         moonPivot.position.z);
-
+  moonObj.name = jsonObj.planets[2].Moon.name;
   pivots[2].add(moonPivot);
   moonPivot.add(moonObj);
 
@@ -267,21 +267,85 @@ var render = () => {
   renderer.render( scene, camera );
 };
 
+render();
+
 /**********
 Click Event Listener
 **********/
 window.addEventListener( 'mousedown', () => {
     mouse.x = (event.clientX / window.innerWidth) *2 -1;
     mouse.y = - (event.clientY / window.innerHeight) *2 +1;
-    console.log(mouse);
 
     raycaster.setFromCamera( mouse, camera );
-	  var intersects = raycaster.intersectObjects(planets, true);
+	  var intersects = raycaster.intersectObjects(scene.children, true);
     if (intersects.length > 0){
-     console.log("intersects: " + intersects.length);
-     for ( var i = 0; i < intersects.length; i++ ){
-       intersects[ i ].object.material.color.set( 0xff0000 );
-	   }
-    }
-  }, false );
-render();
+
+      // //TODO check to see what was clicked on (planet/moon/sun)
+      // console.log(intersects[0].object.parent.parent);
+      // intersects[0].object.material.color.set( 0xff0000 );
+      if(intersects[0].object.parent.parent.name){
+        switch(intersects[0].object.parent.parent.name){
+          case "Sun":
+            console.log("Sun");
+            console.log(sunObj.position);
+            break;
+
+          case "Mercury":
+            console.log("Mercury");
+            console.log(planets[0].position);
+            break;
+
+          case "Venus":
+            console.log("Venus");
+            console.log(planets[1].position);
+            break;
+
+          case "Earth":
+            console.log("Earth");
+            console.log(planets[2].position);
+            break;
+
+          case "Moon":
+            console.log("Moon");
+            console.log(moonObj.matrixWorld);  //NOTE local position relitive to earth
+            break;
+
+          case "Mars":
+            console.log("Mars");
+            console.log(planets[3].position);
+            break;
+
+          case "Jupiter":
+            console.log("Jupiter");
+            console.log(planets[4].matrixWorld);
+
+            // var geometry = new THREE.BoxGeometry( 1, 100, 1 );
+            // var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+            // var cube = new THREE.Mesh( geometry, material );
+            // cube.position.set(planets[4].matrixWorld[0], 0, 0);
+            // scene.add(cube);
+
+            break;
+
+          case "Saturn":
+            console.log("Saturn");
+            console.log(planets[5].position);
+            break;
+
+          case "Uranus":
+            console.log("Uranus");
+            console.log(planets[6].position);
+            break;
+
+          case "Neptune":
+            console.log("Neptune");
+            console.log(planets[7].position);
+            break;
+
+          default:
+            break;
+
+        }
+      }
+   }
+}, false );

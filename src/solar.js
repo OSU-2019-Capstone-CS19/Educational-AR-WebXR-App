@@ -116,7 +116,7 @@ for (var i=0; i < jsonObj.numPlanets; i++){    //need to add pluto
 
 //Earths Moon
 loader.load(
-  jsonObj.planets[2].Moon.file,
+  jsonObj.planets[2].moon.file,
   gltf => loadMoon( gltf ),
   xhr => onProgress(xhr),
   error => onError(error)
@@ -173,7 +173,6 @@ var loadPlanet = ( gltf ) => {
       num = 7;
       break;
     default:
-      console.log("Bad Case");
       break;
   }
 
@@ -181,19 +180,19 @@ var loadPlanet = ( gltf ) => {
   planets[num].scale.set((jsonObj.planets[num].radius/jsonObj.sizeScale),
                           (jsonObj.planets[num].radius/jsonObj.sizeScale),
                           (jsonObj.planets[num].radius/jsonObj.sizeScale));
-  planets[num].position.set(pivots[num].position.x + jsonObj.planets[num].DistanceFromSun/jsonObj.distanceScale,
+  planets[num].position.set(pivots[num].position.x + jsonObj.planets[num].distanceFromSun/jsonObj.distanceScale,
                             pivots[num].position.y,
                             pivots[num].position.z);
   planets[num].name = jsonObj.planets[num].name;
   pivots[num].add(planets[num]);
-  pivots[num].rotation.z += jsonObj.planets[num].OrbitInclination;
+  pivots[num].rotation.z += jsonObj.planets[num].orbitInclination;
 
   //Draw Orbit Lines
   material = new THREE.LineBasicMaterial({ color:0xffffa1 });
-  orbitCircle = new THREE.CircleGeometry(jsonObj.planets[num].DistanceFromSun/jsonObj.distanceScale, 100);
+  orbitCircle = new THREE.CircleGeometry(jsonObj.planets[num].distanceFromSun/jsonObj.distanceScale, 100);
   orbitCircle.vertices.shift();
-  orbitCircle.rotateX(Math.PI * 0.5); //Fix oriantation
-  orbitCircle.rotateZ(jsonObj.planets[num].OrbitInclination);
+  orbitCircle.rotateX(Math.PI * 0.5);
+  orbitCircle.rotateZ(jsonObj.planets[num].orbitInclination);
   scene.add( new THREE.LineLoop( orbitCircle, material ));
 
   num++;
@@ -203,22 +202,22 @@ var loadPlanet = ( gltf ) => {
 var loadMoon = ( gltf ) => {
   moonObj = gltf.scene;
 
-  moonPivot.position.set( moonPivot.position.x + jsonObj.planets[2].DistanceFromSun/jsonObj.distanceScale,
+  moonPivot.position.set( moonPivot.position.x + jsonObj.planets[2].distanceFromSun/jsonObj.distanceScale,
                           moonPivot.position.y,
                           moonPivot.position.z);
 
-  moonObj.scale.set((jsonObj.planets[2].Moon.radius/jsonObj.sizeScale),
-                    (jsonObj.planets[2].Moon.radius/jsonObj.sizeScale),
-                    (jsonObj.planets[2].Moon.radius/jsonObj.sizeScale));
+  moonObj.scale.set((jsonObj.planets[2].moon.radius/jsonObj.sizeScale),
+                    (jsonObj.planets[2].moon.radius/jsonObj.sizeScale),
+                    (jsonObj.planets[2].moon.radius/jsonObj.sizeScale));
 
-  moonObj.position.set( jsonObj.planets[2].Moon.DistanceFromEarth/jsonObj.distanceScale,
+  moonObj.position.set( jsonObj.planets[2].moon.distanceFromEarth/jsonObj.distanceScale,
                         moonPivot.position.y,
                         moonPivot.position.z);
-  moonObj.name = jsonObj.planets[2].Moon.name;
+  moonObj.name = jsonObj.planets[2].moon.name;
   pivots[2].add(moonPivot);
   moonPivot.add(moonObj);
 
-  moonPivot.rotation.z += jsonObj.planets[2].Moon.OrbitInclination;
+  moonPivot.rotation.z += jsonObj.planets[2].moon.orbitInclination;
 };
 
 //Model Load Progress
@@ -253,14 +252,15 @@ var render = () => {
   //Orbit (rad/day)
   for (var i=0; i<jsonObj.numPlanets; i++){ //will use jsonObj.numElements
     if (pivots[i]){
-      pivots[i].rotation.y += jsonObj.planets[i].Orbit / jsonObj.orbitScale;
+      pivots[i].rotation.y += jsonObj.planets[i].orbit / jsonObj.orbitScale;
     }
   }
 
   //Moon Orbit (rad/day)
   if (moonPivot){
-    moonPivot.rotation.y += jsonObj.planets[2].Moon.Orbit / jsonObj.orbitScale;
+    moonPivot.rotation.y += jsonObj.planets[2].moon.orbit / jsonObj.orbitScale;
   }
+
 
   cameraControls.update();
 
@@ -280,9 +280,6 @@ window.addEventListener( 'mousedown', () => {
 	  var intersects = raycaster.intersectObjects(scene.children, true);
     if (intersects.length > 0){
 
-      // //TODO check to see what was clicked on (planet/moon/sun)
-      // console.log(intersects[0].object.parent.parent);
-      // intersects[0].object.material.color.set( 0xff0000 );
       if(intersects[0].object.parent.parent.name){
         switch(intersects[0].object.parent.parent.name){
           case "Sun":
@@ -292,54 +289,83 @@ window.addEventListener( 'mousedown', () => {
 
           case "Mercury":
             console.log("Mercury");
-            console.log(planets[0].position);
+            jsonObj.planets[0].beingViewed = "true";
             break;
 
           case "Venus":
             console.log("Venus");
-            console.log(planets[1].position);
+            jsonObj.planets[1].beingViewed = "true";
             break;
 
           case "Earth":
             console.log("Earth");
-            console.log(planets[2].position);
+            jsonObj.planets[2].beingViewed = "true";
             break;
 
           case "Moon":
             console.log("Moon");
             console.log(moonObj.matrixWorld);  //NOTE local position relitive to earth
+            jsonObj.planets[2].moon.beingViewed = "true";
             break;
 
           case "Mars":
             console.log("Mars");
-            console.log(planets[3].position);
+            jsonObj.planets[3].beingViewed = "true";
             break;
 
           case "Jupiter":
             console.log("Jupiter");
-            console.log(planets[4].matrixWorld);
+
+            jsonObj.planets[4].beingViewed = "true";
+
+
+
+
+            var test = new THREE.Vector3().setFromMatrixPosition(planets[4].matrixWorld);
+
+            //TODO: set posision of camera
+            camera.position.set( test.x/2, test.y, test.z/2);
+            //camera.applyQuaternion( new THREE.Vector3( 0, 1, 0 ), Math.PI);
+            cameraControls.target = test;
+
+            //TODO: Turn rotate off, set rotate to pivot point
+            cameraControls.enabled = false;
+            pivots[4].add(camera);
+
+            //Moving to the position
+              //Raise up to a curtain y (so we can fly over anything)
+              //Then fly to the position and rotate till there. (cameraControls are off during this)
+              //Might come up with an equation dependent on how far away we are
+
 
             // var geometry = new THREE.BoxGeometry( 1, 100, 1 );
             // var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
             // var cube = new THREE.Mesh( geometry, material );
-            // cube.position.set(planets[4].matrixWorld[0], 0, 0);
+            //
+            // cube.position.setFromMatrixPosition(planets[4].matrixWorld);
             // scene.add(cube);
+            cameraControls.update();
+
+
+
+
+
 
             break;
 
           case "Saturn":
             console.log("Saturn");
-            console.log(planets[5].position);
+            jsonObj.planets[5].beingViewed = "true";
             break;
 
           case "Uranus":
             console.log("Uranus");
-            console.log(planets[6].position);
+            jsonObj.planets[6].beingViewed = "true";
             break;
 
           case "Neptune":
             console.log("Neptune");
-            console.log(planets[7].position);
+            jsonObj.planets[7].beingViewed = "true";
             break;
 
           default:

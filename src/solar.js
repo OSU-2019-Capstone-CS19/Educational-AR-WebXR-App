@@ -29,11 +29,14 @@ for (var i=0; i < jsonObj.numPlanets; i++){ //need to add pluto
   scene.add(pivots[i]);
 }
 
+//Camera added to scene
+scene.add(camera);
+
 //Camera pivot
 cameraPivot = new THREE.Object3D();
 //cameraPivot.position.copy(camera.position);
-cameraPivot.position.set(camera.position.x, camera.position.y, camera.position.z);
-scene.add(cameraPivot);
+cameraPivot.position.set(camera.position.x, camera.position.y-500, camera.position.z);
+camera.add(cameraPivot);
 console.log(cameraPivot.position);
 
 //Lights
@@ -79,9 +82,10 @@ var loadSun = ( gltf ) => {
 var loadAstronaut = ( gltf ) => {
   astronautObj = gltf.scene;
   //astronautObj.position.set(10, 10, 10);
-  //astronautObj.scale.set(.05, .05, .05);
+  astronautObj.scale.set(.05, .05, .05);
   cameraPivot.add(astronautObj);
-  astronautObj.position.set(100, 0, 500);
+  astronautObj.lookAt(cameraPivot.position);
+  astronautObj.position.set(cameraPivot.position.x + 600, cameraPivot.position.y, cameraPivot.position.z + 100);
   //scene.add(astronautObj);
   console.log(astronautObj.position);
   console.log(camera.position);
@@ -205,3 +209,12 @@ var render = () => {
 };
 
 render();
+
+/**********
+Click Event Listener
+**********/
+window.addEventListener( 'mousedown', () => {
+  
+  
+  console.log("CLicked.");
+});

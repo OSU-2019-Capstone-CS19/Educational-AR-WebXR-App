@@ -35,8 +35,10 @@ scene.add(camera);
 //Camera pivot
 cameraPivot = new THREE.Object3D();
 //cameraPivot.position.copy(camera.position);
-cameraPivot.position.set(camera.position.x, camera.position.y-500, camera.position.z);
-camera.add(cameraPivot);
+cameraPivot.position.set(camera.position.x, camera.position.y, camera.position.z);
+cameraPivot.rotation.copy(camera.rotation);
+cameraPivot.updateMatrix();
+scene.add(cameraPivot);
 console.log(cameraPivot.position);
 
 //Lights
@@ -84,8 +86,9 @@ var loadAstronaut = ( gltf ) => {
   //astronautObj.position.set(10, 10, 10);
   astronautObj.scale.set(.05, .05, .05);
   cameraPivot.add(astronautObj);
-  astronautObj.lookAt(cameraPivot.position);
-  astronautObj.position.set(cameraPivot.position.x + 600, cameraPivot.position.y, cameraPivot.position.z + 100);
+  // cameraPivot.rotation.y += -200;
+  // astronautObj.lookAt(cameraPivot.position);
+  astronautObj.position.set(cameraPivot.position.x, cameraPivot.position.y-700, cameraPivot.position.z-700);
   //scene.add(astronautObj);
   console.log(astronautObj.position);
   console.log(camera.position);
@@ -198,10 +201,20 @@ var render = () => {
     }
   }
 
+  //****************************************************
+  //Astronaut
+  //****************************************************
+  //CamerPivot hooked to camera
+  // cameraPivot.position.setFromMatrixPosition(camera.matrixWorld);
+  // cameraPivot.rotation.setFromRotationMatrix(camera.matrixWorld);
+
+  console.log(new THREE.Vector3().setFromMatrixPosition(astronautObj.matrixWorld));
+
   //Rotate Astronaut
-  if(cameraPivot){
-  	cameraPivot.rotation.y += jsonObj.astronaut.Orbit;
-  }
+  // if(cameraPivot){
+  // 	cameraPivot.rotation.y += jsonObj.astronaut.Orbit;
+  // }
+
 
   cameraControls.update();
 
@@ -214,7 +227,9 @@ render();
 Click Event Listener
 **********/
 window.addEventListener( 'mousedown', () => {
-  
-  
-  console.log("CLicked.");
+  cameraPivot.position.setFromMatrixPosition(camera.matrixWorld);
+  // cameraPivot.rotation.setFromRotationMatrix(new THREE.Vector3().getWorldQuarternion(camera.matrixWorld));
+  console.log(camera);
+  cameraPivot.updateMatrix();
+  console.log("Clicked.");
 });

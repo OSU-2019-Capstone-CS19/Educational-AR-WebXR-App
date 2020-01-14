@@ -1,12 +1,12 @@
 {
    "numPlanets":8,
-   "sizeScale":1000,
-   "distanceScale": 1,
-   "orbitScale": 1,
+   "sizeScale":10,
+   "distanceScale":0.05,
+   "orbitScale": 10,
    "rotationScale": 1,
    "sun": {
      "name": "Sun",
-     "file": "./model/planets-gltf/sun/sun.gltf",
+     "file": "./model/Sun.glb",
      "radius":695510,
      "rotation":2
    },
@@ -16,7 +16,7 @@
    "planets":[
       {
          "name":"Mercury",
-         "file":"./model/planets-gltf/mercury/mercury.gltf",
+         "file":"./model/planets-glb/Mercury.glb",
          "radius":2439.7,
          "distanceFromSun":69.633,
          "orbit":0.0714,
@@ -27,7 +27,7 @@
       },
       {
          "name":"Venus",
-         "file":"./model/planets-gltf/venus/venus.gltf",
+         "file":"./model/planets-glb/Venus.glb",
          "radius":6051.8,
          "distanceFromSun":108.73,
          "orbit":0.0279,
@@ -38,7 +38,7 @@
       },
       {
          "name":"Earth",
-         "file":"./model/planets-gltf/earth/earth.gltf",
+         "file":"./model/planets-glb/Earth.glb",
          "radius":6371,
          "distanceFromSun":147.12,
          "orbit":0.0172,
@@ -60,7 +60,7 @@
       },
       {
          "name":"Mars",
-         "file":"./model/planets-gltf/mars/mars.gltf",
+         "file":"./model/planets-glb/Mars.glb",
          "radius":3389.5,
          "distanceFromSun":240.01,
          "orbit":0.00915,
@@ -71,7 +71,7 @@
       },
       {
          "name":"Jupiter",
-         "file":"./model/planets-gltf/jupiter/jupiter.gltf",
+         "file":"./model/planets-glb/Jupiter.glb",
          "radius":69911,
          "distanceFromSun":782.67,
          "orbit":0.00143,
@@ -82,7 +82,7 @@
       },
       {
          "name":"Saturn",
-         "file":"./model/planets-gltf/saturn/saturn.gltf",
+         "file":"./model/planets-glb/Saturn.glb",
          "radius":58232,
          "distanceFromSun":1498.4,
          "orbit":0.0005936,
@@ -93,7 +93,7 @@
       },
       {
          "name":"Uranus",
-         "file":"./model/planets-gltf/uranus/uranus.gltf",
+         "file":"./model/planets-glb/Uranus.glb",
          "radius":25362,
          "distanceFromSun":2965,
          "orbit":0.000205,
@@ -104,7 +104,7 @@
       },
       {
          "name":"Neptune",
-         "file":"./model/planets-gltf/neptune/neptune.gltf",
+         "file":"./model/planets-glb/Neptune.glb",
          "radius":24622,
          "distanceFromSun":4477.2,
          "orbit":0.000104,
@@ -115,7 +115,7 @@
       },
       {
          "name":"Pluto",
-         "file":"./model/planets-gltf",
+         "file":"./model/planets-glb/Pluto.glb",
          "radius":1188.3,
          "distanceFromSun":5906.38,
          "orbit":90520,

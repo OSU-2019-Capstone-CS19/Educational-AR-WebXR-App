@@ -126,6 +126,9 @@ loader.load(
 
 /**********
 Load Model Functions
+TODO: include inclination of rotation
+Each Planet, Sun, and Moon begins with a scale of 1, equivalent to (1000, 1000, 1000)
+Scalled down by 10000
 **********/
 // var loadAstronaut = ( gltf ) => {
 //   astronautObj = gltf.scene;
@@ -137,11 +140,15 @@ Load Model Functions
 //Load Sun Model
 var loadSun = ( gltf ) => {
   sunObj = gltf.scene;
-  // sunObj.scale.set( jsonObj.sun.radius/jsonObj.sizeScale, //10 for testing
-  //                   jsonObj.sun.radius/jsonObj.sizeScale,
-  //                   jsonObj.sun.radius/jsonObj.sizeScale);
+  //TODO: remove /10
+  sunObj.scale.set( jsonObj.sun.radius/jsonObj.sizeScale/10,
+                    jsonObj.sun.radius/jsonObj.sizeScale/10,
+                    jsonObj.sun.radius/jsonObj.sizeScale/10);
   sunObj.name = jsonObj.sun.name;
   scene.add(sunObj);
+
+  var boundingBox = new THREE.Box3().setFromObject(sunObj);
+  console.log(boundingBox.getSize());
 };
 
 //Load Planet Models
@@ -149,28 +156,28 @@ var loadPlanet = ( gltf ) => {
 
   //Order Planets
   switch (gltf.parser.options.path){
-    case "./model/planets-gltf/mercury/":
+    case "./model/planets-glb/mercury/":
       num = 0;
       break;
-    case "./model/planets-gltf/venus/":
+    case "./model/planets-glb/venus/":
       num = 1;
       break;
-    case "./model/planets-gltf/earth/":
+    case "./model/planets-glb/earth/":
       num = 2;
       break;
-    case "./model/planets-gltf/mars/":
+    case "./model/planets-glb/mars/":
       num = 3;
       break;
-    case "./model/planets-gltf/jupiter/":
+    case "./model/planets-glb/jupiter/":
       num = 4;
       break;
-    case "./model/planets-gltf/saturn/":
+    case "./model/planets-glb/saturn/":
       num = 5;
       break;
-    case "./model/planets-gltf/uranus/":
+    case "./model/planets-glb/uranus/":
       num = 6;
       break;
-    case "./model/planets-gltf/neptune/":
+    case "./model/planets-glb/neptune/":
       num = 7;
       break;
     default:
@@ -178,15 +185,13 @@ var loadPlanet = ( gltf ) => {
   }
 
   planets[num] = gltf.scene
-  // planets[num].scale.set((jsonObj.planets[num].radius/jsonObj.sizeScale),
-  //                         (jsonObj.planets[num].radius/jsonObj.sizeScale),
-  //                         (jsonObj.planets[num].radius/jsonObj.sizeScale));
+  planets[num].scale.set((jsonObj.planets[num].radius/jsonObj.sizeScale),
+                          (jsonObj.planets[num].radius/jsonObj.sizeScale),
+                          (jsonObj.planets[num].radius/jsonObj.sizeScale));
   planets[num].position.set(pivots[num].position.x + jsonObj.planets[num].distanceFromSun/jsonObj.distanceScale,
                             pivots[num].position.y,
                             pivots[num].position.z);
   planets[num].name = jsonObj.planets[num].name;
-
-  //console.log(planets[num].name + num);
 
   pivots[num].add(planets[num]);
   pivots[num].rotation.z += jsonObj.planets[num].orbitInclination;
@@ -219,8 +224,8 @@ var loadMoon = ( gltf ) => {
                         moonPivot.position.y,
                         moonPivot.position.z);
   moonObj.name = jsonObj.planets[2].moon.name;
-  //pivots[2].add(moonPivot);
-  //moonPivot.add(moonObj);
+  pivots[2].add(moonPivot);
+  moonPivot.add(moonObj);
 
   moonPivot.rotation.z += jsonObj.planets[2].moon.orbitInclination;
 };
@@ -238,21 +243,23 @@ var onError = (errorMessage) => {
 
 /**********
 Render/Animate Function
+TODO: set actual rotation speed for sun moon and planets
+TODO: pivot points need to rotate on the y axis with respect to the inclination
 **********/
 var render = () => {
   requestAnimationFrame( render );
 
   //Sun Rotation
   if (sunObj){
-    //sunObj.rotation.y += 0.01;
+    sunObj.rotation.y += 0.01;
   }
 
   //Planet Rotation (rad/day)
-  // for (var i=0; i<jsonObj.numPlanets; i++){
-  //   if (planets[i]){
-  //       planets[i].rotation.y += jsonObj.planets[i].Rotation / jsonObj.rotationScale;
-  //   }
-  // }
+  for (var i=0; i<jsonObj.numPlanets; i++){
+    if (planets[i]){
+        planets[i].rotation.y += 0.01;//jsonObj.planets[i].Rotation / jsonObj.rotationScale;
+    }
+  }
 
   //Orbit (rad/day)
   for (var i=0; i<jsonObj.numPlanets; i++){ //will use jsonObj.numElements
@@ -291,9 +298,9 @@ window.addEventListener( 'mousedown', () => {
     raycaster.setFromCamera( mouse, camera );
 	  var intersects = raycaster.intersectObjects(scene.children, true);
     if (intersects.length > 0){
-
-      if(intersects[0].object.parent.parent.name){
-        switch(intersects[0].object.parent.parent.name){
+      console.log(intersects[0]);
+      if(intersects[0].object.parent.name){
+        switch(intersects[0].object.parent.name){
           case "Sun":
             console.log("Sun");
             break;

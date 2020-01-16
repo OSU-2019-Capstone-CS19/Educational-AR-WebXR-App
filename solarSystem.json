@@ -1,14 +1,15 @@
 {
    "numPlanets":8,
    "sizeScale":1000000,
-   "distanceScale":1000000,
+   "distanceScale":100000,
    "orbitScale": 10,
    "rotationScale": 1,
    "sun": {
      "name": "Sun",
      "file": "./model/Sun.glb",
      "radius":695510,
-     "rotation":2
+     "rotation":0.2327,
+     "rotationAngle":0.127
    },
    "astronaut": {
       "file": "./model/astronaut/scene.gltf"
@@ -22,7 +23,7 @@
          "orbit":0.0714,
          "orbitInclination":0.1223476,
          "rotation":0.1065,
-         "rotationAngle":2,
+         "rotationAngle":0.03,
          "beingViewed":"false"
       },
       {
@@ -33,7 +34,7 @@
          "orbit":0.0279,
          "orbitInclination":0.059,
          "rotation":0.0259,
-         "rotationAngle":177,
+         "rotationAngle":3.089,
          "beingViewed":"false"
       },
       {
@@ -44,17 +45,17 @@
          "orbit":0.0172,
          "orbitInclination":0,
          "rotation":6.28,
-         "rotationAngle":23.5,
+         "rotationAngle":0.41,
          "beingViewed":"false",
          "moon":{
             "name":"Moon",
-            "file":"./model/planets-gltf/Moon.glb",
+            "file":"./model/planets-glb/Moon.glb",
             "radius":1737.12,
             "distanceFromEarth":384399,
             "orbit":0.01721,
-            "orbitInclination":5,
-            "rotation":27,
-            "rotationAngle":1.5,
+            "orbitInclination": 0.087,
+            "rotation":0.2327,
+            "rotationAngle":0.026,
             "beingViewed":"false"
          }
       },
@@ -66,7 +67,7 @@
          "orbit":0.00915,
          "orbitInclination":0.032288,
          "rotation":6.1299,
-         "rotationAngle":25,
+         "rotationAngle":0.436,
          "beingViewed":"false"
       },
       {
@@ -77,7 +78,7 @@
          "orbit":0.00143,
          "orbitInclination":0.02286,
          "rotation":15.232,
-         "rotationAngle":3,
+         "rotationAngle":0.05,
          "beingViewed":"false"
       },
       {
@@ -88,7 +89,7 @@
          "orbit":0.0005936,
          "orbitInclination":0.04328,
          "rotation":14.094,
-         "rotationAngle":26.7,
+         "rotationAngle":0.466,
          "beingViewed":"false"
       },
       {
@@ -99,7 +100,7 @@
          "orbit":0.000205,
          "orbitInclination":0.01347,
          "rotation":8.875,
-         "rotationAngle":98,
+         "rotationAngle":1.71,
          "beingViewed":"false"
       },
       {
@@ -110,7 +111,7 @@
          "orbit":0.000104,
          "orbitInclination":0.003089,
          "rotation":8.875,
-         "rotationAngle":30,
+         "rotationAngle":0.524,
          "beingViewed":"false"
       },
       {
@@ -121,7 +122,7 @@
          "orbit":90520,
          "orbitInclination":17,
          "rotation":6.39,
-         "rotationAngle":120,
+         "rotationAngle":2.09,
          "beingViewed":"false"
       }
    ]

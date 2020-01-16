@@ -11,7 +11,7 @@
    },
    "astronaut": {
       "file": "./model/astronaut/scene.gltf",
-      "Orbit":0.002
+      "Orbit":0.000
    },
    "planets":[
       {

@@ -208,7 +208,7 @@ var render = () => {
   // cameraPivot.position.setFromMatrixPosition(camera.matrixWorld);
   // cameraPivot.rotation.setFromRotationMatrix(camera.matrixWorld);
 
-  console.log(new THREE.Vector3().setFromMatrixPosition(astronautObj.matrixWorld));
+  // console.log(new THREE.Vector3().setFromMatrixPosition(astronautObj.matrixWorld));
 
   //Rotate Astronaut
   // if(cameraPivot){
@@ -226,10 +226,41 @@ render();
 /**********
 Click Event Listener
 **********/
-window.addEventListener( 'mousedown', () => {
-  cameraPivot.position.setFromMatrixPosition(camera.matrixWorld);
-  // cameraPivot.rotation.setFromRotationMatrix(new THREE.Vector3().getWorldQuarternion(camera.matrixWorld));
-  console.log(camera);
-  cameraPivot.updateMatrix();
-  console.log("Clicked.");
-});
+// window.addEventListener( 'mousedown', () => {
+document.body.onkeyup = function(e){
+    if(e.keyCode == 32){
+        //your code
+
+     
+      cameraPivot.position.setFromMatrixPosition(camera.matrixWorld);
+      cameraPivot.quaternion.setFromRotationMatrix(camera.matrixWorld);
+      // cameraPivot.rotateY()
+      cameraPivot.updateMatrix();
+
+      console.log(cameraPivot);
+      // cameraPivot.rotateY(Math.PI);
+      cameraPivot.updateMatrixWorld();
+      var test = new THREE.Quaternion();
+      test.setFromRotationMatrix(cameraPivot.matrixWorld);
+      console.log(test);
+      test.setFromRotationMatrix(camera.matrixWorld);
+      console.log(test);
+
+      // var yaxis = new THREE.Vector3(0, 1, 0);
+      // var zaxis = new THREE.Vector3(0, 0, 1);
+      // var dir = zaxis.clone();
+      // dir.applyQuaternion(camera.quaternion);
+      // var ycomponent = yaxis.clone().multiplyScalar(dir.dot(yaxis));
+      // dir.sub(ycomponent);
+      // dir.normalize();
+      // cameraPivot.quaternion.setFromUnitVectors(zaxis, dir);
+      // cameraPivot.position.copy(camera.position);
+      // camera.add(cameraPivot);
+      // cameraPivot.position.set(0, 0, 700);
+      // camera.remove(cameraPivot);
+      // scene.add(cameraPivot);
+      // cameraPivot.updateMatrix();
+      console.log("Clicked.");
+      }
+}
+// });

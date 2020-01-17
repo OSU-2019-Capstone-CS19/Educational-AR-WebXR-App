@@ -56,14 +56,14 @@ camera.position.y = 700;
 /**********
 Create Lights
 **********/
-var sunLight = new THREE.PointLight( 0xfffff, 1, 1000, 2);
+var sunLight = new THREE.PointLight( 0xfffee8, 1, 0, 0);
 sunLight.position.set( 0, 0, 0);
 scene.add(sunLight);
 
 //NOTE: May remove and rely on just the point light from the sun. In this case we do need a light to light up the sun from what the camera sees
-var pointLight = new THREE.DirectionalLight(0xffffff, 1);
-pointLight.position.set(camera.position.x, camera.position.y, camera.position.z);
-scene.add(pointLight);
+// var pointLight = new THREE.DirectionalLight(0xffffff, 1);
+// camera.add(pointLight);
+// scene.add(camera);
 
 
 /**********
@@ -71,11 +71,6 @@ Raycasting and Mouse
 **********/
 var raycaster = new THREE.Raycaster();
 var mouse = new THREE.Vector2();
-
-// function onMouseClick(event){
-//   mouse.x = (event.clientX / window.innerWidth) *2 -1;
-//   mouse.y = - (event.clientY / window.innerHeight) *2 -1;
-// }
 
 
 /**********
@@ -176,6 +171,9 @@ var loadPlanet = ( gltf ) => {
     case "./model/planets-glb/neptune/":
       num = 7;
       break;
+    case "./model/planets-glb/pluto/":
+      num = 8;
+      break;
     default:
       break;
   }
@@ -192,7 +190,6 @@ var loadPlanet = ( gltf ) => {
 
   pivots[num].add(planets[num]);
   pivots[num].rotateZ(jsonObj.planets[num].orbitInclination);// += jsonObj.planets[num].orbitInclination;
-
 
   //Draw Orbit Lines
   material = new THREE.LineBasicMaterial({ color:0xffffa1 });
@@ -230,12 +227,12 @@ var loadMoon = ( gltf ) => {
 
   moonPivot.rotateZ(jsonObj.planets[2].moon.orbitInclination);
 
-  console.log(jsonObj.planets[2].radius/jsonObj.sizeScale + jsonObj.planets[2].moon.distanceFromEarth/jsonObj.distanceScale);
+
 };
 
 //Model Load Progress
 var onProgress = (xhr) => {
-  //console.log(( xhr.loaded / xhr.total * 100 ) + '% loaded');
+  console.log(( xhr.loaded / xhr.total * 100 ) + '% loaded');
 };
 
 //Model Load Error
@@ -372,22 +369,12 @@ window.addEventListener( 'mousedown', () => {
             console.log("Jupiter");
 
             jsonObj.planets[4].beingViewed = "true";
-
             cameraTarget = new THREE.Vector3().setFromMatrixPosition(planets[4].matrixWorld);
-
-            //TODO: Moving to the position
-              //Raise up to a curtain y (so we can fly over anything)
-              //Then fly to the position and rotate till there. (cameraControls are off during this)
-              //Might come up with an equation dependent on how far away we are
-
-            //TODO: set posision of camera
-              //Take X and Z posision and set away from planet by the size of its radius
-              //Y will be set based on height of planet(radius)
-            camera.position.set( cameraTarget.x/2, 0, cameraTarget.z/2);
-            cameraControls.target = cameraTarget;
-
             pivots[4].add(camera);
+            camera.position.set( (jsonObj.planets[4].distanceFromSun/jsonObj.distanceScale) * 9/10 , jsonObj.planets[4].radius/jsonObj.sizeScale, 0);
+            cameraControls.target = cameraTarget;
             cameraControls.update();
+
             break;
 
           case "Saturn":

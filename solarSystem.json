@@ -1,9 +1,9 @@
 {
-   "numPlanets":8,
+   "numPlanets":9,
    "sizeScale":1000000,
-   "distanceScale":100000,
+   "distanceScale":1000000,
    "orbitScale": 10,
-   "rotationScale": 1,
+   "rotationScale": 10,
    "sun": {
      "name": "Sun",
      "file": "./model/Sun.glb",
@@ -119,9 +119,9 @@
          "file":"./model/planets-glb/pluto/Pluto.glb",
          "radius":1188.3,
          "distanceFromSun":5906380000,
-         "orbit":90520,
-         "orbitInclination":17,
-         "rotation":6.39,
+         "orbit":0.0000694,
+         "orbitInclination":0.2967,
+         "rotation":0.98,
          "rotationAngle":2.09,
          "beingViewed":"false"
       }

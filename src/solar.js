@@ -281,6 +281,10 @@ var render = () => {
     if (jsonObj.planets[i].beingViewed == "true"){
       cameraTarget = new THREE.Vector3().setFromMatrixPosition(planets[i].matrixWorld);
       cameraControls.target = cameraTarget;
+
+    } else if (jsonObj.planets[2].moon.beingViewed == "true"){
+      cameraTarget = new THREE.Vector3().setFromMatrixPosition(planets[2].matrixWorld);
+      cameraControls.target = cameraTarget;
     }
   }
 
@@ -311,103 +315,93 @@ window.addEventListener( 'mousedown', () => {
           case "Mercury":
             console.log("Mercury");
             jsonObj.planets[0].beingViewed = "true";
-            cameraTarget = new THREE.Vector3().setFromMatrixPosition(planets[1].matrixWorld);
-            cameraControls.target = cameraTarget;
-            cameraControls.update();
+            pivots[0].add(camera);
+            camera.position.set( (jsonObj.planets[0].distanceFromSun/jsonObj.distanceScale) * 9/10 , jsonObj.planets[0].radius/jsonObj.sizeScale, 0);
 
-            //camera.posision.set
-            pivots[1].add(camera);
             break;
 
           case "Venus":
             console.log("Venus");
             jsonObj.planets[1].beingViewed = "true";
-            cameraTarget = new THREE.Vector3().setFromMatrixPosition(planets[1].matrixWorld);
-            cameraControls.target = cameraTarget;
-            cameraControls.update();
-
-            //camera.posision.set
             pivots[1].add(camera);
+            camera.position.set( (jsonObj.planets[1].distanceFromSun/jsonObj.distanceScale) * 9/10 , jsonObj.planets[1].radius/jsonObj.sizeScale, 0);
+
             break;
 
           case "Earth":
             console.log("Earth");
-            console.log(planets[2]);
             jsonObj.planets[2].beingViewed = "true";
-            cameraTarget = new THREE.Vector3().setFromMatrixPosition(planets[2].matrixWorld);
-            cameraControls.target = cameraTarget;
-            cameraControls.update();
 
-            //camera.posision.set
+            //Orbit
             pivots[2].add(camera);
+            camera.position.set( (jsonObj.planets[2].distanceFromSun/jsonObj.distanceScale) * 9/10 , jsonObj.planets[2].radius/jsonObj.sizeScale, 0);
+
+            //Rotation
+            // planets[2].add(camera);
+            // camera.position.set( 1500, 0, 0);
+
             break;
 
           case "Moon":
             console.log("Moon");
-            console.log(moonObj.matrixWorld);  //NOTE local position relitive to earth
             jsonObj.planets[2].moon.beingViewed = "true";
-            cameraTarget = new THREE.Vector3().setFromMatrixPosition(planets[2].moon.matrixWorld);
-            cameraControls.target = cameraTarget;
-            cameraControls.update();
-
-            //camera.posision.set
             moonPivot.add(camera);
+            camera.position.set( 10, 0, 0);
+
             break;
 
           case "Mars":
             console.log("Mars");
             jsonObj.planets[3].beingViewed = "true";
-            cameraTarget = new THREE.Vector3().setFromMatrixPosition(planets[3].matrixWorld);
-            cameraControls.target = cameraTarget;
-            cameraControls.update();
-
-            //camera.posision.set
             pivots[3].add(camera);
+            camera.position.set( (jsonObj.planets[3].distanceFromSun/jsonObj.distanceScale) * 9/10 , jsonObj.planets[3].radius/jsonObj.sizeScale, 0);
+
             break;
 
           case "Jupiter":
             console.log("Jupiter");
-
             jsonObj.planets[4].beingViewed = "true";
-            cameraTarget = new THREE.Vector3().setFromMatrixPosition(planets[4].matrixWorld);
-            pivots[4].add(camera);
-            camera.position.set( (jsonObj.planets[4].distanceFromSun/jsonObj.distanceScale) * 9/10 , jsonObj.planets[4].radius/jsonObj.sizeScale, 0);
-            cameraControls.target = cameraTarget;
-            cameraControls.update();
+
+            //Orbit
+            // pivots[4].add(camera);
+            // camera.position.set( (jsonObj.planets[4].distanceFromSun/jsonObj.distanceScale) * 9/10 , jsonObj.planets[4].radius/jsonObj.sizeScale, 0);
+
+            //Rotation
+            planets[4].add(camera);
+            camera.position.set( (jsonObj.planets[4].distanceFromSun/jsonObj.distanceScale)*(2), 0, 0);
 
             break;
 
           case "Saturn":
             console.log("Saturn");
             jsonObj.planets[5].beingViewed = "true";
-            cameraTarget = new THREE.Vector3().setFromMatrixPosition(planets[5].matrixWorld);
-            cameraControls.target = cameraTarget;
-            cameraControls.update();
-
-            //camera.posision.set
             pivots[5].add(camera);
+            camera.position.set( (jsonObj.planets[5].distanceFromSun/jsonObj.distanceScale) * 9/10 , jsonObj.planets[5].radius/jsonObj.sizeScale, 0);
+
             break;
 
           case "Uranus":
             console.log("Uranus");
             jsonObj.planets[6].beingViewed = "true";
-            cameraTarget = new THREE.Vector3().setFromMatrixPosition(planets[6].matrixWorld);
-            cameraControls.target = cameraTarget;
-            cameraControls.update();
-
-            //camera.posision.set
             pivots[6].add(camera);
+            camera.position.set( (jsonObj.planets[6].distanceFromSun/jsonObj.distanceScale) * 9/10 , jsonObj.planets[6].radius/jsonObj.sizeScale, 0);
+
             break;
 
           case "Neptune":
             console.log("Neptune");
             jsonObj.planets[7].beingViewed = "true";
-            cameraTarget = new THREE.Vector3().setFromMatrixPosition(planets[7].matrixWorld);
-            cameraControls.target = cameraTarget;
-            cameraControls.update();
-
-            //camera.posision.set
             pivots[7].add(camera);
+            camera.position.set( (jsonObj.planets[7].distanceFromSun/jsonObj.distanceScale) * 9/10 , jsonObj.planets[7].radius/jsonObj.sizeScale, 0);
+
+            break;
+
+          case "Pluto":
+            console.log("Pluto");
+            jsonObj.planets[8].beingViewed = "true";
+            pivot[8].add(camera);
+            camera.position.set( (jsonObj.planets[8].distanceFromSun/jsonObj.distanceScale) * 9/10 , jsonObj.planets[8].radius/jsonObj.sizeScale, 0);
+
             break;
 
           default:

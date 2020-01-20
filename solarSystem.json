@@ -3,7 +3,7 @@
    "sizeScale":1000000,
    "distanceScale":1000000,
    "orbitScale": 10,
-   "rotationScale": 1000,
+   "rotationScale": 10,
    "showPlanetLines": "true",
    "sun": {
      "name": "Sun",

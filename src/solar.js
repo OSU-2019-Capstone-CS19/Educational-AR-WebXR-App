@@ -1,11 +1,14 @@
 var planets = [];
 var pivots = [];
+var orbitLines = [];
 var sunObj, moonObj, moonPivot;
 var astronautObj;
 var cameraTarget
 
 /**********
 Load up JSON file
+***********
+=> This file contains all relevent information concerning all the objects in the scene
 **********/
 var jsonObj;
 var request = new XMLHttpRequest();
@@ -24,7 +27,11 @@ document.body.appendChild( renderer.domElement );
 
 /**********
 Create Scene
-Load 3D objects
+***********
+=> Create the scene
+=> Create Sun object
+=> Create Astronaut object
+=> Create all pivots for objects in the scene
 **********/
 var scene = new THREE.Scene();
 sunObj = new THREE.Object3D();
@@ -41,7 +48,8 @@ for (var i=0; i < jsonObj.numPlanets; i++){ //need to add pluto
 
 /**********
 Create Camera
-Camera Controls
+=> NOTE: cameraControls will not be implemented in the AR build, instead an AR camera will be used
+=> Set starting point for camera
 **********/
 var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000000 );
 var cameraControls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -60,6 +68,7 @@ var sunLight = new THREE.PointLight( 0xfffee8, 1, 0, 0);
 sunLight.position.set( 0, 0, 0);
 scene.add(sunLight);
 
+
 /**********
 Raycasting and Mouse
 **********/
@@ -69,6 +78,7 @@ var mouse = new THREE.Vector2();
 
 /**********
 Load Models
+=> Use the GLTFLoader to load all nessisary models and set the models to appropriate objects
 **********/
 var loader = new THREE.GLTFLoader();
 
@@ -115,8 +125,31 @@ loader.load(
 
 /**********
 Load Model Functions
-Each Planet, Sun, and Moon begins with a scale of 1, equivalent to (1000, 1000, 1000)
+***********
+=> These functions are called when the model is first loaded
+=> Sun:
+  => Set scale based on Json values
+  => Set Y axis angle based on Json value
+  => add to scene (Note: will be position to (0,0,0))
+
+=> Planets:
+  => Uses switch statement to determin which planet is loading in at this time (Note: planets dont load in order)
+  => Set scale and position based on Json values
+  => Set Y axis angle based on Json value
+  => Set planets parent to proper pivot object (Pivot is already set to scene, and set to (0, 0, 0))
+  => Set Y axis of the pivot to the orbit inclination value in the json
+  => Create orbit rings and set Y axis of orbit ring based on the orbit inclination
+  => Add to scene(Note: will be set to (0, 0, 0))
+
+=> Moon:
+  => Set moonPivot to the location of the Earth (uses the same values from the Json)
+  => Set the scale and position of the moon based on json values
+  => Set hierarchy as Earth > moonPivot > moonObj
+  => Set Y axis of the pivot and the moon obj based on the json values
+
+=> Note: Each Planet, Sun, and Moon begins with a scale of 1, equivalent to (1000, 1000, 1000)
 **********/
+
 // var loadAstronaut = ( gltf ) => {
 //   astronautObj = gltf.scene;
 //   astronautObj.position.set(100, 1000, 1000);
@@ -191,9 +224,10 @@ var loadPlanet = ( gltf ) => {
   orbitCircle.vertices.shift();
   orbitCircle.rotateX(Math.PI * 0.5);
   orbitCircle.rotateZ(jsonObj.planets[num].orbitInclination);
-  scene.add( new THREE.LineLoop( orbitCircle, material ));
 
-  num++;
+  orbitLines[num] = new THREE.LineLoop( orbitCircle, material);
+  scene.add(orbitLines[num]);
+
 };
 
 //Load Moon Model
@@ -237,6 +271,7 @@ var onError = (errorMessage) => {
 
 /**********
 Render/Animate Function
+***********
 => Check if sunObj exists
   => Yes: Rotate the sunObj about its Y axis
 
@@ -566,3 +601,24 @@ window.addEventListener( 'mousedown', () => {
       }
    }
 }, false );
+
+/**********
+Test Click Event Listener
+NOTE: This will be added as an option 
+**********/
+document.body.onkeyup = function(e){
+    if(e.keyCode == 32){
+		    if(jsonObj.showPlanetLines == "true"){
+          jsonObj.showPlanetLines = "false";
+          for (var i=0; i < jsonObj.numPlanets; i++){
+            scene.remove(orbitLines[i]);
+          }
+
+        } else if(jsonObj.showPlanetLines == "false"){
+          jsonObj.showPlanetLines = "true";
+          for (var i=0; i < jsonObj.numPlanets; i++){
+            scene.add(orbitLines[i]);
+          }
+        }
+    }
+}

@@ -260,7 +260,7 @@ var loadMoon = ( gltf ) => {
 
 //Model Load Progress
 var onProgress = (xhr) => {
-  console.log(( xhr.loaded / xhr.total * 100 ) + '% loaded');
+  //console.log(( xhr.loaded / xhr.total * 100 ) + '% loaded');
 };
 
 //Model Load Error

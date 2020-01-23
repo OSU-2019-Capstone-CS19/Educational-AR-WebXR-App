@@ -83,15 +83,7 @@ var loadSun = ( gltf ) => {
 
 var loadAstronaut = ( gltf ) => {
   astronautObj = gltf.scene;
-  //astronautObj.position.set(10, 10, 10);
   astronautObj.scale.set(.05, .05, .05);
-  // cameraPivot.add(astronautObj);
-  // cameraPivot.rotation.y += -200;
-  // astronautObj.lookAt(cameraPivot.position);
-  // astronautObj.position.set(cameraPivot.position.x, cameraPivot.position.y-700, cameraPivot.position.z-700);
-  //scene.add(astronautObj);
-  // console.log(astronautObj.position);
-  // console.log(camera.position);
 };
 
 var loadPlanet = ( gltf ) => {
@@ -204,18 +196,19 @@ var render = () => {
   //****************************************************
   //Astronaut
   //****************************************************
-  //CamerPivot hooked to camera
-  // cameraPivot.position.setFromMatrixPosition(camera.matrixWorld);
-  // cameraPivot.rotation.setFromRotationMatrix(camera.matrixWorld);
+  if(jsonObj.astronaut.rotate == "true") {
+    if(jsonObj.astronaut.angle > Math.PI/4) {
+      console.log("I AM HERE!");
+      jsonObj.astronaut.rotate = "false";
+      //textbox here
+    } else {
+      cameraPivot.rotateY((Math.PI/4)/50);
+      jsonObj.astronaut.angle += (Math.PI/4)/50;
+    }
+  }
 
-  // console.log(new THREE.Vector3().setFromMatrixPosition(astronautObj.matrixWorld));
-
-  //Rotate Astronaut
-  // if(cameraPivot){
-  // 	cameraPivot.rotation.y += jsonObj.astronaut.Orbit;
-  // }
-
-
+  // cameraPivot
+  
   cameraControls.update();
 
   renderer.render( scene, camera );
@@ -229,13 +222,17 @@ Click Event Listener
 // window.addEventListener( 'mousedown', () => {
 document.body.onkeyup = function(e){
     if(e.keyCode == 32){
-		cameraPivot.position.setFromMatrixPosition(camera.matrixWorld);
-		cameraPivot.quaternion.setFromRotationMatrix(camera.matrixWorld);
-		// cameraPivot.rotateY()
-		cameraPivot.updateMatrix();
+  		cameraPivot.position.setFromMatrixPosition(camera.matrixWorld);
+  		cameraPivot.quaternion.setFromRotationMatrix(camera.matrixWorld);
+  		// cameraPivot.rotateY()
+  		cameraPivot.updateMatrix();
 
-		cameraPivot.add(astronautObj);
-		astronautObj.position.z =-100;
+  		cameraPivot.add(astronautObj);
+      astronautObj.position.y = -50;
+      astronautObj.position.z = -100;
+      cameraPivot.rotateY(-Math.PI/2);
+      jsonObj.astronaut.angle = 0;
+      jsonObj.astronaut.rotate = "true";
     }
 }
 // });

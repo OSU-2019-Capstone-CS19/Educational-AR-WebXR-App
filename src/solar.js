@@ -1,6 +1,9 @@
+//import { WebGLRenderer, Scene, Object3D, PerspectiveCamera, OrbitControls, Vector3, PointLight, Raycaster, Vector2, GLTFLoader, LineBasicMaterial, CircleGeometry, LineLoop} from 'three';
+
 var planets = [];
 var pivots = [];
 var orbitLines = [];
+//var interestingPoints[];
 var sunObj, moonObj, moonPivot;
 var astronautObj;
 var cameraTarget

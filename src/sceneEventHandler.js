@@ -47,7 +47,7 @@ window.addEventListener( 'mousedown', () => {
 
               //TODO: this is hard coded
               camera.position.set(0, 700, 0);
-              cameraControls.target = sunObj.position;
+              cameraControls.target = new THREE.Vector3(0,0,0);
               cameraControls.update();
             }
 
@@ -110,8 +110,10 @@ window.addEventListener( 'mousedown', () => {
 
             } else if (jsonObj.planets[2].beingViewed == "true"){
 
-              planets[2].add(camera);
-              camera.position.set( (jsonObj.planets[2].distanceFromSun/jsonObj.distanceScale)*(2), 0, 0);
+              console.log(intersects[0]);
+              var temp = new THREE.Vector3;
+              planets[2].getWorldPosition(temp);
+              console.log(temp);
             }
 
             break;

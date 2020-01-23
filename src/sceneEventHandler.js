@@ -267,19 +267,39 @@ window.addEventListener( 'mousedown', () => {
 Test Click Event Listener
 NOTE: This will be added as an option
 **********/
+// document.body.onkeyup = function(e){
+//     if(e.keyCode == 32){
+// 		    if(jsonObj.showPlanetLines == "true"){
+//           jsonObj.showPlanetLines = "false";
+//           for (var i=0; i < jsonObj.numPlanets; i++){
+//             scene.remove(orbitLines[i]);
+//           }
+//
+//         } else if(jsonObj.showPlanetLines == "false"){
+//           jsonObj.showPlanetLines = "true";
+//           for (var i=0; i < jsonObj.numPlanets; i++){
+//             scene.add(orbitLines[i]);
+//           }
+//         }
+//     }
+// }
+
+/**********
+Click Event Listener
+**********/
+// window.addEventListener( 'mousedown', () => {
 document.body.onkeyup = function(e){
     if(e.keyCode == 32){
-		    if(jsonObj.showPlanetLines == "true"){
-          jsonObj.showPlanetLines = "false";
-          for (var i=0; i < jsonObj.numPlanets; i++){
-            scene.remove(orbitLines[i]);
-          }
+  		cameraPivot.position.setFromMatrixPosition(camera.matrixWorld);
+  		cameraPivot.quaternion.setFromRotationMatrix(camera.matrixWorld);
+  		// cameraPivot.rotateY()
+  		cameraPivot.updateMatrix();
 
-        } else if(jsonObj.showPlanetLines == "false"){
-          jsonObj.showPlanetLines = "true";
-          for (var i=0; i < jsonObj.numPlanets; i++){
-            scene.add(orbitLines[i]);
-          }
-        }
+  		cameraPivot.add(astronautObj);
+      astronautObj.position.y = -50;
+      astronautObj.position.z = -100;
+      cameraPivot.rotateY(-Math.PI/2);
+      jsonObj.astronaut.angle = 0;
+      jsonObj.astronaut.rotate = "true";
     }
 }

@@ -1,8 +1,9 @@
 var planets = [];
 var pivots = [];
+
 var orbitLines = [];
 var sunObj, moonObj, moonPivot;
-var astronautObj;
+var astronautObj, var cameraPivot;
 var cameraTarget
 
 /**********
@@ -15,7 +16,6 @@ var request = new XMLHttpRequest();
   request.open("GET", "./solarSystem.json", false);
   request.send(null)
   jsonObj = JSON.parse(request.responseText);
-
 
 /**********
 Create Renderer
@@ -44,6 +44,17 @@ for (var i=0; i < jsonObj.numPlanets; i++){ //need to add pluto
   pivots[i].position.set(0, 0, 0);
   scene.add(pivots[i]);
 }
+
+//Camera added to scene
+scene.add(camera); //TODO TEST OUT
+
+//Camera pivot
+cameraPivot = new THREE.Object3D();
+cameraPivot.position.set(camera.position.x, camera.position.y, camera.position.z);
+cameraPivot.rotation.copy(camera.rotation);
+cameraPivot.updateMatrix();
+scene.add(cameraPivot);
+console.log(cameraPivot.position);
 
 
 /**********
@@ -150,12 +161,19 @@ Load Model Functions
 => Note: Each Planet, Sun, and Moon begins with a scale of 1, equivalent to (1000, 1000, 1000)
 **********/
 
-// var loadAstronaut = ( gltf ) => {
-//   astronautObj = gltf.scene;
-//   astronautObj.position.set(100, 1000, 1000);
-//   astronautObj.scale.set(200, 200, 200);
-//   scene.add(astronautObj);
-// };
+var loadAstronaut = ( gltf ) => {
+  astronautObj = gltf.scene;
+  astronautObj.scale.set(.05, .05, .05);
+};
+
+//Astronaut
+loader.load(
+  //NOTE cant seem to load glb files from NASA website (missing textures)
+  jsonObj.astronaut.file,
+  gltf => loadAstronaut( gltf ),
+  xhr => onProgress(xhr),
+  error => onError(error)
+);
 
 //Load Sun Model
 var loadSun = ( gltf ) => {
@@ -255,15 +273,44 @@ var loadMoon = ( gltf ) => {
 
   moonPivot.rotateZ(jsonObj.planets[2].moon.orbitInclination);
 
+//TODO put in render.js
+  //****************************************************
+  //Astronaut
+  //****************************************************
+  if(jsonObj.astronaut.rotate == "true") {
+    if(jsonObj.astronaut.angle > Math.PI/4) {
+      console.log("I AM HERE!");
+      jsonObj.astronaut.rotate = "false";
+      //textbox here
+    } else {
+      cameraPivot.rotateY((Math.PI/4)/50);
+      jsonObj.astronaut.angle += (Math.PI/4)/50;
+    }
+  }
+  
+  cameraControls.update();
+=======
 
 };
 
-//Model Load Progress
-var onProgress = (xhr) => {
-  //console.log(( xhr.loaded / xhr.total * 100 ) + '% loaded');
-};
 
-//Model Load Error
-var onError = (errorMessage) => {
-  console.log(errorMessage);
-};
+
+/**********
+Click Event Listener
+**********/
+// window.addEventListener( 'mousedown', () => {
+document.body.onkeyup = function(e){
+    if(e.keyCode == 32){
+  		cameraPivot.position.setFromMatrixPosition(camera.matrixWorld);
+  		cameraPivot.quaternion.setFromRotationMatrix(camera.matrixWorld);
+  		// cameraPivot.rotateY()
+  		cameraPivot.updateMatrix();
+
+  		cameraPivot.add(astronautObj);
+      astronautObj.position.y = -50;
+      astronautObj.position.z = -100;
+      cameraPivot.rotateY(-Math.PI/2);
+      jsonObj.astronaut.angle = 0;
+      jsonObj.astronaut.rotate = "true";
+    }
+}

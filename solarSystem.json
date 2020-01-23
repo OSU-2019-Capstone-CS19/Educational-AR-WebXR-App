@@ -14,7 +14,9 @@
      "beingViewed":"false"
    },
    "astronaut": {
-      "file": "./model/astronaut/scene.gltf"
+      "file": "./model/astronaut/scene.gltf",
+      "angle": 0,
+      "rotate": "false"
    },
    "planets":[
       {

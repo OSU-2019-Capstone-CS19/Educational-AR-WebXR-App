@@ -20,6 +20,11 @@ var request = new XMLHttpRequest();
   request.send(null)
   jsonObj = JSON.parse(request.responseText);
 
+// var jsonAstroFacts;
+//   request.open("GET", "./astronautFacts.json", false);
+//   request.send(null)
+//   jsonAstroFacts = JSON.parse(request.responseText);
+
 
 /**********
 Create Renderer

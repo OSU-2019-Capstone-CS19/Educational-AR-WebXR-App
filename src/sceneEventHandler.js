@@ -285,11 +285,17 @@ NOTE: This will be added as an option
 // }
 
 /**********
-Click Event Listener
+Click Event Listener for astronaut and textbox
 **********/
 // window.addEventListener( 'mousedown', () => {
 document.body.onkeyup = function(e){
     if(e.keyCode == 32){
+      if(document.getElementById("TextBox").style.visibility == "visible"){
+        document.getElementById("TextBox").style.visibility = "hidden";
+      } else {
+        document.getElementById("TextBox").style.visibility = "visible";
+      }
+
   		cameraPivot.position.setFromMatrixPosition(camera.matrixWorld);
   		cameraPivot.quaternion.setFromRotationMatrix(camera.matrixWorld);
   		// cameraPivot.rotateY()

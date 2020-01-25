@@ -12,9 +12,17 @@ canvas {
   z-index: 5;
 }
 
-#testButton {
-  position: fixed;
-  top: 20px;
-  right: 20px;
+#TextBox {
+  position: absolute;
+  box-sizing: content-box;
+  width: 600px;
+  height: 100px;
+  padding: 20px;
+  border: 3px solid white;
+  text-align: center;
+  color: white;
+  bottom: 10%;
+  right: 33%;
   opacity: 0.5;
+  visibility: hidden;
 }

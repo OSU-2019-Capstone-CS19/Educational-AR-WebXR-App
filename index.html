@@ -6,9 +6,15 @@
 		    <title>Solar System</title>
 	  </head>
 	  <body>
+      
+
       <div id="menuOverlay">
         <!-- This is where all the menus would go -->
-        <button id="testButton">THIS IS A TEST BUTTON</button>
+        <button id="testButton" onclick="openNav()">THIS IS A TEST BUTTON (Menu)</button>
+        <div id="mySidenav" class ="sidenav">
+          <a href="javascript:void(0)" class="closebtn" onclick="closeNav()"">&times;</a>
+          
+        </div>
       </div>
 
         <script src="//threejs.org/build/three.min.js"></script>
@@ -20,5 +26,6 @@
         <script src="./src/render.js"></script>
         <script src="./src/sceneEventHandler.js"></script>
         <script src="./src/menuEventHandler.js"></script>
+        <script type="text/javascript" src="./src/dat.gui.min.js"></script>
      </body>
   </html>

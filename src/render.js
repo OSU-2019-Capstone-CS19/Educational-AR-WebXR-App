@@ -71,7 +71,6 @@ var render = () => {
   //Astronaut
   if(jsonObj.astronaut.rotate == "true") {
     if(jsonObj.astronaut.angle > Math.PI/4) {
-      console.log("I AM HERE!");
       jsonObj.astronaut.rotate = "false";
       //textbox here
     } else {

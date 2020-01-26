@@ -293,6 +293,7 @@ document.body.onkeyup = function(e){
       if(document.getElementById("TextBox").style.visibility == "visible"){
         document.getElementById("TextBox").style.visibility = "hidden";
       } else {
+        document.getElementById("TextBox").innerHTML = jsonAtroFacts.facts.fact1;
         document.getElementById("TextBox").style.visibility = "visible";
       }
 

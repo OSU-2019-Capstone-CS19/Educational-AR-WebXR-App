@@ -17,13 +17,14 @@ Load up JSON file
 var jsonObj;
 var request = new XMLHttpRequest();
   request.open("GET", "./solarSystem.json", false);
-  request.send(null)
+  request.send(null);
   jsonObj = JSON.parse(request.responseText);
 
-// var jsonAstroFacts;
-//   request.open("GET", "./astronautFacts.json", false);
-//   request.send(null)
-//   jsonAstroFacts = JSON.parse(request.responseText);
+var jsonAstroFacts;
+var factRequest = new XMLHttpRequest();
+  factRequest.open("GET", "./astronautFacts.json", false);
+  factRequest.send();
+  jsonAstroFacts = JSON.parse(factRequest.responseText);
 
 
 /**********

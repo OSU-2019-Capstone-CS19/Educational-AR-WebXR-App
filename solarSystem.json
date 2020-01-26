@@ -51,6 +51,7 @@
          "rotation":6.28,
          "rotationAngle":0.41,
          "beingViewed":"false",
+         "fact":"We live on this planet! (I would hope you do too...).",
          "moon":{
             "name":"Moon",
             "file":"./model/planets-glb/Moon.glb",
@@ -130,4 +131,5 @@
          "beingViewed":"false"
       }
    ]
+
 }

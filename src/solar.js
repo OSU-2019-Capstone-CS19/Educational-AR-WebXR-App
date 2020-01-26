@@ -20,11 +20,12 @@ var request = new XMLHttpRequest();
   request.send(null);
   jsonObj = JSON.parse(request.responseText);
 
-var jsonAstroFacts;
-var factRequest = new XMLHttpRequest();
-  factRequest.open("GET", "./astronautFacts.json", false);
-  factRequest.send();
-  jsonAstroFacts = JSON.parse(factRequest.responseText);
+// var jsonAstroFacts;
+// var factRequest = new XMLHttpRequest();
+//   factRequest.open("GET", "./astronautFacts.json", false);
+//   factRequest.send();
+//   jsonAstroFacts = JSON.parse(factRequest.responseText);
+//   console.log(jsonAstroFacts);
 
 
 /**********

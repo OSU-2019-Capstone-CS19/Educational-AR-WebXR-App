@@ -59,22 +59,20 @@ window.addEventListener( 'mousedown', () => {
           case "Mercury":
             if (jsonObj.planets[0].beingViewed == "false"){
 
+              jsonObj.sun.beingViewed = "false";
+              jsonObj.planets[2].moon.beingViewed = "false";
               for (var i=0; i<jsonObj.numPlanets; i++){
                 jsonObj.planets[i].beingViewed = "false";
               }
-              jsonObj.sun.beingViewed = "false";
+
               jsonObj.planets[0].beingViewed = "true";
-
-              pivots[0].add(camera);
-              camera.position.set( (jsonObj.planets[0].distanceFromSun/jsonObj.distanceScale) * 9/10 , jsonObj.planets[0].radius/jsonObj.sizeScale, 0);
-
-              spawnAstronaut(pivots[0]);
+              jsonObj.traversal = "true";
 
 
-          } else if (jsonObj.planets[0].beingViewed == "true"){
-
-            planets[0].add(camera);
-            camera.position.set( (jsonObj.planets[0].distanceFromSun/jsonObj.distanceScale)*(2), 0, 0);
+          // } else if (jsonObj.planets[0].beingViewed == "true"){
+          //
+          //   planets[0].add(camera);
+          //   camera.position.set( (jsonObj.planets[0].distanceFromSun/jsonObj.distanceScale)*(2), 0, 0);
 
 
           }
@@ -148,44 +146,42 @@ window.addEventListener( 'mousedown', () => {
           case "Mars":
             if (jsonObj.planets[3].beingViewed == "false"){
 
+              jsonObj.sun.beingViewed = "false";
+              jsonObj.planets[2].moon.beingViewed = "false";
               for (var i=0; i<jsonObj.numPlanets; i++){
                 jsonObj.planets[i].beingViewed = "false";
               }
-              jsonObj.sun.beingViewed = "false";
+
               jsonObj.planets[3].beingViewed = "true";
+              jsonObj.traversal = "true";
 
-              pivots[3].add(camera);
-              camera.position.set( (jsonObj.planets[3].distanceFromSun/jsonObj.distanceScale) * 9/10 , jsonObj.planets[3].radius/jsonObj.sizeScale, 0);
 
-              spawnAstronaut(pivots[3]);
-
-            } else if (jsonObj.planets[3].beingViewed == "true"){
-
-            planets[3].add(camera);
-            camera.position.set( (jsonObj.planets[3].distanceFromSun/jsonObj.distanceScale)*(2), 0, 0);
+            // } else if (jsonObj.planets[3].beingViewed == "true"){
+            //
+            // planets[3].add(camera);
+            // camera.position.set( (jsonObj.planets[3].distanceFromSun/jsonObj.distanceScale)*(2), 0, 0);
           }
 
             break;
 
 
           case "Jupiter":
-            if (jsonObj.planets[4].beingViewed == "false"){
+            if (jsonObj.planets[4].beingViewed == "false" && jsonObj.traversal == "false"){
 
+              jsonObj.sun.beingViewed = "false";
+              jsonObj.planets[2].moon.beingViewed = "false";
               for (var i=0; i<jsonObj.numPlanets; i++){
                 jsonObj.planets[i].beingViewed = "false";
               }
-              jsonObj.sun.beingViewed = "false";
+
               jsonObj.planets[4].beingViewed = "true";
+              jsonObj.traversal = "true";
 
-              pivots[4].add(camera);
-              camera.position.set( (jsonObj.planets[4].distanceFromSun/jsonObj.distanceScale) * 9/10 , jsonObj.planets[4].radius/jsonObj.sizeScale, 0);
 
-              spawnAstronaut(pivots[4]);
-
-            } else if (jsonObj.planets[4].beingViewed == "true"){
-
-              planets[4].add(camera);
-              camera.position.set( (jsonObj.planets[4].distanceFromSun/jsonObj.distanceScale)*(2), 0, 0);
+            // } else if (jsonObj.planets[4].beingViewed == "true"){
+            //
+            //   planets[4].add(camera);
+            //   camera.position.set( (jsonObj.planets[4].distanceFromSun/jsonObj.distanceScale)*(2), 0, 0);
             }
 
             break;

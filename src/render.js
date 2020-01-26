@@ -68,6 +68,22 @@ var render = () => {
     }
   }
 
+  //traversal
+  if (jsonObj.traversal == "true"){
+    if (jsonObj.sun.beingViewed == "true"){
+      //Move to sun
+    } else if (jsonObj.planets[2].moon.beingViewed == "true"){
+      //move to moon
+    } else {
+      for (var i=0; i<jsonObj.numPlanets; i++){
+        if (jsonObj.planets[i].beingViewed == "true"){
+          //move to planet
+          cameraTraversal(planets[i], i);
+        }
+      }
+    }
+  }
+
   //Astronaut
   if(jsonObj.astronaut.rotate == "true") {
     if(jsonObj.astronaut.angle > Math.PI/4) {

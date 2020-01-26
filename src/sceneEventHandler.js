@@ -26,6 +26,8 @@ window.addEventListener( 'mousedown', () => {
       if(intersects[0].object.parent.name){
         switch(intersects[0].object.parent.name){
 
+          //TODO / NOTE: This switch will need to be moved to the render function and will happen once we are transitioned to the object picked.
+
           case "Sun":
             if (jsonObj.sun.beingViewed == "false"){
               for (var i=0; i<jsonObj.numPlanets; i++){
@@ -66,10 +68,15 @@ window.addEventListener( 'mousedown', () => {
               pivots[0].add(camera);
               camera.position.set( (jsonObj.planets[0].distanceFromSun/jsonObj.distanceScale) * 9/10 , jsonObj.planets[0].radius/jsonObj.sizeScale, 0);
 
+              spawnAstronaut(pivots[0]);
+
+
           } else if (jsonObj.planets[0].beingViewed == "true"){
 
             planets[0].add(camera);
             camera.position.set( (jsonObj.planets[0].distanceFromSun/jsonObj.distanceScale)*(2), 0, 0);
+
+
           }
 
             break;
@@ -86,6 +93,8 @@ window.addEventListener( 'mousedown', () => {
 
               pivots[1].add(camera);
               camera.position.set( (jsonObj.planets[1].distanceFromSun/jsonObj.distanceScale) * 9/10 , jsonObj.planets[1].radius/jsonObj.sizeScale, 0);
+
+              spawnAstronaut(pivots[1]);
 
             } else if (jsonObj.planets[1].beingViewed == "true"){
 
@@ -107,6 +116,8 @@ window.addEventListener( 'mousedown', () => {
 
               pivots[2].add(camera);
               camera.position.set( (jsonObj.planets[2].distanceFromSun/jsonObj.distanceScale) * 9/10 , jsonObj.planets[2].radius/jsonObj.sizeScale, 0);
+
+              spawnAstronaut(pivots[2]);
 
             } else if (jsonObj.planets[2].beingViewed == "true"){
 
@@ -146,6 +157,8 @@ window.addEventListener( 'mousedown', () => {
               pivots[3].add(camera);
               camera.position.set( (jsonObj.planets[3].distanceFromSun/jsonObj.distanceScale) * 9/10 , jsonObj.planets[3].radius/jsonObj.sizeScale, 0);
 
+              spawnAstronaut(pivots[3]);
+
             } else if (jsonObj.planets[3].beingViewed == "true"){
 
             planets[3].add(camera);
@@ -167,6 +180,8 @@ window.addEventListener( 'mousedown', () => {
               pivots[4].add(camera);
               camera.position.set( (jsonObj.planets[4].distanceFromSun/jsonObj.distanceScale) * 9/10 , jsonObj.planets[4].radius/jsonObj.sizeScale, 0);
 
+              spawnAstronaut(pivots[4]);
+
             } else if (jsonObj.planets[4].beingViewed == "true"){
 
               planets[4].add(camera);
@@ -186,6 +201,8 @@ window.addEventListener( 'mousedown', () => {
 
               pivots[5].add(camera);
               camera.position.set( (jsonObj.planets[5].distanceFromSun/jsonObj.distanceScale) * 9/10 , jsonObj.planets[5].radius/jsonObj.sizeScale, 0);
+
+              spawnAstronaut(pivots[5]);
 
             } else if (jsonObj.planets[5].beingViewed == "true"){
 
@@ -207,6 +224,8 @@ window.addEventListener( 'mousedown', () => {
               pivots[6].add(camera);
               camera.position.set( (jsonObj.planets[6].distanceFromSun/jsonObj.distanceScale) * 9/10 , jsonObj.planets[6].radius/jsonObj.sizeScale, 0);
 
+              spawnAstronaut(pivots[6]);
+
             } else if (jsonObj.planets[6].beingViewed == "true"){
 
               planets[6].add(camera);
@@ -226,6 +245,8 @@ window.addEventListener( 'mousedown', () => {
 
             pivots[7].add(camera);
             camera.position.set( (jsonObj.planets[7].distanceFromSun/jsonObj.distanceScale) * 9/10 , jsonObj.planets[7].radius/jsonObj.sizeScale, 0);
+
+            spawnAstronaut(pivots[7]);
 
           } else if (jsonObj.planets[7].beingViewed == "true"){
 
@@ -247,10 +268,12 @@ window.addEventListener( 'mousedown', () => {
               pivots[8].add(camera);
               camera.position.set( (jsonObj.planets[8].distanceFromSun/jsonObj.distanceScale) * 9/10 , jsonObj.planets[8].radius/jsonObj.sizeScale, 0);
 
+              spawnAstronaut(pivots[8]);
+
             } else if (jsonObj.planets[8].beingViewed == "true"){
 
               planets[8].add(camera);
-              camera.position.set( (jsonObj.planets[4].distanceFromSun/jsonObj.distanceScale)*(2), 0, 0);
+              camera.position.set( (jsonObj.planets[8].distanceFromSun/jsonObj.distanceScale)*(2), 0, 0);
             }
 
             break;
@@ -297,16 +320,15 @@ document.body.onkeyup = function(e){
         document.getElementById("TextBox").style.visibility = "visible";
       }
 
-  		cameraPivot.position.setFromMatrixPosition(camera.matrixWorld);
-  		cameraPivot.quaternion.setFromRotationMatrix(camera.matrixWorld);
-  		// cameraPivot.rotateY()
-  		cameraPivot.updateMatrix();
-
-  		cameraPivot.add(astronautObj);
-      astronautObj.position.y = -50;
-      astronautObj.position.z = -100;
-      cameraPivot.rotateY(-Math.PI/2);
-      jsonObj.astronaut.angle = 0;
-      jsonObj.astronaut.rotate = "true";
+  		// cameraPivot.position.setFromMatrixPosition(camera.matrixWorld);
+  		// cameraPivot.quaternion.setFromRotationMatrix(camera.matrixWorld);
+  		// cameraPivot.updateMatrix();
+      //
+  		// cameraPivot.add(astronautObj);
+      // astronautObj.position.y = -50;
+      // astronautObj.position.z = -100;
+      // cameraPivot.rotateY(-Math.PI/2);
+      // jsonObj.astronaut.angle = 0;
+      // jsonObj.astronaut.rotate = "true";
     }
 }

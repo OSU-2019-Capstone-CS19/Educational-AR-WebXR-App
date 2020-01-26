@@ -285,3 +285,22 @@ var onProgress = (xhr) => {
 var onError = (errorMessage) => {
   console.log(errorMessage);
 };
+
+//TODO: Need to sync to the rotation of planet
+var spawnAstronaut = (pivot) => {
+  pivot.add(cameraPivot);
+  cameraPivot.add(astronautObj);
+  astronautObj.position.y = -50;
+  astronautObj.position.z = -100;
+  cameraPivot.rotateY(-Math.PI/2);
+  jsonObj.astronaut.angle = 0;
+  jsonObj.astronaut.rotate = "true";
+
+  cameraPivot.position.setFromMatrixPosition(camera.matrixWorld);
+  cameraPivot.quaternion.setFromRotationMatrix(camera.matrixWorld);
+  cameraPivot.updateMatrix();
+
+  console.log(cameraPivot);
+  console.log(camera);
+
+}

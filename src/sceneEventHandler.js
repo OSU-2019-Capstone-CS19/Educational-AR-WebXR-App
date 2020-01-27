@@ -26,8 +26,6 @@ window.addEventListener( 'mousedown', () => {
       if(intersects[0].object.parent.name){
         switch(intersects[0].object.parent.name){
 
-          //TODO / NOTE: This switch will need to be moved to the render function and will happen once we are transitioned to the object picked.
-
           case "Sun":
             if (!jsonObj.sun.beingViewed && !jsonObj.traversal){
               for (var i=0; i<jsonObj.numPlanets; i++){
@@ -173,9 +171,6 @@ window.addEventListener( 'mousedown', () => {
               jsonObj.planets[4].beingViewed = true;
               jsonObj.traversal = true;
 
-              //TEST
-              curOrbit = jsonObj.orbitScale;
-              jsonObj.orbitScale = 10000000000000;
 
             // } else if (jsonObj.planets[4].beingViewed == "true"){
             //
@@ -273,26 +268,6 @@ window.addEventListener( 'mousedown', () => {
    }
 }, false );
 
-/**********
-Test Click Event Listener
-NOTE: This will be added as an option
-**********/
-// document.body.onkeyup = function(e){
-//     if(e.keyCode == 32){
-// 		    if(jsonObj.showPlanetLines == "true"){
-//           jsonObj.showPlanetLines = "false";
-//           for (var i=0; i < jsonObj.numPlanets; i++){
-//             scene.remove(orbitLines[i]);
-//           }
-//
-//         } else if(jsonObj.showPlanetLines == "false"){
-//           jsonObj.showPlanetLines = "true";
-//           for (var i=0; i < jsonObj.numPlanets; i++){
-//             scene.add(orbitLines[i]);
-//           }
-//         }
-//     }
-// }
 
 /**********
 Click Event Listener for astronaut and textbox
@@ -306,6 +281,9 @@ document.body.onkeyup = function(e){
         document.getElementById("TextBox").innerHTML = jsonObj.planets[2].fact;
         document.getElementById("TextBox").style.visibility = "visible";
       }
+
+      //Test
+      spawnAstronaut(cameraPivot);
 
   		// cameraPivot.position.setFromMatrixPosition(camera.matrixWorld);
   		// cameraPivot.quaternion.setFromRotationMatrix(camera.matrixWorld);

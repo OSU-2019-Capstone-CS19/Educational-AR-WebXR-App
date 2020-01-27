@@ -26,6 +26,8 @@ Render/Animate Function
 var render = () => {
   requestAnimationFrame( render );
 
+
+  sunLight.intensity = jsonObj.sun.intensity;
   //Sun Rotation
   if (sunObj){
     sunObj.rotateY(jsonObj.sun.rotation / jsonObj.rotationScale);

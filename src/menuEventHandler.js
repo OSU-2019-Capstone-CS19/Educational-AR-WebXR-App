@@ -1,3 +1,5 @@
+
+
 //Test Button
 
 
@@ -66,6 +68,11 @@ function showSun(){
 
   
 }
+
+document.getElementById("intensitySlider").addEventListener("click", function(){
+  jsonObj.sun.intensity=jsonObj.sun.intensity+1.0;
+  console.log("sun intensity = ", jsonObj.sun.intensity);
+});
 
 document.getElementById("toggleAstronaut").addEventListener("click", function(){
   jsonObj.astronaut.visible=!(jsonObj.astronaut.visible);

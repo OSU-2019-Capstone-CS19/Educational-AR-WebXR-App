@@ -16,7 +16,23 @@
           <a href="#" onclick="openPlanetsNav()">Planets</a>
           <a href="#" id="toggleAstronaut">Astronaut</a>
           <a href="#" id="toggleTrace">Trace Lines</a>
-          <a href="#" id="intensitySlider">Sun Intensity</a>
+          <a href="#" type="button" class="collapsible">Sun Intensity</a>
+          <div class="content">
+            <p>Adjust Sun Brightness: </p>
+            <div class="slidecontainer">
+              <input type="range" min="0" max="10" value="1" class="slider" id="sunRange">
+              <p>Value: <span id="sunVal"></span></p>
+            </div>
+          </div>
+          
+          <a href="#" type="button" class="collapsible">Speed</a>
+          <div class="content">
+            <p>Adjust Speed:</p>
+            <div class="slidecontainer">
+              <input type="range" min="1" max="100" value="10.0" class="slider" id="speedRange">
+              <p>Value: <span id="speedVal"></span></p>
+            </div>
+          </div>
 
         </div>
 
@@ -46,6 +62,6 @@
         <script src="./src/render.js"></script>
         <script src="./src/sceneEventHandler.js"></script>
         <script src="./src/menuEventHandler.js"></script>
-        <script type="text/javascript" src="./src/dat.gui.min.js"></script>
+      
      </body>
   </html>

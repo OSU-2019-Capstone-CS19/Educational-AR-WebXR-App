@@ -11,7 +11,8 @@
      "radius":695510,
      "rotation":0.2327,
      "rotationAngle":0.127,
-     "beingViewed":"false"
+     "beingViewed":"false",
+     "intensity": 1.0
    },
    "astronaut": {
       "file": "./model/astronaut/scene.gltf",

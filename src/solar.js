@@ -8,7 +8,7 @@ var orbitLines = [];
 //var interestingPoints[];
 var sunObj, moonObj, moonPivot;
 var astronautObj, cameraPivot;
-var cameraTarget
+var cameraTarget;
 
 
 
@@ -82,7 +82,8 @@ scene.add(cameraPivot);
 /**********
 Create Lights
 **********/
-var sunLight = new THREE.PointLight( 0xfffee8, 1, 0, 0);
+
+var sunLight = new THREE.PointLight( 0xfffee8, jsonObj.sun.Intensity, 0, 0);
 sunLight.position.set( 0, 0, 0);
 scene.add(sunLight);
 

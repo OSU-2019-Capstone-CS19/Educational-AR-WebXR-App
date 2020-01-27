@@ -9,6 +9,7 @@ var sunObj, moonObj, moonPivot;
 var astronautObj, cameraPivot;
 var cameraTarget
 
+var curOrbit;
 
 /**********
 Load up JSON file
@@ -233,7 +234,7 @@ var loadPlanet = ( gltf ) => {
 
   //Planet Target
   //Note: Scale is 1=1000 based on original model
-  planetTargets[num].position.set(planets[num].position.x - (jsonObj.planets[num].radius)*1500 / jsonObj.sizeScale,
+  planetTargets[num].position.set(planets[num].position.x - (jsonObj.planets[num].radius)*2000 / jsonObj.sizeScale,
                             planets[num].position.y,
                             planets[num].position.z);
 
@@ -241,8 +242,6 @@ var loadPlanet = ( gltf ) => {
   // var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
   // var cube = new THREE.Mesh( geometry, material );
   // planetTargets[num].add(cube);
-  // console.log(num);
-  // console.log(planets[num].scale);
 
   //Pivot
   pivots[num].add(planets[num]);
@@ -313,30 +312,40 @@ var spawnAstronaut = (pivot) => {
   astronautObj.position.z = -100;
   cameraPivot.rotateY(-Math.PI/2);
   jsonObj.astronaut.angle = 0;
-  jsonObj.astronaut.rotate = "true";
+  jsonObj.astronaut.rotate = true;
 
   cameraPivot.position.setFromMatrixPosition(camera.matrixWorld);
   cameraPivot.quaternion.setFromRotationMatrix(camera.matrixWorld);
   cameraPivot.updateMatrix();
 
-  console.log(cameraPivot);
-  console.log(camera);
+  // console.log(cameraPivot);
+  // console.log(camera);
 
 }
 
 var cameraTraversal = (target, num) => {
   var dir = new THREE.Vector3();
-  dir.subVectors(planetTargets[num].getWorldPosition(dir), camera.position);
-  camera.translateOnAxis(dir.normalize(), 2);
+  dir.subVectors(planetTargets[num].getWorldPosition(dir), camera.position).normalize();
+  camera.translateOnAxis(dir, 4);
 
   //TODO: adjust speed based on distance
-  var distance = target.position.distanceTo( camera.position );
-  console.log(distance);
+  var temp = new THREE.Vector3;
+  target.updateMatrix();
+  temp.setFromMatrixPosition(target.matrixWorld);
 
-  if (distance <= jsonObj.planets[num].radius*1500 / jsonObj.sizeScale && distance >= (-1)*jsonObj.planets[num].radius*1500 / jsonObj.sizeScale){
-    jsonObj.traversal = "false";
+  var distance = camera.position.distanceTo(temp);
+
+  console.log("distance " + distance);
+  console.log(jsonObj.planets[num].radius*2000 / jsonObj.sizeScale);
+
+//  if (distance <= jsonObj.planets[num].radius*1500 / jsonObj.sizeScale && distance >= (-1)*jsonObj.planets[num].radius*1500 / jsonObj.sizeScale){
+  if (distance <= jsonObj.planets[num].radius*2000 / jsonObj.sizeScale){
+
+    jsonObj.orbitScale = curOrbit;
+
+
+    jsonObj.traversal = false;
     pivots[num].add(camera);
-    console.log(distance);
     spawnAstronaut(pivots[num]);
   }
 }

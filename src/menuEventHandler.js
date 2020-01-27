@@ -40,6 +40,57 @@ function showPlanet(chosen){
   camera.position.set( (jsonObj.planets[chosen].distanceFromSun/jsonObj.distanceScale) * 9/10 , jsonObj.planets[chosen].radius/jsonObj.sizeScale, 0);
 }
 
+function showMoon(){
+  for (var i=0; i<jsonObj.numPlanets; i++){
+    jsonObj.planets[i].beingViewed = "false";
+  }
+  jsonObj.sun.beingViewed = "false";
+  jsonObj.planets[2].moon.beingViewed = "true";
+
+  moonPivot.add(camera);
+  camera.position.set(10,0,0);
+
+}
+
+function showSun(){
+  for (var i=0; i<jsonObj.numPlanets; i++){
+    jsonObj.planets[i].beingViewed = "false";
+  }
+  jsonObj.sun.beingViewed = "true";
+
+  sunObj.add(camera);
+
+  camera.position.set(0,700, 1500);
+  cameraControls.target = sunObj.position;
+  cameraControls.update();
+
+  
+}
+
+document.getElementById("toggleAstronaut").addEventListener("click", function(){
+  jsonObj.astronaut.visible=!(jsonObj.astronaut.visible);
+  console.log("astronaut.visible = ", jsonObj.astronaut.visible);
+});
+
+document.getElementById("toggleTrace").addEventListener("click", function(){
+  //jsonObj.showPlanetLines=!(jsonObj.showPlanetLines);
+  //console.log("showPlanetLines = ", jsonObj.showPlanetLines);
+  if(jsonObj.showPlanetLines =="true"){
+    jsonObj.showPlanetLines = "false";
+    for (var i=0; i<jsonObj.numPlanets; i++){
+      scene.remove(orbitLines[i]);
+    }
+  }
+  else if(jsonObj.showPlanetLines=="false"){
+    jsonObj.showPlanetLines ="true";
+    for (var i=0;i<jsonObj.numPlanets; i++){
+      scene.add(orbitLines[i]);
+    }
+  }
+  
+});
+
+
 
 /*document.getElementById("showEarth").addEventListener("click", function(){
   for (var i=0; i<jsonObj.numPlanets; i++){

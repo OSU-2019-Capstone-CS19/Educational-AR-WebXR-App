@@ -10,21 +10,7 @@ var sunObj, moonObj, moonPivot;
 var astronautObj, cameraPivot;
 var cameraTarget
 
-/*********
- * Create UI
- */
 
- var params = {
-  showTracelines: true,
-  astronaut: true,
-  speed: 10,
-  planetbeingview: 0,
-  size: 1000000,
-  distance: 1000000
-};
-
-
-//var gui = new dat.GUI();
 
 /**********
 Load up JSON file

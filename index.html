@@ -12,8 +12,20 @@
         <!-- This is where all the menus would go -->
         <button id="testButton" onclick="openNav()">THIS IS A TEST BUTTON (Menu)</button>
         <div id="mySidenav" class ="sidenav">
-          <a href="javascript:void(0)" class="closebtn" onclick="closeNav()"">&times;</a>
-          
+          <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+          <a href="#" onclick="openPlanetsNav()">Planets</a>
+        </div>
+
+        <div id="planetsNav" class ="sidenav">
+          <a href="javascript:void(0)" class="closebtn" onclick="closePlanetsNav()">&times;</a>
+          <a href="#" onclick="showPlanet(0)">Mercury</a>
+          <a href="#" onclick="showPlanet(1)">Venus</a>
+          <a href="#" id="showEarth" onclick="showPlanet(2)">Earth</a>
+          <a href="#" onclick="showPlanet(3)">Mars</a>
+          <a href="#" onclick="showPlanet(4)">Jupiter</a>
+          <a href="#" onclick="showPlanet(5)">Saturn</a>
+          <a href="#" onclick="showPlanet(6)">Uranus</a>
+          <a href="#" onclick="showPlanet(7)">Neptune</a>
         </div>
       </div>
 

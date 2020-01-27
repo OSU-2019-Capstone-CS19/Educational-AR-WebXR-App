@@ -9,7 +9,6 @@ var sunObj, moonObj, moonPivot;
 var astronautObj, cameraPivot;
 var cameraTarget
 
-var curOrbit;
 
 /**********
 Load up JSON file
@@ -59,9 +58,6 @@ for (var i=0; i < jsonObj.numPlanets; i++){
   scene.add(pivots[i]);
   planetTargets[i] = new THREE.Object3D();
 }
-
-//Camera added to scene
-//scene.add(camera); //TODO TEST OUT
 
 
 /**********
@@ -176,7 +172,7 @@ Load Model Functions
 //Load Sun Model
 var loadSun = ( gltf ) => {
   sunObj = gltf.scene;
-  //TODO: remove /10
+  //TODO: remove /10, Maybe?
   sunObj.scale.set( jsonObj.sun.radius/jsonObj.sizeScale/10,
                     jsonObj.sun.radius/jsonObj.sizeScale/10,
                     jsonObj.sun.radius/jsonObj.sizeScale/10);
@@ -234,14 +230,15 @@ var loadPlanet = ( gltf ) => {
 
   //Planet Target
   //Note: Scale is 1=1000 based on original model
-  planetTargets[num].position.set(planets[num].position.x - (jsonObj.planets[num].radius)*2000 / jsonObj.sizeScale,
+  planetTargets[num].position.set(planets[num].position.x - (jsonObj.planets[num].radius)*1500 / jsonObj.sizeScale,
                             planets[num].position.y,
                             planets[num].position.z);
 
-  // var geometry = new THREE.BoxGeometry( 5, 5, 5 );
-  // var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-  // var cube = new THREE.Mesh( geometry, material );
-  // planetTargets[num].add(cube);
+  //TESTING
+  var geometry = new THREE.BoxGeometry( 5, 5, 5 );
+  var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+  var cube = new THREE.Mesh( geometry, material );
+  planetTargets[num].add(cube);
 
   //Pivot
   pivots[num].add(planets[num]);
@@ -304,9 +301,15 @@ var onError = (errorMessage) => {
   console.log(errorMessage);
 };
 
+//NOTE: Wait for AR
 //TODO: Need to sync to the rotation of planet
 var spawnAstronaut = (pivot) => {
-  pivot.add(cameraPivot);
+
+  //pivot.add(cameraPivot);
+
+  cameraPivot.position.setFromMatrixPosition(camera.matrixWorld);
+  cameraPivot.quaternion.setFromRotationMatrix(camera.matrixWorld);
+  cameraPivot.updateMatrix();
   cameraPivot.add(astronautObj);
   astronautObj.position.y = -50;
   astronautObj.position.z = -100;
@@ -314,38 +317,26 @@ var spawnAstronaut = (pivot) => {
   jsonObj.astronaut.angle = 0;
   jsonObj.astronaut.rotate = true;
 
-  cameraPivot.position.setFromMatrixPosition(camera.matrixWorld);
-  cameraPivot.quaternion.setFromRotationMatrix(camera.matrixWorld);
-  cameraPivot.updateMatrix();
+
 
   // console.log(cameraPivot);
   // console.log(camera);
 
 }
 
+//NOTE: Wait for AR
 var cameraTraversal = (target, num) => {
   var dir = new THREE.Vector3();
   dir.subVectors(planetTargets[num].getWorldPosition(dir), camera.position).normalize();
   camera.translateOnAxis(dir, 4);
 
-  //TODO: adjust speed based on distance
-  var temp = new THREE.Vector3;
-  target.updateMatrix();
-  temp.setFromMatrixPosition(target.matrixWorld);
+  planets[num].getWorldPosition(dir);
+  var distance = camera.position.distanceTo(dir);
 
-  var distance = camera.position.distanceTo(temp);
-
-  console.log("distance " + distance);
-  console.log(jsonObj.planets[num].radius*2000 / jsonObj.sizeScale);
-
-//  if (distance <= jsonObj.planets[num].radius*1500 / jsonObj.sizeScale && distance >= (-1)*jsonObj.planets[num].radius*1500 / jsonObj.sizeScale){
-  if (distance <= jsonObj.planets[num].radius*2000 / jsonObj.sizeScale){
-
-    jsonObj.orbitScale = curOrbit;
-
+  if (distance <= jsonObj.planets[num].radius*2000 / jsonObj.sizeScale){ //500 for buffer
 
     jsonObj.traversal = false;
-    pivots[num].add(camera);
+    //pivots[num].add(camera);
     spawnAstronaut(pivots[num]);
   }
 }

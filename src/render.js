@@ -26,6 +26,8 @@ Render/Animate Function
 var render = () => {
   requestAnimationFrame( render );
 
+  sunLight.intensity = jsonObj.sun.intensity;
+
   //Sun Rotation
   if (sunObj){
     sunObj.rotateY(jsonObj.sun.rotation / jsonObj.rotationScale);
@@ -58,7 +60,7 @@ var render = () => {
   //Camera rotation if viewing planet
   //NOTE: this will not be present in the AR build
   for (var i=0; i<jsonObj.numPlanets; i++){
-    if (jsonObj.planets[i].beingViewed == "true"){
+    if (jsonObj.planets[i].beingViewed){
       cameraTarget = new THREE.Vector3().setFromMatrixPosition(planets[i].matrixWorld);
       cameraControls.target = cameraTarget;
 
@@ -69,14 +71,14 @@ var render = () => {
   }
 
   //traversal
-  if (jsonObj.traversal == "true"){
-    if (jsonObj.sun.beingViewed == "true"){
+  if (jsonObj.traversal){
+    if (jsonObj.sun.beingViewed){
       //Move to sun
-    } else if (jsonObj.planets[2].moon.beingViewed == "true"){
+    } else if (jsonObj.planets[2].moon.beingViewed){
       //move to moon
     } else {
       for (var i=0; i<jsonObj.numPlanets; i++){
-        if (jsonObj.planets[i].beingViewed == "true"){
+        if (jsonObj.planets[i].beingViewed){
           //move to planet
           cameraTraversal(planets[i], i);
         }
@@ -85,9 +87,9 @@ var render = () => {
   }
 
   //Astronaut
-  if(jsonObj.astronaut.rotate == "true") {
+  if(jsonObj.astronaut.rotate) {
     if(jsonObj.astronaut.angle > Math.PI/4) {
-      jsonObj.astronaut.rotate = "false";
+      jsonObj.astronaut.rotate = false;
       //textbox here
     } else {
       cameraPivot.rotateY((Math.PI/4)/50);

@@ -2,22 +2,22 @@
    "numPlanets":9,
    "sizeScale":1000000,
    "distanceScale":1000000,
-   "orbitScale": 1000,
+   "orbitScale": 1,
    "rotationScale": 10,
-   "showPlanetLines": "true",
-   "traversal":"false",
+   "showPlanetLines":true,
+   "traversal":false,
    "sun": {
      "name": "Sun",
      "file": "./model/Sun.glb",
      "radius":695510,
      "rotation":0.2327,
      "rotationAngle":0.127,
-     "beingViewed":"false"
+     "beingViewed":false
    },
    "astronaut": {
       "file": "./model/astronaut/scene.gltf",
       "angle": 0,
-      "rotate": "false"
+      "rotate": false
    },
    "planets":[
       {
@@ -29,7 +29,7 @@
          "orbitInclination":0.1223476,
          "rotation":0.1065,
          "rotationAngle":0.03,
-         "beingViewed":"false"
+         "beingViewed":false
       },
       {
          "name":"Venus",
@@ -40,7 +40,7 @@
          "orbitInclination":0.059,
          "rotation":0.0259,
          "rotationAngle":3.089,
-         "beingViewed":"false"
+         "beingViewed":false
       },
       {
          "name":"Earth",
@@ -51,7 +51,7 @@
          "orbitInclination":0,
          "rotation":6.28,
          "rotationAngle":0.41,
-         "beingViewed":"false",
+         "beingViewed":false,
          "fact":"We live on this planet! (I would hope you do too...).",
          "moon":{
             "name":"Moon",
@@ -62,7 +62,7 @@
             "orbitInclination": 0.087,
             "rotation":0.2327,
             "rotationAngle":0.026,
-            "beingViewed":"false"
+            "beingViewed":false
          }
       },
       {
@@ -74,7 +74,7 @@
          "orbitInclination":0.032288,
          "rotation":6.1299,
          "rotationAngle":0.436,
-         "beingViewed":"false"
+         "beingViewed":false
       },
       {
          "name":"Jupiter",
@@ -85,7 +85,7 @@
          "orbitInclination":0.02286,
          "rotation":15.232,
          "rotationAngle":0.05,
-         "beingViewed":"false"
+         "beingViewed":false
       },
       {
          "name":"Saturn",
@@ -96,7 +96,7 @@
          "orbitInclination":0.04328,
          "rotation":14.094,
          "rotationAngle":0.466,
-         "beingViewed":"false"
+         "beingViewed":false
       },
       {
          "name":"Uranus",
@@ -107,7 +107,7 @@
          "orbitInclination":0.01347,
          "rotation":8.875,
          "rotationAngle":1.71,
-         "beingViewed":"false"
+         "beingViewed":false
       },
       {
          "name":"Neptune",
@@ -118,7 +118,7 @@
          "orbitInclination":0.003089,
          "rotation":8.875,
          "rotationAngle":0.524,
-         "beingViewed":"false"
+         "beingViewed":false
       },
       {
          "name":"Pluto",
@@ -129,7 +129,7 @@
          "orbitInclination":0.2967,
          "rotation":0.98,
          "rotationAngle":2.09,
-         "beingViewed":"false"
+         "beingViewed":false
       }
    ]
 

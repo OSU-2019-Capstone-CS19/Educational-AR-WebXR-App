@@ -235,10 +235,10 @@ var loadPlanet = ( gltf ) => {
                             planets[num].position.z);
 
   //TESTING
-  var geometry = new THREE.BoxGeometry( 5, 5, 5 );
-  var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-  var cube = new THREE.Mesh( geometry, material );
-  planetTargets[num].add(cube);
+  // var geometry = new THREE.BoxGeometry( 5, 5, 5 );
+  // var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+  // var cube = new THREE.Mesh( geometry, material );
+  // planetTargets[num].add(cube);
 
   //Pivot
   pivots[num].add(planets[num]);
@@ -337,6 +337,6 @@ var cameraTraversal = (target, num) => {
 
     jsonObj.traversal = false;
     //pivots[num].add(camera);
-    spawnAstronaut(pivots[num]);
+    // spawnAstronaut(pivots[num]);
   }
 }

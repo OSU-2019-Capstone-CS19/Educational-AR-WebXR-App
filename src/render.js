@@ -31,19 +31,19 @@ var render = () => {
     sunObj.rotateY(jsonObj.sun.rotation / jsonObj.rotationScale);
   }
 
-  //Planet Rotation (rad/day)
-  for (var i=0; i<jsonObj.numPlanets; i++){
-    if (planets[i]){
-        planets[i].rotateY(jsonObj.planets[i].rotation / jsonObj.rotationScale);
-    }
-  }
-
-  //Planet Orbit (rad/day)
-  for (var i=0; i<jsonObj.numPlanets; i++){ //will use jsonObj.numElements
-    if (pivots[i]){
-      pivots[i].rotateY(jsonObj.planets[i].orbit / jsonObj.orbitScale);
-    }
-  }
+  // //Planet Rotation (rad/day)
+  // for (var i=0; i<jsonObj.numPlanets; i++){
+  //   if (planets[i]){
+  //       planets[i].rotateY(jsonObj.planets[i].rotation / jsonObj.rotationScale);
+  //   }
+  // }
+  //
+  // // //Planet Orbit (rad/day)
+  // for (var i=0; i<jsonObj.numPlanets; i++){ //will use jsonObj.numElements
+  //   if (pivots[i]){
+  //     pivots[i].rotateY(jsonObj.planets[i].orbit / jsonObj.orbitScale);
+  //   }
+  // }
 
   //Moon Rotation (rad/day)
   if (moonObj){
@@ -80,7 +80,12 @@ var render = () => {
     }
   }
 
+
+
   cameraControls.update();
+
+  //Test
+  light.position.copy( camera.position );
 
   renderer.render( scene, camera );
 };

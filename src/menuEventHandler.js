@@ -7,7 +7,7 @@ document.getElementById("testButton").addEventListener("click", function(){
     jsonObj.planets[2].beingViewed = "true";
 
     pivots[2].add(camera);
-    camera.position.set( (jsonObj.planets[2].distanceFromSun/jsonObj.distanceScale) * 9/10 , jsonObj.planets[2].radius/jsonObj.sizeScale, 0);
+    camera.position.set( (jsonObj.planets[2].distanceFromSun/jsonObj.distanceScale) * 9.5/10 , jsonObj.planets[2].radius/jsonObj.sizeScale, 0);
 
 
 

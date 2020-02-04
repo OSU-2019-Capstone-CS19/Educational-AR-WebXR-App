@@ -16,6 +16,8 @@ Click Event Listener
     => Yes: Set camera parent to planet so camera orbits around the planet
 **********/
 window.addEventListener( 'mousedown', () => {
+    var ranNum = Math.floor(Math.random() * 3);
+
     mouse.x = (event.clientX / window.innerWidth) *2 -1;
     mouse.y = - (event.clientY / window.innerHeight) *2 +1;
 
@@ -39,6 +41,7 @@ window.addEventListener( 'mousedown', () => {
               camera.position.set(0, 700, 1500);
               cameraControls.target = sunObj.position;
               cameraControls.update();
+              document.getElementById("TextBox").innerHTML = jsonObj.sun.facts[ranNum];
 
             } else {
               //NOTE: Is broken right now
@@ -49,6 +52,7 @@ window.addEventListener( 'mousedown', () => {
               camera.position.set(0, 700, 0);
               cameraControls.target = new THREE.Vector3(0,0,0);
               cameraControls.update();
+              document.getElementById("TextBox").innerHTML = jsonObj.sun.standard;
             }
 
             break;
@@ -65,6 +69,8 @@ window.addEventListener( 'mousedown', () => {
 
               jsonObj.planets[0].beingViewed = true;
               jsonObj.traversal = true;
+
+              document.getElementById("TextBox").innerHTML = jsonObj.planets[0].facts[ranNum];
 
 
           // } else if (jsonObj.planets[0].beingViewed == "true"){
@@ -90,6 +96,8 @@ window.addEventListener( 'mousedown', () => {
               jsonObj.planets[1].beingViewed = true;
               jsonObj.traversal = true;
 
+              document.getElementById("TextBox").innerHTML = jsonObj.planets[1].facts[ranNum];
+
             // } else if (jsonObj.planets[1].beingViewed){
             //
             //   planets[1].add(camera);
@@ -110,6 +118,8 @@ window.addEventListener( 'mousedown', () => {
 
               jsonObj.planets[2].beingViewed = true;
               jsonObj.traversal = true;
+
+              document.getElementById("TextBox").innerHTML = jsonObj.planets[2].facts[ranNum];
 
             // } else if (jsonObj.planets[2].beingViewed){
             //
@@ -149,6 +159,8 @@ window.addEventListener( 'mousedown', () => {
               jsonObj.planets[3].beingViewed = true;
               jsonObj.traversal = true;
 
+              document.getElementById("TextBox").innerHTML = jsonObj.planets[3].facts[ranNum];
+
 
             // } else if (jsonObj.planets[3].beingViewed == "true"){
             //
@@ -171,6 +183,8 @@ window.addEventListener( 'mousedown', () => {
               jsonObj.planets[4].beingViewed = true;
               jsonObj.traversal = true;
 
+              document.getElementById("TextBox").innerHTML = jsonObj.planets[4].facts[ranNum];
+
 
             // } else if (jsonObj.planets[4].beingViewed == "true"){
             //
@@ -191,7 +205,9 @@ window.addEventListener( 'mousedown', () => {
 
               jsonObj.planets[5].beingViewed = true;
               jsonObj.traversal = true;
-            //
+
+              document.getElementById("TextBox").innerHTML = jsonObj.planets[5].facts[ranNum];
+            
             // } else if (jsonObj.planets[5].beingViewed){
             //
             //   planets[5].add(camera);
@@ -211,6 +227,8 @@ window.addEventListener( 'mousedown', () => {
 
               jsonObj.planets[6].beingViewed = true;
               jsonObj.traversal = true;
+
+              document.getElementById("TextBox").innerHTML = jsonObj.planets[6].facts[ranNum];
 
             // } else if (jsonObj.planets[6].beingViewed == "true"){
             //
@@ -232,6 +250,8 @@ window.addEventListener( 'mousedown', () => {
               jsonObj.planets[7].beingViewed = true;
               jsonObj.traversal = true;
 
+              document.getElementById("TextBox").innerHTML = jsonObj.planets[7].facts[ranNum];
+
           // } else if (jsonObj.planets[7].beingViewed == true){
           //
           //   planets[7].add(camera);
@@ -251,6 +271,8 @@ window.addEventListener( 'mousedown', () => {
 
               jsonObj.planets[8].beingViewed = true;
               jsonObj.traversal = true;
+
+              document.getElementById("TextBox").innerHTML = jsonObj.planets[8].facts[ranNum];
 
             // } else if (jsonObj.planets[8].beingViewed == "true"){
             //
@@ -273,27 +295,26 @@ window.addEventListener( 'mousedown', () => {
 Click Event Listener for astronaut and textbox
 **********/
 // window.addEventListener( 'mousedown', () => {
-document.body.onkeyup = function(e){
-    if(e.keyCode == 32){
-      if(document.getElementById("TextBox").style.visibility == "visible"){
-        document.getElementById("TextBox").style.visibility = "hidden";
-      } else {
-        document.getElementById("TextBox").innerHTML = jsonObj.planets[2].fact;
-        document.getElementById("TextBox").style.visibility = "visible";
-      }
+// document.body.onkeyup = function(e){
+    // if(e.keyCode == 32){
+    //   if(document.getElementById("TextBox").style.visibility == "visible"){
+    //     document.getElementById("TextBox").style.visibility = "hidden";
+    //   } else {
+    //     document.getElementById("TextBox").style.visibility = "visible";
+    //   }
 
-      //Test
-      spawnAstronaut(cameraPivot);
+    //   Test
+    //   spawnAstronaut(cameraPivot);
 
   		// cameraPivot.position.setFromMatrixPosition(camera.matrixWorld);
   		// cameraPivot.quaternion.setFromRotationMatrix(camera.matrixWorld);
   		// cameraPivot.updateMatrix();
-      //
+      
   		// cameraPivot.add(astronautObj);
-      // astronautObj.position.y = -50;
-      // astronautObj.position.z = -100;
-      // cameraPivot.rotateY(-Math.PI/2);
-      // jsonObj.astronaut.angle = 0;
-      // jsonObj.astronaut.rotate = "true";
-    }
-}
+    //   astronautObj.position.y = -50;
+    //   astronautObj.position.z = -100;
+    //   cameraPivot.rotateY(-Math.PI/2);
+    //   jsonObj.astronaut.angle = 0;
+    //   jsonObj.astronaut.rotate = "true";
+    // }
+// }

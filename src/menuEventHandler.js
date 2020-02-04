@@ -9,6 +9,4 @@
 //     pivots[2].add(camera);
 //     camera.position.set( (jsonObj.planets[2].distanceFromSun/jsonObj.distanceScale) * 9/10 , jsonObj.planets[2].radius/jsonObj.sizeScale, 0);
 
-
-
 // });

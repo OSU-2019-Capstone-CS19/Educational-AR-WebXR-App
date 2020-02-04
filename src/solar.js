@@ -4,7 +4,7 @@ var planets = [];
 var pivots = [];
 var planetTargets = [];
 var orbitLines = [];
-//var interestingPoints[];
+var continentBoxs = [];
 var sunObj, moonObj, moonPivot;
 var astronautObj, cameraPivot;
 var cameraTarget
@@ -89,6 +89,10 @@ var sunLight = new THREE.PointLight( 0xfffee8, 1, 0, 0);
 sunLight.position.set( 0, 0, 0);
 scene.add(sunLight);
 
+//test
+light = new THREE.PointLight( 0xffffff, 2, 0, 0);
+light.position = camera.position;
+scene.add(light);
 
 /**********
 Raycasting and Mouse
@@ -225,7 +229,9 @@ var loadPlanet = ( gltf ) => {
   planets[num].position.set(pivots[num].position.x + jsonObj.planets[num].distanceFromSun/jsonObj.distanceScale,
                             pivots[num].position.y,
                             pivots[num].position.z);
-  planets[num].rotateZ(jsonObj.planets[num].rotationAngle);
+
+
+  //planets[num].rotateZ(jsonObj.planets[num].rotationAngle);
   planets[num].name = jsonObj.planets[num].name;
 
   //Planet Target
@@ -245,6 +251,7 @@ var loadPlanet = ( gltf ) => {
   pivots[num].add(planetTargets[num]);
 
   pivots[num].rotateZ(jsonObj.planets[num].orbitInclination);
+
 
   //Draw Orbit Lines
   material = new THREE.LineBasicMaterial({ color:0xffffa1 });
@@ -303,40 +310,81 @@ var onError = (errorMessage) => {
 
 //NOTE: Wait for AR
 //TODO: Need to sync to the rotation of planet
-var spawnAstronaut = (pivot) => {
+// var spawnAstronaut = (pivot) => {
 
-  //pivot.add(cameraPivot);
+//   //pivot.add(cameraPivot);
 
-  cameraPivot.position.setFromMatrixPosition(camera.matrixWorld);
-  cameraPivot.quaternion.setFromRotationMatrix(camera.matrixWorld);
-  cameraPivot.updateMatrix();
-  cameraPivot.add(astronautObj);
-  astronautObj.position.y = -50;
-  astronautObj.position.z = -100;
-  cameraPivot.rotateY(-Math.PI/2);
-  jsonObj.astronaut.angle = 0;
-  jsonObj.astronaut.rotate = true;
+//   cameraPivot.position.setFromMatrixPosition(camera.matrixWorld);
+//   cameraPivot.quaternion.setFromRotationMatrix(camera.matrixWorld);
+//   cameraPivot.updateMatrix();
+//   cameraPivot.add(astronautObj);
+//   astronautObj.position.y = -50;
+//   astronautObj.position.z = -100;
+//   cameraPivot.rotateY(-Math.PI/2);
+//   jsonObj.astronaut.angle = 0;
+//   jsonObj.astronaut.rotate = true;
 
 
 
-  // console.log(cameraPivot);
-  // console.log(camera);
+//   // console.log(cameraPivot);
+//   // console.log(camera);
 
-}
+// }
 
 //NOTE: Wait for AR
-var cameraTraversal = (target, num) => {
-  var dir = new THREE.Vector3();
-  dir.subVectors(planetTargets[num].getWorldPosition(dir), camera.position).normalize();
-  camera.translateOnAxis(dir, 4);
+// var cameraTraversal = (target, num) => {
+//   var dir = new THREE.Vector3();
+//   dir.subVectors(planetTargets[num].getWorldPosition(dir), camera.position).normalize();
+//   camera.translateOnAxis(dir, 4);
 
-  planets[num].getWorldPosition(dir);
-  var distance = camera.position.distanceTo(dir);
+//   planets[num].getWorldPosition(dir);
+//   var distance = camera.position.distanceTo(dir);
 
-  if (distance <= jsonObj.planets[num].radius*2000 / jsonObj.sizeScale){ //500 for buffer
+//   if (distance <= jsonObj.planets[num].radius*2000 / jsonObj.sizeScale){ //500 for buffer
 
-    jsonObj.traversal = false;
-    //pivots[num].add(camera);
-    // spawnAstronaut(pivots[num]);
-  }
-}
+//     jsonObj.traversal = false;
+//     //pivots[num].add(camera);
+//     // spawnAstronaut(pivots[num]);
+//   }
+// }
+
+//Implementing bounding boxes for all the continenets
+var antarcticaBox = new THREE.Box3();
+antarcticaBox.setFromPoints(jsonObj.continents[6].boundingBox);
+antarcticaBox.expandByPoint(jsonObj.continents[6].centerPoint);
+
+var australiaBox = new THREE.Box3();
+australiaBox.setFromPoints(jsonObj.continents[5].boundingBox);
+//australiaBox.expandByPoint(jsonObj.continents[5].centerPoint);
+
+var europeBox = new THREE.Box3();
+europeBox.setFromPoints(jsonObj.continents[2].boundingBox);
+//europeBox.expandByPoint(jsonObj.continents[2].centerPoint);
+
+var africaBox1 = new THREE.Box3();
+africaBox1.setFromPoints(jsonObj.continents[3].boundingBox[0]);
+//africaBox.expandByPoint(jsonObj.continenets[3].centerPoint)
+
+var africaBox2 = new THREE.Box3();
+africaBox2.setFromPoints(jsonObj.continents[3].boundingBox[1]);
+
+var southAmericaBox1 = new THREE.Box3();
+southAmericaBox1.setFromPoints(jsonObj.continents[1].boundingBox[0]);
+
+var southAmericaBox2 = new THREE.Box3();
+southAmericaBox2.setFromPoints(jsonObj.continents[1].boundingBox[1]);
+
+var northAmericaBox1 = new THREE.Box3();
+northAmericaBox1.setFromPoints(jsonObj.continents[0].boundingBox[0]);
+
+var northAmericaBox2 = new THREE.Box3();
+northAmericaBox2.setFromPoints(jsonObj.continents[0].boundingBox[1]);
+
+var asiaBox1 = new THREE.Box3();
+asiaBox1.setFromPoints(jsonObj.continents[4].boundingBox[0]);
+
+var asiaBox2 = new THREE.Box3();
+asiaBox2.setFromPoints(jsonObj.continents[4].boundingBox[1]);
+
+// var helper1 = new THREE.Box3Helper( antarcticaBox, 0xffff00 );
+// scene.add( helper1 );

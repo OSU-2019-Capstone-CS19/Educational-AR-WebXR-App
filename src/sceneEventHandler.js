@@ -116,17 +116,46 @@ window.addEventListener( 'mousedown', () => {
                 jsonObj.planets[i].beingViewed = false;
               }
 
-              jsonObj.planets[2].beingViewed = true;
-              jsonObj.traversal = true;
+//              jsonObj.planets[2].beingViewed = true;
+//              jsonObj.traversal = true;
+
+              pivots[2].add(camera);
+              camera.position.set( (jsonObj.planets[2].distanceFromSun/jsonObj.distanceScale) * 9.5/10 , jsonObj.planets[2].radius/jsonObj.sizeScale, 0);
 
               document.getElementById("TextBox").innerHTML = jsonObj.planets[2].facts[ranNum];
 
-            // } else if (jsonObj.planets[2].beingViewed){
-            //
-            //   console.log(intersects[0]);
-            //   var temp = new THREE.Vector3;
-            //   planets[2].getWorldPosition(temp);
-            //   console.log(temp);
+              
+              var point = planets[2].worldToLocal(intersects[0].point);
+
+              // console.log(point);
+
+
+              if (antarcticaBox.containsPoint(point)){
+                console.log("Antarctica");
+              } else if (australiaBox.containsPoint(point)){
+                console.log("Australia");
+              } else if (europeBox.containsPoint(point)){
+                console.log("Europe");
+              //TODO: Still need to get it to work
+              } else if (africaBox1.containsPoint(point)){
+                console.log("Africa");
+              } else if (africaBox2.containsPoint(point)){
+                console.log("Africa");
+              } else if (southAmericaBox1.containsPoint(point)){
+                console.log("South America");
+              } else if (southAmericaBox2.containsPoint(point)){
+                console.log("South America");
+              } else if (northAmericaBox1.containsPoint(point)){
+                console.log("North America");
+              } else if (northAmericaBox2.containsPoint(point)){
+                console.log("North America");
+              } else if (asiaBox1.containsPoint(point)){
+                console.log("Asia");
+              } else if (asiaBox2.containsPoint(point)){
+                console.log("Asia");
+              } else {
+                console.log("False");
+              }
             }
 
             break;

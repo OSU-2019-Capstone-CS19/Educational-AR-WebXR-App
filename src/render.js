@@ -31,19 +31,19 @@ var render = () => {
     sunObj.rotateY(jsonObj.sun.rotation / jsonObj.rotationScale);
   }
 
-  // //Planet Rotation (rad/day)
-  // for (var i=0; i<jsonObj.numPlanets; i++){
-  //   if (planets[i]){
-  //       planets[i].rotateY(jsonObj.planets[i].rotation / jsonObj.rotationScale);
-  //   }
-  // }
-  //
-  // // //Planet Orbit (rad/day)
-  // for (var i=0; i<jsonObj.numPlanets; i++){ //will use jsonObj.numElements
-  //   if (pivots[i]){
-  //     pivots[i].rotateY(jsonObj.planets[i].orbit / jsonObj.orbitScale);
-  //   }
-  // }
+  //Planet Rotation (rad/day)
+  for (var i=0; i<jsonObj.numPlanets; i++){
+    if (planets[i]){
+        planets[i].rotateY(jsonObj.planets[i].rotation / jsonObj.rotationScale);
+    }
+  }
+
+  // //Planet Orbit (rad/day)
+  for (var i=0; i<jsonObj.numPlanets; i++){ //will use jsonObj.numElements
+    if (pivots[i]){
+      pivots[i].rotateY(jsonObj.planets[i].orbit / jsonObj.orbitScale);
+    }
+  }
 
   //Moon Rotation (rad/day)
   if (moonObj){
@@ -55,7 +55,7 @@ var render = () => {
     moonPivot.rotateY(jsonObj.planets[2].moon.orbit / jsonObj.orbitScale);
   }
 
-  //NOTE: Wait for AR 
+  //NOTE: Wait for AR
   //traversal
   if (jsonObj.traversal){
     if (jsonObj.sun.beingViewed){

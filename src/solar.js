@@ -75,11 +75,11 @@ cameraControls.update();
 camera.position.y = 700;
 
 //Camera pivot (astronaut)
-cameraPivot = new THREE.Object3D();
-cameraPivot.position.set(camera.position.x, camera.position.y, camera.position.z);
-cameraPivot.rotation.copy(camera.rotation);
-cameraPivot.updateMatrix();
-scene.add(cameraPivot);
+// cameraPivot = new THREE.Object3D();
+// cameraPivot.position.set(camera.position.x, camera.position.y, camera.position.z);
+// cameraPivot.rotation.copy(camera.rotation);
+// cameraPivot.updateMatrix();
+// scene.add(cameraPivot);
 
 
 /**********
@@ -231,7 +231,7 @@ var loadPlanet = ( gltf ) => {
                             pivots[num].position.z);
 
 
-  //planets[num].rotateZ(jsonObj.planets[num].rotationAngle);
+  planets[num].rotateZ(jsonObj.planets[num].rotationAngle);
   planets[num].name = jsonObj.planets[num].name;
 
   //Planet Target
@@ -241,10 +241,10 @@ var loadPlanet = ( gltf ) => {
                             planets[num].position.z);
 
   //TESTING
-  // var geometry = new THREE.BoxGeometry( 5, 5, 5 );
-  // var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-  // var cube = new THREE.Mesh( geometry, material );
-  // planetTargets[num].add(cube);
+  var geometry = new THREE.BoxGeometry( 5, 5, 5 );
+  var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+  var cube = new THREE.Mesh( geometry, material );
+  planetTargets[num].add(cube);
 
   //Pivot
   pivots[num].add(planets[num]);
@@ -332,21 +332,21 @@ var onError = (errorMessage) => {
 // }
 
 //NOTE: Wait for AR
-// var cameraTraversal = (target, num) => {
-//   var dir = new THREE.Vector3();
-//   dir.subVectors(planetTargets[num].getWorldPosition(dir), camera.position).normalize();
-//   camera.translateOnAxis(dir, 4);
+var cameraTraversal = (target, num) => {
+  var dir = new THREE.Vector3();
+  dir.subVectors(planetTargets[num].getWorldPosition(dir), camera.position).normalize();
+  camera.translateOnAxis(dir, 4);
 
-//   planets[num].getWorldPosition(dir);
-//   var distance = camera.position.distanceTo(dir);
+  planets[num].getWorldPosition(dir);
+  var distance = camera.position.distanceTo(dir);
 
-//   if (distance <= jsonObj.planets[num].radius*2000 / jsonObj.sizeScale){ //500 for buffer
+  if (distance <= jsonObj.planets[num].radius*2000 / jsonObj.sizeScale){ //500 for buffer
 
-//     jsonObj.traversal = false;
-//     //pivots[num].add(camera);
-//     // spawnAstronaut(pivots[num]);
-//   }
-// }
+    jsonObj.traversal = false;
+    //pivots[num].add(camera);
+    // spawnAstronaut(pivots[num]);
+  }
+}
 
 //Implementing bounding boxes for all the continenets
 var antarcticaBox = new THREE.Box3();

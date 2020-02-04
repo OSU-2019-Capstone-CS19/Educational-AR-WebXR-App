@@ -55,24 +55,42 @@ var render = () => {
     moonPivot.rotateY(jsonObj.planets[2].moon.orbit / jsonObj.orbitScale);
   }
 
-  //Camera rotation if viewing planet
-  //NOTE: this will not be present in the AR build
-  for (var i=0; i<jsonObj.numPlanets; i++){
-    if (jsonObj.planets[i].beingViewed == "true"){
-      cameraTarget = new THREE.Vector3().setFromMatrixPosition(planets[i].matrixWorld);
-      cameraControls.target = cameraTarget;
-
-    // } else if (jsonObj.planets[2].moon.beingViewed == "true"){
-    //   cameraTarget = new THREE.Vector3().setFromMatrixPosition(planets[2].matrixWorld);
-    //   cameraControls.target = cameraTarget;
+  //NOTE: Wait for AR 
+  //traversal
+  if (jsonObj.traversal){
+    if (jsonObj.sun.beingViewed){
+      //Move to sun
+    } else if (jsonObj.planets[2].moon.beingViewed){
+      //move to moon
+    } else {
+      for (var i=0; i<jsonObj.numPlanets; i++){
+        if (jsonObj.planets[i].beingViewed){
+          //move to planet
+          cameraTarget = new THREE.Vector3().setFromMatrixPosition(planetTargets[i].matrixWorld);
+          cameraControls.target = cameraTarget;
+          cameraTraversal(planets[i], i);
+        }
+      }
     }
+  } else {
+    //Camera rotation if viewing planet
+    //NOTE: this will not be present in the AR build
+    // for (var i=0; i<jsonObj.numPlanets; i++){
+    //   if (jsonObj.planets[i].beingViewed){
+    //     cameraTarget = new THREE.Vector3().setFromMatrixPosition(planetTargets[i].matrixWorld);
+    //     cameraControls.target = cameraTarget;
+    //
+    //   // } else if (jsonObj.planets[2].moon.beingViewed == "true"){
+    //   //   cameraTarget = new THREE.Vector3().setFromMatrixPosition(planets[2].matrixWorld);
+    //   //   cameraControls.target = cameraTarget;
+    //   }
+    // }
   }
 
   //Astronaut
-  if(jsonObj.astronaut.rotate == "true") {
+  if(jsonObj.astronaut.rotate) {
     if(jsonObj.astronaut.angle > Math.PI/4) {
-      console.log("I AM HERE!");
-      jsonObj.astronaut.rotate = "false";
+      jsonObj.astronaut.rotate = false;
       //textbox here
     } else {
       cameraPivot.rotateY((Math.PI/4)/50);

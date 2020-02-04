@@ -2,21 +2,28 @@
    "numPlanets":9,
    "sizeScale":1000000,
    "distanceScale":1000000,
-   "orbitScale": 1,
-   "rotationScale": 100,
-   "showPlanetLines": "true",
+   "orbitScale": 100000000,
+   "rotationScale": 10,
+   "showPlanetLines":true,
+   "traversal":false,
    "sun": {
      "name": "Sun",
      "file": "./model/Sun.glb",
      "radius":695510,
      "rotation":0.2327,
      "rotationAngle":0.127,
-     "beingViewed":"false"
+     "beingViewed":false,
+     "facts":[
+               "The Sun accounts for 99.86% of the mass in the solar system.",
+               "The Sun is almost a perfect sphere.",
+               "The Sun rotates in the opposite direction to Earth."
+         ],
+     "standard":"Welcome to the Solar System."
    },
    "astronaut": {
       "file": "./model/astronaut/scene.gltf",
       "angle": 0,
-      "rotate": "false"
+      "rotate": false
    },
    "planets":[
       {
@@ -28,7 +35,12 @@
          "orbitInclination":0.1223476,
          "rotation":0.1065,
          "rotationAngle":0.03,
-         "beingViewed":"false"
+         "beingViewed":false,
+         "facts":[
+               "Mercury is the smallest planet.",
+               "A day on the surface of Mercury lasts 176 Earth days.",
+               "Mercury orbits so quickly around the Sun that early civilizations believed it was actually two different stars."
+         ]
       },
       {
          "name":"Venus",
@@ -39,7 +51,12 @@
          "orbitInclination":0.059,
          "rotation":0.0259,
          "rotationAngle":3.089,
-         "beingViewed":"false"
+         "beingViewed":false,
+         "facts":[
+               "Venus is the second brightest natural object in the sky.",
+               "Venus rotates in the opposite direction to other planets.",
+               "Venus orbits the sun in an ellipse, but its orbit is the closest to being a circle out of all the planets in the Solar System."
+         ]
       },
       {
          "name":"Earth",
@@ -50,7 +67,12 @@
          "orbitInclination":0,
          "rotation":6.28,
          "rotationAngle":0.41,
-         "beingViewed":"false",
+         "beingViewed":false,
+         "facts":[
+               "This is the planet we live on.",
+               "Earth is the only planet not named after a god.",
+               "The Earth is the densest planet in the Solar System."
+         ],
          "moon":{
             "name":"Moon",
             "file":"./model/planets-glb/Moon.glb",
@@ -60,7 +82,12 @@
             "orbitInclination": 0.087,
             "rotation":0.2327,
             "rotationAngle":0.026,
-            "beingViewed":"false"
+            "beingViewed":false,
+            "facts":[
+               "The Moon.",
+               "Full of craters.",
+               "Rotatoes Earth."
+            ]
          }
       },
       {
@@ -72,7 +99,12 @@
          "orbitInclination":0.032288,
          "rotation":6.1299,
          "rotationAngle":0.436,
-         "beingViewed":"false"
+         "beingViewed":false,
+         "facts":[
+               "Mars is home to the tallest mountain in the solar system.",
+               "Mars has the largest dust storms in the solar system.",
+               "Mars does not have a magnetic field."
+         ]
       },
       {
          "name":"Jupiter",
@@ -83,7 +115,12 @@
          "orbitInclination":0.02286,
          "rotation":15.232,
          "rotationAngle":0.05,
-         "beingViewed":"false"
+         "beingViewed":false,
+         "facts":[
+               "Jupiter has 67 moons.",
+               "The largest of Jupiter’s moons, Ganymede is the largest moon in the solar system.",
+               "Jupiter’s Great Red Spot is an enormous storm that has been raging for over 300 years."
+         ]
       },
       {
          "name":"Saturn",
@@ -94,7 +131,12 @@
          "orbitInclination":0.04328,
          "rotation":14.094,
          "rotationAngle":0.466,
-         "beingViewed":"false"
+         "beingViewed":false,
+         "facts":[
+               "Saturn has oval-shaped storms similar to Jupiter’s.",
+               "Saturn has more moons than any other planet.",
+               "Saturn is known as a gas giant, but scientists believe it has a solid rocky core."
+         ]
       },
       {
          "name":"Uranus",
@@ -105,7 +147,12 @@
          "orbitInclination":0.01347,
          "rotation":8.875,
          "rotationAngle":1.71,
-         "beingViewed":"false"
+         "beingViewed":false,
+         "facts":[
+               "Uranus hits the coldest temperatures of any planet.",
+               "Uranus is the coldest planet in the solar system.",
+               "The mass of Uranus is about 14.5 times the mass of Earth."
+         ]
       },
       {
          "name":"Neptune",
@@ -116,7 +163,12 @@
          "orbitInclination":0.003089,
          "rotation":8.875,
          "rotationAngle":0.524,
-         "beingViewed":"false"
+         "beingViewed":false,
+         "facts":[
+               "Neptune has an average surface temperature of -214°C.",
+               "Neptune has a storm similar to the Great Red Spot on Jupiter.",
+               "Neptune is the smallest gas giant."
+         ]
       },
       {
          "name":"Pluto",
@@ -127,7 +179,12 @@
          "orbitInclination":0.2967,
          "rotation":0.98,
          "rotationAngle":2.09,
-         "beingViewed":"false"
+         "beingViewed":false,
+         "facts":[
+               "Pluto was reclassified from a planet to a dwarf planet in 2006.",
+               "Pluto is one third water.",
+               "Pluto sometimes has an atmosphere."
+         ]
       }
    ],
    "continents": [
@@ -408,4 +465,5 @@
                         ]
       }
    ]
+
 }

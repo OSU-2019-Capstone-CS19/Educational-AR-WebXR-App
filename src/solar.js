@@ -2,6 +2,7 @@
 
 var planets = [];
 var pivots = [];
+var planetTargets = [];
 var orbitLines = [];
 var continentBoxs = [];
 var sunObj, moonObj, moonPivot;
@@ -17,8 +18,15 @@ Load up JSON file
 var jsonObj;
 var request = new XMLHttpRequest();
   request.open("GET", "./solarSystem.json", false);
-  request.send(null)
+  request.send(null);
   jsonObj = JSON.parse(request.responseText);
+
+// var jsonAstroFacts;
+// var factRequest = new XMLHttpRequest();
+//   factRequest.open("GET", "./astronautFacts.json", false);
+//   factRequest.send();
+//   jsonAstroFacts = JSON.parse(factRequest.responseText);
+//   console.log(jsonAstroFacts);
 
 
 /**********
@@ -48,7 +56,9 @@ for (var i=0; i < jsonObj.numPlanets; i++){
   pivots[i] = new THREE.Object3D();
   pivots[i].position.set(0, 0, 0);
   scene.add(pivots[i]);
+  planetTargets[i] = new THREE.Object3D();
 }
+
 
 /**********
 Create Camera
@@ -166,7 +176,7 @@ Load Model Functions
 //Load Sun Model
 var loadSun = ( gltf ) => {
   sunObj = gltf.scene;
-  //TODO: remove /10
+  //TODO: remove /10, Maybe?
   sunObj.scale.set( jsonObj.sun.radius/jsonObj.sizeScale/10,
                     jsonObj.sun.radius/jsonObj.sizeScale/10,
                     jsonObj.sun.radius/jsonObj.sizeScale/10);
@@ -211,6 +221,7 @@ var loadPlanet = ( gltf ) => {
       break;
   }
 
+  //Planet
   planets[num] = gltf.scene
   planets[num].scale.set((jsonObj.planets[num].radius/jsonObj.sizeScale),
                           (jsonObj.planets[num].radius/jsonObj.sizeScale),
@@ -223,8 +234,23 @@ var loadPlanet = ( gltf ) => {
   //planets[num].rotateZ(jsonObj.planets[num].rotationAngle);
   planets[num].name = jsonObj.planets[num].name;
 
+  //Planet Target
+  //Note: Scale is 1=1000 based on original model
+  planetTargets[num].position.set(planets[num].position.x - (jsonObj.planets[num].radius)*1500 / jsonObj.sizeScale,
+                            planets[num].position.y,
+                            planets[num].position.z);
+
+  //TESTING
+  // var geometry = new THREE.BoxGeometry( 5, 5, 5 );
+  // var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+  // var cube = new THREE.Mesh( geometry, material );
+  // planetTargets[num].add(cube);
+
+  //Pivot
   pivots[num].add(planets[num]);
-  //pivots[num].rotateZ(jsonObj.planets[num].orbitInclination);
+  pivots[num].add(planetTargets[num]);
+
+  pivots[num].rotateZ(jsonObj.planets[num].orbitInclination);
 
 
   //Draw Orbit Lines
@@ -281,6 +307,46 @@ var onProgress = (xhr) => {
 var onError = (errorMessage) => {
   console.log(errorMessage);
 };
+
+//NOTE: Wait for AR
+//TODO: Need to sync to the rotation of planet
+// var spawnAstronaut = (pivot) => {
+
+//   //pivot.add(cameraPivot);
+
+//   cameraPivot.position.setFromMatrixPosition(camera.matrixWorld);
+//   cameraPivot.quaternion.setFromRotationMatrix(camera.matrixWorld);
+//   cameraPivot.updateMatrix();
+//   cameraPivot.add(astronautObj);
+//   astronautObj.position.y = -50;
+//   astronautObj.position.z = -100;
+//   cameraPivot.rotateY(-Math.PI/2);
+//   jsonObj.astronaut.angle = 0;
+//   jsonObj.astronaut.rotate = true;
+
+
+
+//   // console.log(cameraPivot);
+//   // console.log(camera);
+
+// }
+
+//NOTE: Wait for AR
+// var cameraTraversal = (target, num) => {
+//   var dir = new THREE.Vector3();
+//   dir.subVectors(planetTargets[num].getWorldPosition(dir), camera.position).normalize();
+//   camera.translateOnAxis(dir, 4);
+
+//   planets[num].getWorldPosition(dir);
+//   var distance = camera.position.distanceTo(dir);
+
+//   if (distance <= jsonObj.planets[num].radius*2000 / jsonObj.sizeScale){ //500 for buffer
+
+//     jsonObj.traversal = false;
+//     //pivots[num].add(camera);
+//     // spawnAstronaut(pivots[num]);
+//   }
+// }
 
 //Implementing bounding boxes for all the continenets
 var antarcticaBox = new THREE.Box3();

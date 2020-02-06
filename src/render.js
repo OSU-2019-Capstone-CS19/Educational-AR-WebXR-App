@@ -26,8 +26,8 @@ Render/Animate Function
 var render = () => {
   requestAnimationFrame( render );
 
-
   sunLight.intensity = jsonObj.sun.intensity;
+
   //Sun Rotation
   if (sunObj){
     sunObj.rotateY(jsonObj.sun.rotation / jsonObj.rotationScale);
@@ -57,57 +57,19 @@ var render = () => {
     moonPivot.rotateY(jsonObj.planets[2].moon.orbit / jsonObj.orbitScale);
   }
 
-  //NOTE: Wait for AR
-  //traversal
-  if (jsonObj.traversal){
-    if (jsonObj.sun.beingViewed){
-      //Move to sun
+  //Camera rotation if viewing planet
+  //NOTE: this will not be present in the AR build
+  for (var i=0; i<jsonObj.numPlanets; i++){
+    if (jsonObj.planets[i].beingViewed){
+      cameraControls.target = new THREE.Vector3().setFromMatrixPosition(planets[i].matrixWorld);
+
     } else if (jsonObj.planets[2].moon.beingViewed){
-      //move to moon
-    } else {
-      for (var i=0; i<jsonObj.numPlanets; i++){
-        if (jsonObj.planets[i].beingViewed){
-          //move to planet
-          cameraTarget = new THREE.Vector3().setFromMatrixPosition(planetTargets[i].matrixWorld);
-          cameraControls.target = cameraTarget;
-          cameraTraversal(planets[i], i);
-        }
-      }
-    }
-  } else {
-    //Camera rotation if viewing planet
-    //NOTE: this will not be present in the AR build
-    // for (var i=0; i<jsonObj.numPlanets; i++){
-    //   if (jsonObj.planets[i].beingViewed){
-    //     cameraTarget = new THREE.Vector3().setFromMatrixPosition(planetTargets[i].matrixWorld);
-    //     cameraControls.target = cameraTarget;
-    //
-    //   // } else if (jsonObj.planets[2].moon.beingViewed == "true"){
-    //   //   cameraTarget = new THREE.Vector3().setFromMatrixPosition(planets[2].matrixWorld);
-    //   //   cameraControls.target = cameraTarget;
-    //   }
-    // }
-  }
-
-  //Astronaut
-
-  if(jsonObj.astronaut.visible == "true"){
-    if(jsonObj.astronaut.rotate == "true") {
-      if(jsonObj.astronaut.angle > Math.PI/4) {
-        console.log("I AM HERE!");
-        jsonObj.astronaut.rotate = "false";
-        //textbox here
-      } else {
-        cameraPivot.rotateY((Math.PI/4)/50);
-        jsonObj.astronaut.angle += (Math.PI/4)/50;
-      }
+      cameraTarget = new THREE.Vector3().setFromMatrixPosition(moonObj.matrixWorld);
+      cameraControls.target = cameraTarget;
     }
   }
 
   cameraControls.update();
-
-  //Test
-  light.position.copy( camera.position );
 
   renderer.render( scene, camera );
 };

@@ -1,7 +1,3 @@
-
-
-//import { WebGLRenderer, Scene, Object3D, PerspectiveCamera, OrbitControls, Vector3, PointLight, Raycaster, Vector2, GLTFLoader, LineBasicMaterial, CircleGeometry, LineLoop} from 'three';
-
 var planets = [];
 var pivots = [];
 var planetTargets = [];
@@ -10,7 +6,6 @@ var continentBoxs = [];
 var sunObj, moonObj, moonPivot;
 var astronautObj, cameraPivot;
 var cameraTarget;
-
 
 
 /**********
@@ -23,13 +18,6 @@ var request = new XMLHttpRequest();
   request.open("GET", "./solarSystem.json", false);
   request.send(null);
   jsonObj = JSON.parse(request.responseText);
-
-// var jsonAstroFacts;
-// var factRequest = new XMLHttpRequest();
-//   factRequest.open("GET", "./astronautFacts.json", false);
-//   factRequest.send();
-//   jsonAstroFacts = JSON.parse(factRequest.responseText);
-//   console.log(jsonAstroFacts);
 
 
 /**********
@@ -54,7 +42,6 @@ moonObj = new THREE.Object3D();
 moonPivot = new THREE.Object3D();
 astronautObj = new THREE.Object3D();
 
-
 for (var i=0; i < jsonObj.numPlanets; i++){
   pivots[i] = new THREE.Object3D();
   pivots[i].position.set(0, 0, 0);
@@ -73,30 +60,16 @@ var cameraControls = new THREE.OrbitControls(camera, renderer.domElement);
 cameraControls.target = new THREE.Vector3( 0, 0, 0);
 cameraControls.update();
 
-//camera.position.x = 200
-// camera.position.z =  500;
 camera.position.y = 700;
-
-//Camera pivot (astronaut)
-// cameraPivot = new THREE.Object3D();
-// cameraPivot.position.set(camera.position.x, camera.position.y, camera.position.z);
-// cameraPivot.rotation.copy(camera.rotation);
-// cameraPivot.updateMatrix();
-// scene.add(cameraPivot);
 
 
 /**********
 Create Lights
 **********/
-
 var sunLight = new THREE.PointLight( 0xfffee8, jsonObj.sun.Intensity, 0, 0);
 sunLight.position.set( 0, 0, 0);
 scene.add(sunLight);
 
-//test
-light = new THREE.PointLight( 0xffffff, 2, 0, 0);
-light.position = camera.position;
-scene.add(light);
 
 /**********
 Raycasting and Mouse
@@ -120,8 +93,6 @@ loader.load(
 );
 
 //Planets
-var num=0;
-
 //NOTE: Loads planets in the wrong order
 for (var i=0; i < jsonObj.numPlanets; i++){
   loader.load(
@@ -136,15 +107,6 @@ for (var i=0; i < jsonObj.numPlanets; i++){
 loader.load(
   jsonObj.planets[2].moon.file,
   gltf => loadMoon( gltf ),
-  xhr => onProgress(xhr),
-  error => onError(error)
-);
-
-
-//Astronaut
-loader.load(
-  jsonObj.astronaut.file,
-  gltf => loadAstronaut( gltf ),
   xhr => onProgress(xhr),
   error => onError(error)
 );
@@ -226,6 +188,7 @@ var loadPlanet = ( gltf ) => {
   }
 
   //Planet
+  //Note: Scale is 1=1000 based on original model
   planets[num] = gltf.scene
   planets[num].scale.set((jsonObj.planets[num].radius/jsonObj.sizeScale),
                           (jsonObj.planets[num].radius/jsonObj.sizeScale),
@@ -234,28 +197,18 @@ var loadPlanet = ( gltf ) => {
                             pivots[num].position.y,
                             pivots[num].position.z);
 
-
   planets[num].rotateZ(jsonObj.planets[num].rotationAngle);
   planets[num].name = jsonObj.planets[num].name;
 
   //Planet Target
-  //Note: Scale is 1=1000 based on original model
   planetTargets[num].position.set(planets[num].position.x - (jsonObj.planets[num].radius)*1500 / jsonObj.sizeScale,
                             planets[num].position.y,
                             planets[num].position.z);
 
-  //TESTING
-  var geometry = new THREE.BoxGeometry( 5, 5, 5 );
-  var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-  var cube = new THREE.Mesh( geometry, material );
-  planetTargets[num].add(cube);
-
   //Pivot
   pivots[num].add(planets[num]);
   pivots[num].add(planetTargets[num]);
-
   pivots[num].rotateZ(jsonObj.planets[num].orbitInclination);
-
 
   //Draw Orbit Lines
   material = new THREE.LineBasicMaterial({ color:0xffffa1 });
@@ -266,7 +219,6 @@ var loadPlanet = ( gltf ) => {
 
   orbitLines[num] = new THREE.LineLoop( orbitCircle, material);
   scene.add(orbitLines[num]);
-
 };
 
 //Load Moon Model
@@ -293,13 +245,6 @@ var loadMoon = ( gltf ) => {
   moonPivot.add(moonObj);
 
   moonPivot.rotateZ(jsonObj.planets[2].moon.orbitInclination);
-
-};
-
-//Load Astronaut Model
-var loadAstronaut = ( gltf ) => {
-  astronautObj = gltf.scene;
-  astronautObj.scale.set(.05, .05, .05);
 };
 
 //Model Load Progress
@@ -312,47 +257,82 @@ var onError = (errorMessage) => {
   console.log(errorMessage);
 };
 
-//NOTE: Wait for AR
-//TODO: Need to sync to the rotation of planet
-// var spawnAstronaut = (pivot) => {
 
-//   //pivot.add(cameraPivot);
+/***********
+Planet Selection
+***********/
+var planetSelect = (planetNum) => {
+  var ranNum = Math.floor(Math.random() * 3);
+  document.getElementById("TextBox").innerHTML = jsonObj.planets[planetNum].facts[ranNum];
 
-//   cameraPivot.position.setFromMatrixPosition(camera.matrixWorld);
-//   cameraPivot.quaternion.setFromRotationMatrix(camera.matrixWorld);
-//   cameraPivot.updateMatrix();
-//   cameraPivot.add(astronautObj);
-//   astronautObj.position.y = -50;
-//   astronautObj.position.z = -100;
-//   cameraPivot.rotateY(-Math.PI/2);
-//   jsonObj.astronaut.angle = 0;
-//   jsonObj.astronaut.rotate = true;
+  if (!jsonObj.planets[planetNum].beingViewed){
+    jsonObj.sun.beingViewed = false;
+    jsonObj.planets[2].moon.beingViewed = false;
+    for (var i=0; i<jsonObj.numPlanets; i++){
+      jsonObj.planets[i].beingViewed = false;
+    }
+    jsonObj.planets[planetNum].beingViewed = true;
 
+    planetTargets[planetNum].add(camera);
+    camera.position.set(0,0,0);
+  }
+};
 
+var sunSelect = () => {
+  var ranNum = Math.floor(Math.random() * 3);
+  document.getElementById("TextBox").innerHTML = jsonObj.sun.facts[ranNum];
 
-//   // console.log(cameraPivot);
-//   // console.log(camera);
+  if (!jsonObj.sun.beingViewed){
+    jsonObj.sun.beingViewed = false;
+    jsonObj.planets[2].moon.beingViewed = false;
+    for (var i=0; i<jsonObj.numPlanets; i++){
+      jsonObj.planets[i].beingViewed = false;
+    }
+    jsonObj.sun.beingViewed = true;
 
-// }
+    sunObj.add(camera);
 
-//NOTE: Wait for AR
-var cameraTraversal = (target, num) => {
-  var dir = new THREE.Vector3();
-  dir.subVectors(planetTargets[num].getWorldPosition(dir), camera.position).normalize();
-  camera.translateOnAxis(dir, 4);
+    //TODO: this is hard coded
+    camera.position.set(0, 700, 1500);
+    cameraControls.target = sunObj.position;
+    cameraControls.update();
 
-  planets[num].getWorldPosition(dir);
-  var distance = camera.position.distanceTo(dir);
+  } else {
 
-  if (distance <= jsonObj.planets[num].radius*2000 / jsonObj.sizeScale){ //500 for buffer
+    //Solar System View
+    jsonObj.sun.beingViewed = false;
+    sunObj.remove(camera);
 
-    jsonObj.traversal = false;
-    //pivots[num].add(camera);
-    // spawnAstronaut(pivots[num]);
+    //TODO: this is hard coded
+    camera.position.set(0, 700, 0);
+    cameraControls.target = new THREE.Vector3(0,0,0);
+    cameraControls.update();
+  }
+};
+
+var moonSelect = () => {
+  var ranNum = Math.floor(Math.random() * 3);
+  document.getElementById("TextBox").innerHTML = jsonObj.planets[2].moon.facts[ranNum];
+
+  if (!jsonObj.planets[2].moon.beingViewed){
+    jsonObj.sun.beingViewed = false;
+    jsonObj.planets[2].moon.beingViewed = false;
+    for (var i=0; i<jsonObj.numPlanets; i++){
+      jsonObj.planets[i].beingViewed = false;
+    }
+    jsonObj.planets[2].moon.beingViewed = true;
+
+    moonPivot.add(camera);
+
+    //TODO hard coded
+    camera.position.set( -1, 0, 0);
   }
 }
 
-//Implementing bounding boxes for all the continenets
+
+/*********
+Implementing bounding boxes for all the continenets
+*********/
 var antarcticaBox = new THREE.Box3();
 antarcticaBox.setFromPoints(jsonObj.continents[6].boundingBox);
 antarcticaBox.expandByPoint(jsonObj.continents[6].centerPoint);
@@ -390,5 +370,25 @@ asiaBox1.setFromPoints(jsonObj.continents[4].boundingBox[0]);
 var asiaBox2 = new THREE.Box3();
 asiaBox2.setFromPoints(jsonObj.continents[4].boundingBox[1]);
 
-// var helper1 = new THREE.Box3Helper( antarcticaBox, 0xffff00 );
+// var helper = new THREE.Box3Helper( antarcticaBox, 0xffff00 );
+// scene.add( helper );
+// var helper1 = new THREE.Box3Helper( australiaBox, 0xffff00 );
 // scene.add( helper1 );
+// var helper2 = new THREE.Box3Helper( europeBox, 0xffff00 );
+// scene.add( helper2 );
+// var helper3 = new THREE.Box3Helper( africaBox1, 0xffff00 );
+// scene.add( helper3 );
+// var helper4 = new THREE.Box3Helper( africaBox2, 0xffff00 );
+// scene.add( helper4 );
+// var helper5 = new THREE.Box3Helper(southAmericaBox1, 0xffff00 );
+// scene.add( helper5 );
+// var helper6 = new THREE.Box3Helper( southAmericaBox2, 0xffff00 );
+// scene.add( helper6 );
+// var helper7 = new THREE.Box3Helper( northAmericaBox1, 0xffff00 );
+// scene.add( helper7 );
+// var helper8 = new THREE.Box3Helper( northAmericaBox2, 0xffff00 );
+// scene.add( helper8 );
+// var helper9 = new THREE.Box3Helper( asiaBox1, 0xffff00 );
+// scene.add( helper9 );
+// var helper0 = new THREE.Box3Helper( asiaBox2, 0xffff00 );
+// scene.add( helper0 );

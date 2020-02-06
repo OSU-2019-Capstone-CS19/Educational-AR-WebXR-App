@@ -26,6 +26,8 @@ Render/Animate Function
 var render = () => {
   requestAnimationFrame( render );
 
+
+  sunLight.intensity = jsonObj.sun.intensity;
   //Sun Rotation
   if (sunObj){
     sunObj.rotateY(jsonObj.sun.rotation / jsonObj.rotationScale);
@@ -88,17 +90,19 @@ var render = () => {
   }
 
   //Astronaut
-  if(jsonObj.astronaut.rotate) {
-    if(jsonObj.astronaut.angle > Math.PI/4) {
-      jsonObj.astronaut.rotate = false;
-      //textbox here
-    } else {
-      cameraPivot.rotateY((Math.PI/4)/50);
-      jsonObj.astronaut.angle += (Math.PI/4)/50;
+
+  if(jsonObj.astronaut.visible == "true"){
+    if(jsonObj.astronaut.rotate == "true") {
+      if(jsonObj.astronaut.angle > Math.PI/4) {
+        console.log("I AM HERE!");
+        jsonObj.astronaut.rotate = "false";
+        //textbox here
+      } else {
+        cameraPivot.rotateY((Math.PI/4)/50);
+        jsonObj.astronaut.angle += (Math.PI/4)/50;
+      }
     }
   }
-
-
 
   cameraControls.update();
 

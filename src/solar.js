@@ -1,3 +1,5 @@
+
+
 //import { WebGLRenderer, Scene, Object3D, PerspectiveCamera, OrbitControls, Vector3, PointLight, Raycaster, Vector2, GLTFLoader, LineBasicMaterial, CircleGeometry, LineLoop} from 'three';
 
 var planets = [];
@@ -7,7 +9,8 @@ var orbitLines = [];
 var continentBoxs = [];
 var sunObj, moonObj, moonPivot;
 var astronautObj, cameraPivot;
-var cameraTarget
+var cameraTarget;
+
 
 
 /**********
@@ -85,7 +88,8 @@ camera.position.y = 700;
 /**********
 Create Lights
 **********/
-var sunLight = new THREE.PointLight( 0xfffee8, 1, 0, 0);
+
+var sunLight = new THREE.PointLight( 0xfffee8, jsonObj.sun.Intensity, 0, 0);
 sunLight.position.set( 0, 0, 0);
 scene.add(sunLight);
 

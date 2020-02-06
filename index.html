@@ -6,6 +6,53 @@
 		    <title>Solar System</title>
 	  </head>
 	  <body>
+      
+
+      <div id="menuOverlay">
+        
+        <!-- This is where all the menus would go -->
+        <button id="testButton" onclick="openNav()">THIS IS A TEST BUTTON (Menu)</button>
+        <div id="mySidenav" class ="sidenav">
+          <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+          <a href="#" onclick="openPlanetsNav()">Planets</a>
+          <a href="#" id="toggleAstronaut">Astronaut</a>
+          <a href="#" id="toggleTrace">Trace Lines</a>
+          <a href="#" type="button" class="collapsible">Sun Intensity</a>
+          <div class="content">
+            <p>Adjust Sun Brightness: </p>
+            <div class="slidecontainer">
+              <input type="range" min="0" max="10" value="1" class="slider" id="sunRange">
+              <p>Value: <span id="sunVal"></span></p>
+            </div>
+          </div>
+          
+          <a href="#" type="button" class="collapsible">Speed</a>
+          <div class="content">
+            <p>Adjust Speed:</p>
+            <div class="slidecontainer">
+              <input type="range" min="1" max="100" value="10.0" class="slider" id="speedRange">
+              <p>Value: 1/<span id="speedVal"></span></p>
+            </div>
+          </div>
+
+        </div>
+
+        <div id="planetsNav" class ="sidenav">
+          <a href="javascript:void(0)" class="closebtn" onclick="closePlanetsNav()">&times;</a>
+          <a href="#" onclick="showPlanet(0)">Mercury</a>
+          <a href="#" onclick="showPlanet(1)">Venus</a>
+          <a href="#" id="showEarth" onclick="showPlanet(2)">Earth</a>
+          <a href="#" onclick="showPlanet(3)">Mars</a>
+          <a href="#" onclick="showPlanet(4)">Jupiter</a>
+          <a href="#" onclick="showPlanet(5)">Saturn</a>
+          <a href="#" onclick="showPlanet(6)">Uranus</a>
+          <a href="#" onclick="showPlanet(7)">Neptune</a>
+          <a href="#" onclick="showPlanet(8)">Pluto</a>
+          <hr>
+          <a href="#" onclick="showMoon()">Sun</a>
+          <a href="#" onclick="showSun()">Moon</a>
+        </div>
+
       <div id="TextBox">
         <!-- This is where all the menus would go -->
         Welcome to the Solar System.
@@ -20,5 +67,6 @@
         <script src="./src/render.js"></script>
         <script src="./src/sceneEventHandler.js"></script>
         <script src="./src/menuEventHandler.js"></script>
+      
      </body>
   </html>

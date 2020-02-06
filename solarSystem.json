@@ -12,6 +12,7 @@
      "radius":695510,
      "rotation":0.2327,
      "rotationAngle":0.127,
+     "intensity": 1.0
      "beingViewed":false,
      "facts":[
                "The Sun accounts for 99.86% of the mass in the solar system.",
@@ -23,7 +24,8 @@
    "astronaut": {
       "file": "./model/astronaut/scene.gltf",
       "angle": 0,
-      "rotate": false
+      "rotate": "false",
+      "visible": "true"
    },
    "planets":[
       {

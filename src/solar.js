@@ -2,7 +2,6 @@ import {Workbox} from 'workbox-window';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-//import { render } from './render.js';
 
 
 if ("serviceWorker" in navigator) {

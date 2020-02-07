@@ -1,0 +1,25 @@
+{
+  "name": "capstone-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "es-dev-server --node-resolve --app-index index.html --open",
+    "build": "rimraf dist && rollup -c rollup.config.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "rollup-plugin-copy-glob": "^0.3.1",
+    "three": "^0.113.2",
+    "workbox-build": "^5.0.0",
+    "workbox-sw": "^5.0.0"
+  },
+  "devDependencies": {
+    "@open-wc/building-rollup": "^0.20.3",
+    "@rollup/plugin-node-resolve": "^7.1.1",
+    "es-dev-server": "^1.38.3",
+    "rimraf": "^3.0.1",
+    "rollup": "^1.31.0"
+  }
+}

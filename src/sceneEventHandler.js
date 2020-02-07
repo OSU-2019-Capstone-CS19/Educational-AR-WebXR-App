@@ -82,7 +82,6 @@ window.addEventListener( 'mousedown', () => {
             planetSelect(3);
             break;
 
-
           case "Jupiter":
             planetSelect(4);
             break;

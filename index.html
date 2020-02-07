@@ -2,16 +2,16 @@
   <html>
     <head>
 		    <meta charset="utf-8">
-        <link rel="stylesheet" href="/src/style.css">
+        <link rel="stylesheet" href="style.css">
 		    <title>Solar System</title>
 	  </head>
 	  <body>
 
       <div id="menuOverlay">
-        <button id="testButton" onclick="openNav()">THIS IS A TEST BUTTON (Menu)</button>
+        <button id="testButton">THIS IS A TEST BUTTON (Menu)</button>
         <div id="mySidenav" class ="sidenav">
-          <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-          <a href="#" onclick="openPlanetsNav()">Planets</a>
+          <a href="javascript:void(0)" class="closebtn" id="closeNav">&times;</a>
+          <a href="#" id="openPlanetsNav">Planets</a>
           <a href="#" id="toggleAstronaut">Astronaut</a>
           <a href="#" id="toggleTrace">Trace Lines</a>
           <a href="#" type="button" class="collapsible">Sun Intensity</a>
@@ -35,19 +35,19 @@
         </div>
 
         <div id="planetsNav" class ="sidenav">
-          <a href="javascript:void(0)" class="closebtn" onclick="closePlanetsNav()">&times;</a>
-          <a href="#" onclick="planetSelect(0)">Mercury</a>
-          <a href="#" onclick="planetSelect(1)">Venus</a>
-          <a href="#" id="showEarth" onclick="planetSelect(2)">Earth</a>
-          <a href="#" onclick="planetSelect(3)">Mars</a>
-          <a href="#" onclick="planetSelect(4)">Jupiter</a>
-          <a href="#" onclick="planetSelect(5)">Saturn</a>
-          <a href="#" onclick="planetSelect(6)">Uranus</a>
-          <a href="#" onclick="planetSelect(7)">Neptune</a>
-          <a href="#" onclick="planetSelect(8)">Pluto</a>
+          <a href="javascript:void(0)" class="closebtn" id="closePlanetsNav">&times;</a>
+          <a href="#" id="showMercury">Mercury</a>
+          <a href="#" id="showVenus">Venus</a>
+          <a href="#" id="showEarth">Earth</a>
+          <a href="#" id="showMars">Mars</a>
+          <a href="#" id="showJupiter">Jupiter</a>
+          <a href="#" id="showSaturn">Saturn</a>
+          <a href="#" id="showUranus">Uranus</a>
+          <a href="#" id="showNeptune">Neptune</a>
+          <a href="#" id="showPluto">Pluto</a>
           <hr>
-          <a href="#" onclick="sunSelect()">Sun</a>
-          <a href="#" onclick="moonSelect()">Moon</a>
+          <a href="#" id="showSun">Sun</a>
+          <a href="#" id="showMoon">Moon</a>
         </div>
       </div>
 
@@ -55,7 +55,8 @@
         Welcome to the Solar System.
       </div>
 
-        <script src="//threejs.org/build/three.min.js"></script>
+        <script type="module" src="src/solar.js"></script>
+        <!-- <script src="//threejs.org/build/three.min.js"></script>
         <script src="//threejs.org/examples/js/loaders/GLTFLoader.js"></script>
         <script src="//threejs.org/examples/js/controls/OrbitControls.js"></script>
 
@@ -63,7 +64,7 @@
         <script src="./src/solar.js"></script>
         <script src="./src/render.js"></script>
         <script src="./src/sceneEventHandler.js"></script>
-        <script src="./src/menuEventHandler.js"></script>
+        <script src="./src/menuEventHandler.js"></script> -->
 
      </body>
   </html>

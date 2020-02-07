@@ -2,7 +2,7 @@
   "name": "capstone-project",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "index.html",
   "scripts": {
     "start": "es-dev-server --node-resolve --app-index index.html --open",
     "build": "rimraf dist && rollup -c rollup.config.js"

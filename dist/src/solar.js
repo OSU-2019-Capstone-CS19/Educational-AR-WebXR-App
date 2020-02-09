@@ -1,4 +1,4 @@
-import {Workbox} from 'workbox-window';
+import { Workbox } from 'workbox-window';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -502,7 +502,7 @@ Click Event Listener
            Set camera parent to planets pivot point so camera orbits around with the planet
     => Yes: Set camera parent to planet so camera orbits around the planet
 **********/
-window.addEventListener( 'mousedown', () => {
+window.addEventListener( 'touchstart', () => {
 
 
     mouse.x = (event.clientX / window.innerWidth) *2 -1;

@@ -1,11 +1,12 @@
-import { Workbox } from 'workbox-window';
+import {Workbox} from 'workbox-window';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+//import { render } from './render.js';
 
 
 if ("serviceWorker" in navigator) {
-  const wb = new Workbox('sw.js');
+  const wb = new Workbox('service-worker.js');
   wb.register();
 }
 
@@ -34,7 +35,7 @@ var request = new XMLHttpRequest();
 /**********
 Create Renderer
 **********/
-var renderer = new THREE.WebGLRenderer();
+var renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
@@ -502,10 +503,9 @@ Click Event Listener
            Set camera parent to planets pivot point so camera orbits around with the planet
     => Yes: Set camera parent to planet so camera orbits around the planet
 **********/
-window.addEventListener( 'click', handler, false);
-window.addEventListener( 'touchstart', handler, false);
+//mousedown
+window.addEventListener( 'touchstart', () => {
 
-function handler(event){
 
     mouse.x = (event.clientX / window.innerWidth) *2 -1;
     mouse.y = - (event.clientY / window.innerHeight) *2 +1;
@@ -596,7 +596,7 @@ function handler(event){
         }
       }
    }
-}
+}, false );
 
 /***************************
 MenuEventHandler

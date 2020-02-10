@@ -505,13 +505,17 @@ Click Event Listener
 **********/
 window.addEventListener( 'touchstart', () => {
 
+    console.log("EVENT FIRED");
+
     mouse.x = (event.clientX / window.innerWidth) *2 -1;
     mouse.y = - (event.clientY / window.innerHeight) *2 +1;
+
+    console.log(mouse);
 
     raycaster.setFromCamera( mouse, camera );
 	  var intersects = raycaster.intersectObjects(scene.children, true);
     if (intersects.length > 0){
-
+      console.log(intersects[0]);
       if(intersects[0].object.parent.name){
         switch(intersects[0].object.parent.name){
 

@@ -503,10 +503,8 @@ Click Event Listener
            Set camera parent to planets pivot point so camera orbits around with the planet
     => Yes: Set camera parent to planet so camera orbits around the planet
 **********/
-window.addEventListener( 'click', handler, false);
-window.addEventListener( 'touchstart', handler, false);
+window.addEventListener( 'touchstart', () => {
 
-function handler(event){
     mouse.x = (event.clientX / window.innerWidth) *2 -1;
     mouse.y = - (event.clientY / window.innerHeight) *2 +1;
 
@@ -596,7 +594,7 @@ function handler(event){
         }
       }
    }
-}
+}, false );
 
 /***************************
 MenuEventHandler

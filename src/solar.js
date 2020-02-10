@@ -504,6 +504,7 @@ Click Event Listener
     => Yes: Set camera parent to planet so camera orbits around the planet
 **********/
 window.addEventListener( 'click', () => {
+    console.log('Event');
 
     mouse.x = (event.clientX / window.innerWidth) *2 -1;
     mouse.y = - (event.clientY / window.innerHeight) *2 +1;

@@ -32,7 +32,7 @@ export default {
         globPatterns: [
           '**/*.{js,css,html,glb,json}'
         ],
-        swDest: "dist/service-worker.js",
+        swDest: "dist/sw.js",
       }),
   ],
 };

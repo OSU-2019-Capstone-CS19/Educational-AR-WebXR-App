@@ -5,7 +5,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 
 if ("serviceWorker" in navigator) {
-  const wb = new Workbox('service-worker.js');
+  const wb = new Workbox('sw.js');
   wb.register();
 }
 

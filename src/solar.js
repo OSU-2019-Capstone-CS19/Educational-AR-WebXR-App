@@ -302,7 +302,7 @@ var sunSelect = () => {
     }
     jsonObj.sun.beingViewed = true;
 
-    //sunObj.add(camera);
+    sunObj.add(camera);
 
     //TODO: this is hard coded
     camera.position.set(0, 700, 1500);
@@ -427,18 +427,26 @@ Click Event Listener
     => Yes: Set camera parent to planet so camera orbits around the planet
 **********/
 window.addEventListener('mousedown', () => {
-  console.log("mouseDown");
-});
+
+  mouse.x = (event.clientX / window.innerWidth) *2 -1;
+  mouse.y = - (event.clientY / window.innerHeight) *2 +1;
+
+  console.log("mousedown");
+
+  checkRaycasting(mouse);
+}, false);
 
 window.addEventListener('touchstart', () => {
 
-    mouse.x = (event.targetTouches[0].pageX / window.innerWidth) *2 -1;
-    mouse.y = - (event.targetTouches[0].pageY / window.innerHeight) *2 +1;
+  mouse.x = (event.targetTouches[0].pageX / window.innerWidth) *2 -1;
+  mouse.y = - (event.targetTouches[0].pageY / window.innerHeight) *2 +1;
 
-    // //mousedown
-    // mouse.x = (event.clientX / window.innerWidth) *2 -1;
-    // mouse.y = - (event.clientY / window.innerHeight) *2 +1;
+  console.log("touchstart");
 
+  checkRaycasting(mouse);
+}, false);
+
+var checkRaycasting = (mouse) => {
     raycaster.setFromCamera( mouse, camera );
 	  var intersects = raycaster.intersectObjects(scene.children, true);
     if (intersects.length > 0){
@@ -525,7 +533,7 @@ window.addEventListener('touchstart', () => {
         }
       }
    }
-}, false );
+}
 
 /***************************
 MenuEventHandler

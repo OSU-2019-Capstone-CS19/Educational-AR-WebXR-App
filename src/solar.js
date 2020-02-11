@@ -302,7 +302,7 @@ var sunSelect = () => {
     }
     jsonObj.sun.beingViewed = true;
 
-    sunObj.add(camera);
+    //sunObj.add(camera);
 
     //TODO: this is hard coded
     camera.position.set(0, 700, 1500);
@@ -426,26 +426,23 @@ Click Event Listener
            Set camera parent to planets pivot point so camera orbits around with the planet
     => Yes: Set camera parent to planet so camera orbits around the planet
 **********/
+window.addEventListener('mousedown', () => {
+  console.log("mouseDown");
+});
+
 window.addEventListener('touchstart', () => {
-
-    console.log("EVENT FIRED");
-
-    console.log(event);
 
     mouse.x = (event.targetTouches[0].pageX / window.innerWidth) *2 -1;
     mouse.y = - (event.targetTouches[0].pageY / window.innerHeight) *2 +1;
 
-    //NOTE: This is for mouse click
+    // //mousedown
     // mouse.x = (event.clientX / window.innerWidth) *2 -1;
     // mouse.y = - (event.clientY / window.innerHeight) *2 +1;
-
-    console.log(mouse);
 
     raycaster.setFromCamera( mouse, camera );
 	  var intersects = raycaster.intersectObjects(scene.children, true);
     if (intersects.length > 0){
 
-      console.log(intersects[0]);
       if(intersects[0].object.parent.name){
         switch(intersects[0].object.parent.name){
 

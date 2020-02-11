@@ -432,6 +432,7 @@ window.addEventListener('mousedown', () => {
   mouse.y = - (event.clientY / window.innerHeight) *2 +1;
 
   console.log("mousedown");
+  console.log(event);
 
   checkRaycasting(mouse);
 }, false);
@@ -442,11 +443,15 @@ window.addEventListener('touchstart', () => {
   mouse.y = - (event.targetTouches[0].pageY / window.innerHeight) *2 +1;
 
   console.log("touchstart");
+  console.log(event);
 
   checkRaycasting(mouse);
 }, false);
 
 var checkRaycasting = (mouse) => {
+
+    console.log("raycasting");
+
     raycaster.setFromCamera( mouse, camera );
 	  var intersects = raycaster.intersectObjects(scene.children, true);
     if (intersects.length > 0){

@@ -426,7 +426,7 @@ Click Event Listener
            Set camera parent to planets pivot point so camera orbits around with the planet
     => Yes: Set camera parent to planet so camera orbits around the planet
 **********/
-window.addEventListener('mousedown', () => {
+window.addEventListener('touchstart', () => {
 
     console.log("EVENT FIRED");
 

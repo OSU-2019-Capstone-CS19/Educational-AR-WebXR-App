@@ -432,8 +432,8 @@ window.addEventListener('mousedown', () => {
 
     console.log(event);
 
-    mouse.x = (event.targetTouches[0].clientX / window.innerWidth) *2 -1;
-    mouse.y = - (event.targetTouches[0].clientY / window.innerHeight) *2 +1;
+    mouse.x = (event.targetTouches[0].pageX / window.innerWidth) *2 -1;
+    mouse.y = - (event.targetTouches[0].pageY / window.innerHeight) *2 +1;
 
     //NOTE: This is for mouse click
     // mouse.x = (event.clientX / window.innerWidth) *2 -1;

@@ -382,29 +382,6 @@ asiaBox1.setFromPoints(jsonObj.continents[4].boundingBox[0]);
 var asiaBox2 = new THREE.Box3();
 asiaBox2.setFromPoints(jsonObj.continents[4].boundingBox[1]);
 
-// var helper = new THREE.Box3Helper( antarcticaBox, 0xffff00 );
-// scene.add( helper );
-// var helper1 = new THREE.Box3Helper( australiaBox, 0xffff00 );
-// scene.add( helper1 );
-// var helper2 = new THREE.Box3Helper( europeBox, 0xffff00 );
-// scene.add( helper2 );
-// var helper3 = new THREE.Box3Helper( africaBox1, 0xffff00 );
-// scene.add( helper3 );
-// var helper4 = new THREE.Box3Helper( africaBox2, 0xffff00 );
-// scene.add( helper4 );
-// var helper5 = new THREE.Box3Helper(southAmericaBox1, 0xffff00 );
-// scene.add( helper5 );
-// var helper6 = new THREE.Box3Helper( southAmericaBox2, 0xffff00 );
-// scene.add( helper6 );
-// var helper7 = new THREE.Box3Helper( northAmericaBox1, 0xffff00 );
-// scene.add( helper7 );
-// var helper8 = new THREE.Box3Helper( northAmericaBox2, 0xffff00 );
-// scene.add( helper8 );
-// var helper9 = new THREE.Box3Helper( asiaBox1, 0xffff00 );
-// scene.add( helper9 );
-// var helper0 = new THREE.Box3Helper( asiaBox2, 0xffff00 );
-// scene.add( helper0 );
-
 
 //NOTE: Couldnt really find a good way to run all the javascripts together. Will look more into it later
 
@@ -432,7 +409,7 @@ window.addEventListener('mousedown', () => {
   mouse.y = - (event.clientY / window.innerHeight) *2 +1;
 
   console.log("mousedown");
-  console.log(event);
+  console.log(mouse);
 
   checkRaycasting(mouse);
 }, false);
@@ -443,7 +420,7 @@ window.addEventListener('touchstart', () => {
   mouse.y = - (event.targetTouches[0].pageY / window.innerHeight) *2 +1;
 
   console.log("touchstart");
-  console.log(event);
+  console.log(mouse);
 
   checkRaycasting(mouse);
 }, false);

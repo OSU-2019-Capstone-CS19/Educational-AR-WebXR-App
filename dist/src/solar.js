@@ -4,7 +4,6 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 //import { render } from './render.js';
 
-
 if ("serviceWorker" in navigator) {
   const wb = new Workbox('service-worker.js');
   wb.register();
@@ -408,83 +407,7 @@ asiaBox2.setFromPoints(jsonObj.continents[4].boundingBox[1]);
 
 
 //NOTE: Couldnt really find a good way to run all the javascripts together. Will look more into it later
-/**********
-Render/Animate Function
-***********
-=> Check if sunObj exists
-  => Yes: Rotate the sunObj about its Y axis
 
-=> Check if planets exists
-  => Yes: Rotate the planets based on their Y axis
-
-=> Check if planets pivots exists
-  => Yes: Rotate each pivot about its Y axis, resulting in an orbit around the sun
-
-=> Check if moonObj exists
-  => Yes: Rotate the moonObj about its Y axis
-
-=> Check if moonPivot exists
-  => Yes: Rotate the moonPivot about its Y axis, resulting in an orbit around the earth
-
-=> Check if any planet is currently being viewed
-  => Yes: Update cameraControls.Target to the planet
-  => NOTE: This will not be in the AR version of the application
-
-=> Update camera controls
-=> Call render
-**********/
-var render = () => {
-  requestAnimationFrame( render );
-
-  sunLight.intensity = jsonObj.sun.intensity;
-
-  //Sun Rotation
-  if (sunObj){
-    sunObj.rotateY(jsonObj.sun.rotation / jsonObj.rotationScale);
-  }
-
-  //Planet Rotation (rad/day)
-  for (var i=0; i<jsonObj.numPlanets; i++){
-    if (planets[i]){
-        planets[i].rotateY(jsonObj.planets[i].rotation / jsonObj.rotationScale);
-    }
-  }
-
-  // //Planet Orbit (rad/day)
-  for (var i=0; i<jsonObj.numPlanets; i++){ //will use jsonObj.numElements
-    if (pivots[i]){
-      pivots[i].rotateY(jsonObj.planets[i].orbit / jsonObj.orbitScale);
-    }
-  }
-
-  //Moon Rotation (rad/day)
-  if (moonObj){
-    moonObj.rotateY(jsonObj.planets[2].moon.rotation / jsonObj.rotationScale);
-  }
-
-  //Moon Orbit (rad/day)
-  if (moonPivot){
-    moonPivot.rotateY(jsonObj.planets[2].moon.orbit / jsonObj.orbitScale);
-  }
-
-  //Camera rotation if viewing planet
-  //NOTE: this will not be present in the AR build
-  for (var i=0; i<jsonObj.numPlanets; i++){
-    if (jsonObj.planets[i].beingViewed){
-      cameraControls.target = new THREE.Vector3().setFromMatrixPosition(planets[i].matrixWorld);
-
-    } else if (jsonObj.planets[2].moon.beingViewed){
-      cameraTarget = new THREE.Vector3().setFromMatrixPosition(moonObj.matrixWorld);
-      cameraControls.target = cameraTarget;
-    }
-  }
-
-  cameraControls.update();
-
-  renderer.render( scene, camera );
-};
-
-render();
 
 /**********
 Click Event Listener
@@ -503,14 +426,14 @@ Click Event Listener
            Set camera parent to planets pivot point so camera orbits around with the planet
     => Yes: Set camera parent to planet so camera orbits around the planet
 **********/
-window.addEventListener('touchstart', () => {
+window.addEventListener('mousedown', () => {
 
     console.log("EVENT FIRED");
 
     console.log(event);
 
-    mouse.x = (event.targetTouches[0].pageX / window.innerWidth) *2 -1;
-    mouse.y = -(event.targetTouches[0].pageY / window.innerWidth) *2 +1;
+    mouse.x = (event.targetTouches[0].clientX / window.innerWidth) *2 -1;
+    mouse.y = - (event.targetTouches[0].clientY / window.innerHeight) *2 +1;
 
     //NOTE: This is for mouse click
     // mouse.x = (event.clientX / window.innerWidth) *2 -1;
@@ -521,6 +444,7 @@ window.addEventListener('touchstart', () => {
     raycaster.setFromCamera( mouse, camera );
 	  var intersects = raycaster.intersectObjects(scene.children, true);
     if (intersects.length > 0){
+
       console.log(intersects[0]);
       if(intersects[0].object.parent.name){
         switch(intersects[0].object.parent.name){
@@ -731,3 +655,81 @@ speedSlider.oninput = function() {
   jsonObj.rotationScale = this.value;
 
 }
+
+/**********
+Render/Animate Function
+***********
+=> Check if sunObj exists
+  => Yes: Rotate the sunObj about its Y axis
+
+=> Check if planets exists
+  => Yes: Rotate the planets based on their Y axis
+
+=> Check if planets pivots exists
+  => Yes: Rotate each pivot about its Y axis, resulting in an orbit around the sun
+
+=> Check if moonObj exists
+  => Yes: Rotate the moonObj about its Y axis
+
+=> Check if moonPivot exists
+  => Yes: Rotate the moonPivot about its Y axis, resulting in an orbit around the earth
+
+=> Check if any planet is currently being viewed
+  => Yes: Update cameraControls.Target to the planet
+  => NOTE: This will not be in the AR version of the application
+
+=> Update camera controls
+=> Call render
+**********/
+var render = () => {
+  requestAnimationFrame( render );
+
+  sunLight.intensity = jsonObj.sun.intensity;
+
+  //Sun Rotation
+  if (sunObj){
+    sunObj.rotateY(jsonObj.sun.rotation / jsonObj.rotationScale);
+  }
+
+  //Planet Rotation (rad/day)
+  for (var i=0; i<jsonObj.numPlanets; i++){
+    if (planets[i]){
+        planets[i].rotateY(jsonObj.planets[i].rotation / jsonObj.rotationScale);
+    }
+  }
+
+  // //Planet Orbit (rad/day)
+  for (var i=0; i<jsonObj.numPlanets; i++){ //will use jsonObj.numElements
+    if (pivots[i]){
+      pivots[i].rotateY(jsonObj.planets[i].orbit / jsonObj.orbitScale);
+    }
+  }
+
+  //Moon Rotation (rad/day)
+  if (moonObj){
+    moonObj.rotateY(jsonObj.planets[2].moon.rotation / jsonObj.rotationScale);
+  }
+
+  //Moon Orbit (rad/day)
+  if (moonPivot){
+    moonPivot.rotateY(jsonObj.planets[2].moon.orbit / jsonObj.orbitScale);
+  }
+
+  //Camera rotation if viewing planet
+  //NOTE: this will not be present in the AR build
+  for (var i=0; i<jsonObj.numPlanets; i++){
+    if (jsonObj.planets[i].beingViewed){
+      cameraControls.target = new THREE.Vector3().setFromMatrixPosition(planets[i].matrixWorld);
+
+    } else if (jsonObj.planets[2].moon.beingViewed){
+      cameraTarget = new THREE.Vector3().setFromMatrixPosition(moonObj.matrixWorld);
+      cameraControls.target = cameraTarget;
+    }
+  }
+
+  cameraControls.update();
+
+  renderer.render( scene, camera );
+};
+
+render();

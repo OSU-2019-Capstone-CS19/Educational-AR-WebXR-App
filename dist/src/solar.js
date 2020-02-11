@@ -449,7 +449,9 @@ window.addEventListener('touchstart', () => {
 }, false);
 
 var checkRaycasting = (mouse) => {
-    console.log(raycasting);
+
+    console.log("raycasting");
+
     raycaster.setFromCamera( mouse, camera );
 	  var intersects = raycaster.intersectObjects(scene.children, true);
     if (intersects.length > 0){

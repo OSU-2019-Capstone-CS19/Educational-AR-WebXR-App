@@ -130,7 +130,6 @@ function init() {
     error => onError(error)
   );
 
-
   if (navigator.xr) {
     checkSupportedState();
   }
@@ -245,7 +244,6 @@ var loadPlanet = ( gltf ) => {
 
 //Load Moon Model
 var loadMoon = ( gltf ) => {
-  moonPivot = new THREE.Object3D();
   moonObj = gltf.scene;
 
   moonPivot.position.set( jsonObj.planets[2].distanceFromSun/jsonObj.distanceScale,

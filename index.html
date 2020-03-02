@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+		    <meta charset="utf-8">
+        <link rel="stylesheet" href="style.css">
+		    <title>Solar System</title>
+	  </head>
+	  <body>
+
+      <div id="menuOverlay">
+        <button id="testButton">THIS IS A TEST BUTTON (Menu)</button>
+        <div id="mySidenav" class ="sidenav">
+          <a href="javascript:void(0)" class="closebtn" id="closeNav">&times;</a>
+          <a href="#" id="openPlanetsNav">Planets</a>
+          <a href="#" id="toggleAstronaut">Astronaut</a>
+          <a href="#" id="toggleTrace">Trace Lines</a>
+          <a href="#" type="button" class="collapsible">Sun Intensity</a>
+          <div class="content">
+            <p>Adjust Sun Brightness: </p>
+            <div class="slidecontainer">
+              <input type="range" min="0" max="10" value="1" class="slider" id="sunRange">
+              <p>Value: <span id="sunVal"></span></p>
+            </div>
+          </div>
+
+          <a href="#" type="button" class="collapsible">Speed</a>
+          <div class="content">
+            <p>Adjust Speed:</p>
+            <div class="slidecontainer">
+              <input type="range" min="1" max="100" value="10.0" class="slider" id="speedRange">
+              <p>Value: 1/<span id="speedVal"></span></p>
+            </div>
+          </div>
+
+        </div>
+
+        <div id="planetsNav" class ="sidenav">
+          <a href="javascript:void(0)" class="closebtn" id="closePlanetsNav">&times;</a>
+          <a href="#" id="showMercury">Mercury</a>
+          <a href="#" id="showVenus">Venus</a>
+          <a href="#" id="showEarth">Earth</a>
+          <a href="#" id="showMars">Mars</a>
+          <a href="#" id="showJupiter">Jupiter</a>
+          <a href="#" id="showSaturn">Saturn</a>
+          <a href="#" id="showUranus">Uranus</a>
+          <a href="#" id="showNeptune">Neptune</a>
+          <a href="#" id="showPluto">Pluto</a>
+          <hr>
+          <a href="#" id="showSun">Sun</a>
+          <a href="#" id="showMoon">Moon</a>
+        </div>
+      </div>
+
+      <div id="TextBox">
+        Welcome to the Solar System.
+      </div>
+
+        <script type="module" src="src/solar.js"></script>
+
+     </body>
+  </html>

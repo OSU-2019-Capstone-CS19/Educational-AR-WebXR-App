@@ -5,3 +5,11 @@ body {
   color: white;
   text-align: center;
 }
+
+#description{
+	border: 2px solid white;
+	width: 800px;
+	text-align: center;
+	padding: 10px;
+	margin-left: 30%;
+}

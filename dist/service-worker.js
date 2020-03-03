@@ -1,2 +1,73 @@
-if(!self.define){const e=async e=>{if("require"!==e&&(e+=".js"),!r[e]&&(await new Promise(async s=>{if("document"in self){const r=document.createElement("script");r.src=e,document.head.appendChild(r),r.onload=s}else importScripts(e),s()}),!r[e]))throw new Error(`Module ${e} didn’t register its module`);return r[e]},s=async(s,r)=>{const c=await Promise.all(s.map(e));r(1===c.length?c[0]:c)};s.toUrl=e=>`./${e}`;const r={require:Promise.resolve(s)};self.define=(s,c,i)=>{r[s]||(r[s]=new Promise(async r=>{let f={};const o={uri:location.origin+s.slice(1)},a=await Promise.all(c.map(s=>"exports"===s?f:"module"===s?o:e(s))),l=i(...a);f.default||(f.default=l),r(f)}))}}define("./service-worker.js",["./workbox-7c85bfc1"],(function(e){"use strict";self.addEventListener("message",e=>{e.data&&"SKIP_WAITING"===e.data.type&&self.skipWaiting()}),e.precacheAndRoute([{url:"index.html",revision:"b5aadef5ad1cba19c528cdd92460a82f"},{url:"model/planets-glb/neptune/Neptune.glb",revision:"b22fc6c5706582d982eb867be9c19159"},{url:"model/planets-glb/uranus/Uranus.glb",revision:"82af7750084d9c843eec63a5655eaced"},{url:"model/planets-glb/venus/Venus.glb",revision:"97df6b856aabf83f455d10884bf1f7f1"},{url:"polyfills/custom-elements-es5-adapter.84b300ee818dce8b351c7cc7c100bcf7.js",revision:"cff507bc95ad1d6bf1a415cc9c8852b0"},{url:"polyfills/dynamic-import.b745cfc9384367cc18b42bbef2bbdcd9.js",revision:"ed55766050be285197b8f511eacedb62"},{url:"polyfills/webcomponents.d406f4685fdfb412c61f23b3ae18f2dc.js",revision:"b1db7cb76380495a55ff4f65a9648f0e"},{url:"solar-21f11037.js",revision:"543b7a277b681bf8e02897295d1d8017"},{url:"solarSystem.json",revision:"401aeab9a8292605a3a6861b584a0cd2"},{url:"src/solar.js",revision:"07df156b443136fe818f232e2bb15470"},{url:"style.css",revision:"698b0960afaaf3a1d8fb020f0f16f258"}],{})}));
-//# sourceMappingURL=service-worker.js.map
+/**
+ * Welcome to your Workbox-powered service worker!
+ *
+ * You'll need to register this file in your web app and you should
+ * disable HTTP caching for this file too.
+ * See https://goo.gl/nhQhGp
+ *
+ * The rest of the code is auto-generated. Please don't update this file
+ * directly; instead, make changes to your Workbox build configuration
+ * and re-run your build process.
+ * See https://goo.gl/2aRDsh
+ */
+
+importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
+
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
+
+/**
+ * The workboxSW.precacheAndRoute() method efficiently caches and responds to
+ * requests for URLs in the manifest.
+ * See https://goo.gl/S9QRab
+ */
+self.__precacheManifest = [
+  {
+    "url": "index.html",
+    "revision": "5d8046de71d0991b905be01521700898"
+  },
+  {
+    "url": "model/planets-glb/neptune/Neptune.glb",
+    "revision": "b22fc6c5706582d982eb867be9c19159"
+  },
+  {
+    "url": "model/planets-glb/uranus/Uranus.glb",
+    "revision": "82af7750084d9c843eec63a5655eaced"
+  },
+  {
+    "url": "model/planets-glb/venus/Venus.glb",
+    "revision": "97df6b856aabf83f455d10884bf1f7f1"
+  },
+  {
+    "url": "polyfills/custom-elements-es5-adapter.84b300ee818dce8b351c7cc7c100bcf7.js",
+    "revision": "cff507bc95ad1d6bf1a415cc9c8852b0"
+  },
+  {
+    "url": "polyfills/dynamic-import.b745cfc9384367cc18b42bbef2bbdcd9.js",
+    "revision": "ed55766050be285197b8f511eacedb62"
+  },
+  {
+    "url": "polyfills/webcomponents.d67d6757b8cd44bc35b021ee0b71d197.js",
+    "revision": "e90bc4e3aa3ed407808c7b2726581d33"
+  },
+  {
+    "url": "solar-748897b7.js",
+    "revision": "c03cc7e7e3af07a4fecf93301bd1c04d"
+  },
+  {
+    "url": "solarSystem.json",
+    "revision": "401aeab9a8292605a3a6861b584a0cd2"
+  },
+  {
+    "url": "src/solar.js",
+    "revision": "90799795a5ba075ff8f72f54b376a5f6"
+  },
+  {
+    "url": "style.css",
+    "revision": "698b0960afaaf3a1d8fb020f0f16f258"
+  }
+].concat(self.__precacheManifest || []);
+workbox.precaching.precacheAndRoute(self.__precacheManifest, {});

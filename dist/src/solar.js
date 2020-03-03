@@ -78,7 +78,7 @@ camera.matrixAutoUpdate = false;
 scene.add(camera);
 
 //Test
-let boxGeometry = new THREE.BoxGeometry( 0.01, 0.01, 0.01 );
+let boxGeometry = new THREE.BoxGeometry( 0.1, 0.1, 0.1 );
 let boxmaterial = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
 let cameraPoint = new THREE.Mesh( boxGeometry, boxmaterial );
 camera.add( cameraPoint );
@@ -374,7 +374,12 @@ function checkSupportedState() {
       });
 
     } else {
-      sceneAnimate();
+      if (reticle){
+        reticle.visible = false;
+        originPoint.visible = true;
+      }
+
+      animateScene();
     }
 
     let xrLayer = xrSession.renderState.baseLayer;
@@ -388,20 +393,17 @@ function checkSupportedState() {
     xrSession.requestAnimationFrame(renderXR);
   }
 
-  function sceneAnimate(){
-    if (reticle){
-      reticle.visible = false;
-      originPoint.visible = true;
-    }
+  function animateScene(){
+
 
     //Sun Rotation
-    if (sunObj){
+    if (sunObj && jsonObj.sun.moveRotate){
       sunObj.rotateY(jsonObj.sun.rotation / jsonObj.rotationScale);
     }
 
     //Planet Rotation (rad/day)
     for (let i=0; i<jsonObj.numPlanets; i++){
-      if (planets[i]){
+      if (planets[i] && jsonObj.planets[i].moveRotate){
         planets[i].rotateY(jsonObj.planets[i].rotation / jsonObj.rotationScale);
       }
     }
@@ -416,7 +418,7 @@ function checkSupportedState() {
     }
 
     //Moon Rotation (rad/day)
-    if (moonObj){
+    if (moonObj && jsonObj.planets[2].moon.moveRotate){
       moonObj.rotateY(jsonObj.planets[2].moon.rotation / jsonObj.rotationScale);
     }
 
@@ -451,10 +453,11 @@ function touchSelectEvent() {
       let sceneRaycaster = new THREE.Raycaster();
       sceneRaycaster.set(rayOrigin, rayDirection);
 
-      let intersectsArray = [sunObj, planets[1], planets[2], planets[3], planets[4], planets[5], planets[6], planets[7], planets[8]];
+      let intersectsArray = [sunObj, planets[1], planets[2], planets[3], planets[4], planets[5], planets[6], planets[7], planets[8], cameraPoint];
 
       let intersects = sceneRaycaster.intersectObjects(intersectsArray, true);
       if (intersects.length > 0){
+        console.log(intersects);
         if (intersects[0].object.parent.name){
           switch(intersects[0].object.parent.name){
 
@@ -544,7 +547,7 @@ function touchSelectEvent() {
     //showSolarSystem = false;
 
   } else {
-    //TODO put redical.visible into json
+    //TODO check redical
     //if (redical.visible){
       showSolarSystem = true;
 
@@ -603,9 +606,11 @@ function planetSelect(num){
     planets[num].getWorldPosition(dist);
     distance = cameraPoint.position.distanceTo(dist);
 
-    let height = originPoint.position.y;
+    // let height = originPoint.position.y;
     originPoint.translateOnAxis(dir, distance);
-    originPoint.position.y = height;
+    // originPoint.position.y = height;
+    originPoint.position.y = cameraPoint.position.y;
+
 
   }
 }

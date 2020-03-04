@@ -73,26 +73,28 @@ moonPivot = new THREE.Object3D();
 Create Camera
 => Set starting point for camera
 **********/
-let camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 0.1, 10000000);
+let camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 0.001, 10000000);
 camera.matrixAutoUpdate = false;
 scene.add(camera);
 
 //Test
-let boxGeometry = new THREE.BoxGeometry( 0.1, 0.1, 0.1 );
-let boxmaterial = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-let cameraPoint = new THREE.Mesh( boxGeometry, boxmaterial );
+// let boxGeometry = new THREE.BoxGeometry( 0.01, 0.01, 0.01 );
+// let boxmaterial = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+// let cameraPoint = new THREE.Mesh( boxGeometry, boxmaterial );
+let cameraPoint = new THREE.Object3D();
 camera.add( cameraPoint );
 cameraPoint.position.z -= 0.5;
 
 /**********
 Create Lights
 **********/
+//TODO: sunlight will be an available option
 // let sunLight = new THREE.PointLight( 0xfffee8, jsonObj.sun.intensity, 0, 0);
 // sunLight.position.set( 0, 0, 0);
 // scene.add(sunLight);
 
-let light = new THREE.PointLight( 0xfffee8, 2, 0, 0);
-camera.add(light);
+let cameraLight = new THREE.PointLight( 0xfffee8, 2, 0, 0);
+camera.add(cameraLight);
 
 
 
@@ -214,8 +216,7 @@ function loadPlanet(gltf) {
   pivots[num].name = "pivotPoint";
   originPoint.add(pivots[num]);
 
-  //Planet
-  //Note: Scale is 1=1000 based on original model
+  //Add Planet based on Json
   planets[num] = gltf.scene
   planets[num].scale.set((jsonObj.planets[num].radius/jsonObj.sizeScale),
                           (jsonObj.planets[num].radius/jsonObj.sizeScale),
@@ -240,26 +241,33 @@ function loadPlanet(gltf) {
   orbitLines[num] = new THREE.LineLoop( orbitCircle, orbitMaterial);
   orbitLines[num].name = "oribitLine";
   originPoint.add(orbitLines[num]);
+
+  //Add Moon
+  //Note: Currently only for earth but could be altered to incoperate moons for any planet in the solar system
+  if (jsonObj.planets[num].moon){
+
+    pivots[num].add(moonPivot);
+    moonPivot.add(moonObj);
+    moonPivot.position.copy(planets[num].position);
+
+    moonObj.scale.set(jsonObj.planets[2].moon.radius/jsonObj.sizeScale,
+                      jsonObj.planets[2].moon.radius/jsonObj.sizeScale,
+                      jsonObj.planets[2].moon.radius/jsonObj.sizeScale);
+
+    //Get the size of the planet to determin radius
+    let planetBox = new THREE.Box3().setFromObject( planets[num] );
+
+    moonObj.position.x = planetBox.getSize().x/2 + jsonObj.planets[2].moon.distanceFromEarth/jsonObj.distanceScale;
+
+    moonObj.rotateZ(jsonObj.planets[2].moon.rotationAngle);
+    moonObj.name = jsonObj.planets[2].moon.name;
+    moonPivot.rotateZ(jsonObj.planets[2].moon.orbitInclination);
+  }
 };
 
 //Load Moon Model
 function loadMoon(gltf) {
   moonObj = gltf.scene;
-  moonPivot.position.set( jsonObj.planets[2].distanceFromSun/jsonObj.distanceScale,
-                          moonPivot.position.y,
-                          moonPivot.position.z);
-  moonObj.scale.set(jsonObj.planets[2].moon.radius/jsonObj.sizeScale,
-                    jsonObj.planets[2].moon.radius/jsonObj.sizeScale,
-                    jsonObj.planets[2].moon.radius/jsonObj.sizeScale);
-  moonObj.position.set( jsonObj.planets[2].radius/jsonObj.sizeScale + jsonObj.planets[2].moon.distanceFromEarth/jsonObj.distanceScale,
-                        moonPivot.position.y,
-                        moonPivot.position.z);
-  moonObj.rotateZ(jsonObj.planets[2].moon.rotationAngle);
-  moonObj.name = jsonObj.planets[2].moon.name;
-
-  pivots[2].add(moonPivot);
-  moonPivot.add(moonObj);
-  moonPivot.rotateZ(jsonObj.planets[2].moon.orbitInclination);
 };
 
 function onProgress(xhr) {
@@ -292,7 +300,7 @@ function checkSupportedState() {
   async function toggleAR(){
     if (arActivated){
       console.log("AR is already activated");
-      return; //TODO: Would close down the XR
+      return; //TODO: Would close down the XR (Would be linked to another button within the AR scene so we can activate the quiz)
     }
     return activateAR();
   }
@@ -453,11 +461,10 @@ function touchSelectEvent() {
       let sceneRaycaster = new THREE.Raycaster();
       sceneRaycaster.set(rayOrigin, rayDirection);
 
-      let intersectsArray = [sunObj, planets[1], planets[2], planets[3], planets[4], planets[5], planets[6], planets[7], planets[8], cameraPoint];
+      let intersectsArray = [sunObj, planets[1], planets[2], planets[3], planets[4], planets[5], planets[6], planets[7], planets[8]];
 
       let intersects = sceneRaycaster.intersectObjects(intersectsArray, true);
       if (intersects.length > 0){
-        console.log(intersects);
         if (intersects[0].object.parent.name){
           switch(intersects[0].object.parent.name){
 
@@ -547,16 +554,15 @@ function touchSelectEvent() {
     //showSolarSystem = false;
 
   } else {
-    //TODO check redical
-    //if (redical.visible){
+    if (reticle.visible){
       showSolarSystem = true;
 
       let sunPreviewMatrix = sunPreview.matrixWorld;
       scene.add(originPoint);
       originPoint.position.setFromMatrixPosition(sunPreviewMatrix);
-    // } else {
-    //   console.log("cant place");
-    // }
+    } else {
+       console.log("cant place yet");
+    }
   }
 }
 
@@ -606,9 +612,9 @@ function planetSelect(num){
     planets[num].getWorldPosition(dist);
     distance = cameraPoint.position.distanceTo(dist);
 
-    // let height = originPoint.position.y;
     originPoint.translateOnAxis(dir, distance);
-    // originPoint.position.y = height;
+    //TODO: will use the height below when transition is implemented
+    // originPoint.position.y = camera.position.y
     originPoint.position.y = cameraPoint.position.y;
 
 

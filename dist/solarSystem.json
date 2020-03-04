@@ -5,7 +5,7 @@
    "orbitScale": 1,
    "rotationScale": 10,
    "showPlanetLines":true,
-   "traversal":false,
+   "pause":false,
    "sun": {
      "name": "Sun",
      "file": "./model/Sun.glb",

@@ -33,7 +33,7 @@ let hitTestOptionsInit = {
 };
 
 /**********
-Load up JSON file
+JSON file
 ***********
 => This file contains all relevent information concerning all the objects in the scene
 **********/
@@ -45,7 +45,7 @@ let request = new XMLHttpRequest();
 
 
 /**********
-Create Renderer
+Renderer
 **********/
 let renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.autoClear = false;
@@ -54,7 +54,7 @@ document.body.appendChild(renderer.domElement);
 
 
 /**********
-Create Scene
+Scene
 ***********
 => Create the scene
 => Create Sun object
@@ -70,7 +70,7 @@ moonPivot = new THREE.Object3D();
 
 
 /**********
-Create Camera
+Camera
 => Set starting point for camera
 **********/
 let camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 0.001, 10000000);
@@ -86,19 +86,20 @@ camera.add( cameraPoint );
 cameraPoint.position.z -= 0.5;
 
 /**********
-Create Lights
+Lights
 **********/
-//TODO: sunlight will be an available option
-// let sunLight = new THREE.PointLight( 0xfffee8, jsonObj.sun.intensity, 0, 0);
-// sunLight.position.set( 0, 0, 0);
-// scene.add(sunLight);
+let sunLight = new THREE.PointLight( 0xfffee8, 2, 0, 0); //TODO: use jsonObj.sun.intensity?
+sunLight.position.set( 0, 0, 0);
+sunLight.visible = false;
+scene.add(sunLight);
 
 let cameraLight = new THREE.PointLight( 0xfffee8, 2, 0, 0);
+cameraLight.visible = true;
 camera.add(cameraLight);
 
-
-
-//Inital function that starts AR off. Establishes AR to button with eventlistener
+/**********
+INIT
+**********/
 function init() {
 
   //TODO: would like to impliment the sunObj here, but transparent
@@ -279,7 +280,9 @@ function onError(error) {
 }
 
 
-//Check if AR is supported on the device
+/*********
+Check AR Support
+*********/
 function checkSupportedState() {
   navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
     if (supported) {
@@ -296,158 +299,177 @@ function checkSupportedState() {
   });
 }
 
-  //NOTE: This function can be removed if we want to (AR activated could be a json componet)
-  async function toggleAR(){
-    if (arActivated){
-      console.log("AR is already activated");
-      return; //TODO: Would close down the XR (Would be linked to another button within the AR scene so we can activate the quiz)
-    }
-    return activateAR();
+//NOTE: This function can be removed if we want to (AR activated could be a json componet)
+async function toggleAR(){
+  if (arActivated){
+    console.log("AR is already activated");
+    return; //TODO: Would close down the XR (Would be linked to another button within the AR scene so we can activate the quiz)
   }
+  return activateAR();
+}
 
-  async function activateAR(){
-    try{
-      xrSession = await navigator.xr.requestSession('immersive-ar');
-      xrRefSpace = await xrSession.requestReferenceSpace('local');
 
-      xrSession.addEventListener('select', touchSelectEvent);
+/**********
+XR Session
+**********/
+async function activateAR(){
+  try{
+    xrSession = await navigator.xr.requestSession('immersive-ar');
+    xrRefSpace = await xrSession.requestReferenceSpace('local');
 
-      let gl = renderer.getContext();
-      await gl.makeXRCompatible();
-      let layer = new XRWebGLLayer(xrSession, gl);
-      xrSession.updateRenderState({ baseLayer: layer });
+    xrSession.addEventListener('select', touchSelectEvent);
 
-      xrSession.addEventListener('end', onSessionEnd);
+    let gl = renderer.getContext();
+    await gl.makeXRCompatible();
+    let layer = new XRWebGLLayer(xrSession, gl);
+    xrSession.updateRenderState({ baseLayer: layer });
 
-      //Test
-      xrSession.requestHitTestSourceForTransientInput(hitTestOptionsInit).then((hitTestSource) => {
-        transientInputHitTestSource = hitTestSource;
-        transientInputHitTestSource.context = {options : hitTestOptionsInit };
-      });
+    xrSession.addEventListener('end', onSessionEnd);
 
-      xrSession.requestAnimationFrame(renderXR);
-      arActivated = true;
-
-    } catch (error){
-      console.log("Catch: "+ error);
-    }
-  }
-
-  function onSessionEnd(){
-    console.log("SESSION ENDED");
-    arActivated = false;
-    xrSession = null;
-  }
-
-  function renderXR(timestamp, xrFrame){
-
-    if (!xrFrame || !xrSession || !arActivated){
-      return;
-    }
-
-    let pose = xrFrame.getViewerPose(xrRefSpace);
-    if (!pose){
-      xrSession.requestAnimationFrame(renderXR);
-      return;
-    }
-
-    if (!showSolarSystem){
-
-      createReticle();
-
-      const x=0;
-      const y=0;
-      let raycaster = new THREE.Raycaster();
-      raycaster.setFromCamera({ x, y }, camera);
-
-      let rayOrigin = raycaster.ray.origin;
-      let rayDirection = raycaster.ray.direction;
-      let ray = new XRRay({x : rayOrigin.x, y : rayOrigin.y, z : rayOrigin.z},
-        {x : rayDirection.x, y : rayDirection.y, z : rayDirection.z});
-
-      xrSession.requestHitTest(ray, xrRefSpace).then((results) => {
-        if (results.length) {
-          console.log("raycast good");
-          let hitResult = results[0];
-          reticle.visible = true;
-          originPoint.visible = false;
-          let hitMatrix = new THREE.Matrix4();
-          hitMatrix.fromArray(hitResult.hitMatrix);
-          reticle.position.setFromMatrixPosition(hitMatrix);
-
-        } else {
-          console.log("Keep looking");
-          reticle.visible = false;
-        }
-      });
-
-    } else {
-      if (reticle){
-        reticle.visible = false;
-        originPoint.visible = true;
-      }
-
-      animateScene();
-    }
-
-    let xrLayer = xrSession.renderState.baseLayer;
-    renderer.setFramebuffer(xrLayer.framebuffer);
-
-    for (let xrView of pose.views){
-      let viewport = xrLayer.getViewport(xrView);
-      renderView(xrView, viewport);
-    }
+    xrSession.requestHitTestSourceForTransientInput(hitTestOptionsInit).then((hitTestSource) => {
+      transientInputHitTestSource = hitTestSource;
+      transientInputHitTestSource.context = {options : hitTestOptionsInit };
+    });
 
     xrSession.requestAnimationFrame(renderXR);
+    arActivated = true;
+
+  } catch (error){
+    console.log("Catch: "+ error);
+  }
+}
+
+
+/*********
+Session End
+*********/
+function onSessionEnd(){
+  console.log("SESSION ENDED");
+  arActivated = false;
+  xrSession = null;
+}
+
+
+/*********
+Render XR
+*********/
+function renderXR(timestamp, xrFrame){
+
+  if (!xrFrame || !xrSession || !arActivated){
+    return;
   }
 
-  function animateScene(){
+  let pose = xrFrame.getViewerPose(xrRefSpace);
+  if (!pose){
+    xrSession.requestAnimationFrame(renderXR);
+    return;
+  }
 
+  if (!showSolarSystem){
 
-    //Sun Rotation
-    if (sunObj && jsonObj.sun.moveRotate){
-      sunObj.rotateY(jsonObj.sun.rotation / jsonObj.rotationScale);
+    createReticle();
+
+    const x=0;
+    const y=0;
+    let raycaster = new THREE.Raycaster();
+    raycaster.setFromCamera({ x, y }, camera);
+
+    let rayOrigin = raycaster.ray.origin;
+    let rayDirection = raycaster.ray.direction;
+    let ray = new XRRay({x : rayOrigin.x, y : rayOrigin.y, z : rayOrigin.z},
+      {x : rayDirection.x, y : rayDirection.y, z : rayDirection.z});
+
+    xrSession.requestHitTest(ray, xrRefSpace).then((results) => {
+      if (results.length) {
+        console.log("raycast good");
+        let hitResult = results[0];
+        reticle.visible = true;
+        originPoint.visible = false;
+        let hitMatrix = new THREE.Matrix4();
+        hitMatrix.fromArray(hitResult.hitMatrix);
+        reticle.position.setFromMatrixPosition(hitMatrix);
+
+      } else {
+        console.log("Keep looking");
+        reticle.visible = false;
+      }
+    });
+
+  } else {
+    if (reticle){
+      reticle.visible = false;
+      originPoint.visible = true;
     }
 
-    //Planet Rotation (rad/day)
-    for (let i=0; i<jsonObj.numPlanets; i++){
-      if (planets[i] && jsonObj.planets[i].moveRotate){
-        planets[i].rotateY(jsonObj.planets[i].rotation / jsonObj.rotationScale);
+    animateScene();
+  }
+
+  let xrLayer = xrSession.renderState.baseLayer;
+  renderer.setFramebuffer(xrLayer.framebuffer);
+
+  for (let xrView of pose.views){
+    let viewport = xrLayer.getViewport(xrView);
+    renderView(xrView, viewport);
+  }
+
+  xrSession.requestAnimationFrame(renderXR);
+}
+
+
+/*********
+Animate 3D scene
+*********/
+function animateScene(){
+
+  //Sun Rotation
+  if (sunObj && jsonObj.sun.moveRotate){
+    sunObj.rotateY(jsonObj.sun.rotation / jsonObj.rotationScale);
+  }
+
+  //Planet Rotation (rad/day)
+  for (let i=0; i<jsonObj.numPlanets; i++){
+    if (planets[i] && jsonObj.planets[i].moveRotate){
+      planets[i].rotateY(jsonObj.planets[i].rotation / jsonObj.rotationScale);
+    }
+  }
+
+  // //Planet Orbit (rad/day)
+  for (let i=0; i<jsonObj.numPlanets; i++){
+    if (!jsonObj.planets[i].beingViewed){
+      if (pivots[i]){
+        pivots[i].rotateY(jsonObj.planets[i].orbit / jsonObj.orbitScale);
       }
     }
-
-    // //Planet Orbit (rad/day)
-    for (let i=0; i<jsonObj.numPlanets; i++){
-      if (!jsonObj.planets[i].beingViewed){
-        if (pivots[i]){
-          pivots[i].rotateY(jsonObj.planets[i].orbit / jsonObj.orbitScale);
-        }
-      }
-    }
-
-    //Moon Rotation (rad/day)
-    if (moonObj && jsonObj.planets[2].moon.moveRotate){
-      moonObj.rotateY(jsonObj.planets[2].moon.rotation / jsonObj.rotationScale);
-    }
-
-    //Moon Orbit (rad/day)
-    if (moonPivot){
-      moonPivot.rotateY(jsonObj.planets[2].moon.orbit / jsonObj.orbitScale);
-    }
   }
 
-  function renderView(xrView, viewport){
-    renderer.setViewport(viewport.x, viewport.y, viewport.width, viewport.height);
-    const viewMatrix = xrView.transform.inverse.matrix;
-
-    //camera
-    camera.projectionMatrix.fromArray(xrView.projectionMatrix);
-    camera.matrix.fromArray(viewMatrix).getInverse(camera.matrix);
-    camera.updateMatrixWorld(true);
-
-    renderer.render(scene, camera)
+  //Moon Rotation (rad/day)
+  if (moonObj && jsonObj.planets[2].moon.moveRotate){
+    moonObj.rotateY(jsonObj.planets[2].moon.rotation / jsonObj.rotationScale);
   }
 
+  //Moon Orbit (rad/day)
+  if (moonPivot){
+    moonPivot.rotateY(jsonObj.planets[2].moon.orbit / jsonObj.orbitScale);
+  }
+}
+
+
+function renderView(xrView, viewport){
+  renderer.setViewport(viewport.x, viewport.y, viewport.width, viewport.height);
+  const viewMatrix = xrView.transform.inverse.matrix;
+
+  //camera
+  camera.projectionMatrix.fromArray(xrView.projectionMatrix);
+  camera.matrix.fromArray(viewMatrix).getInverse(camera.matrix);
+  camera.updateMatrixWorld(true);
+
+  renderer.render(scene, camera)
+}
+
+
+/**********
+Event Handler
+**********/
 function touchSelectEvent() {
   if (showSolarSystem){
 
@@ -471,6 +493,9 @@ function touchSelectEvent() {
             case "Sun":
               console.log("sun");
               // sunSelect();
+
+              //TEST: menu items
+              toggleLight();
               break;
 
             case "Mercury":
@@ -620,5 +645,21 @@ function planetSelect(num){
 
   }
 }
+
+//TODO make part of menu
+function toggleLight(){
+  if (cameraLight.visible){
+    cameraLight.visible = false;
+    sunLight.visible = true;
+  } else {
+    cameraLight.visible = true;
+    sunLight.visible = false;
+  }
+}
+
+function returnToOrigin(){
+
+}
+
 
 init();

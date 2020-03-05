@@ -1,15 +1,25 @@
 body {
-  background-color: #000;
+  background-image: url("./model/backgrounds/StarryBackground.png");
   margin: 0px;
   overflow: hidden;
   color: white;
   text-align: center;
 }
 
-#description{
-	border: 2px solid white;
-	width: 800px;
+#description {
+	margin-left: auto;
+	margin-right: auto; 
+	background-color: #000;
+	color: #ffdd00;
+	border: 2px solid #ffdd00;
+	width: 70%;
 	text-align: center;
 	padding: 10px;
-	margin-left: 30%;
+}
+
+#xr-button {
+	
+	margin-left: auto;
+	margin-right: auto; 
+
 }

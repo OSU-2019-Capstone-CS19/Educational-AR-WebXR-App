@@ -273,7 +273,7 @@ function checkSupportedState() {
 
       console.log("AR READY!");
     } else {
-
+      //buttone change red and say error or warning.
       statusBox.innerHTML = 'Houston we have a problem, your device is not compatible';
       console.log("AR unavailable");
     }

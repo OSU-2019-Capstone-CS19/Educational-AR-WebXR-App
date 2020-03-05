@@ -5,6 +5,10 @@ body {
   color: white;
   text-align: center;
 }
+#title {
+	color: #dddd00;
+	font-size: 50px;
+}
 
 #description {
 	margin-left: auto;
@@ -17,9 +21,22 @@ body {
 	padding: 10px;
 }
 
-#xr-button {
-	
-	margin-left: auto;
-	margin-right: auto; 
+#statusbox {
+	color: #dddd00;
+	font-size: 35px;
+	padding-top: 20%;
+	padding-bottom: 5%;
+}
 
+#xr-button {
+	background-color: #00cc00;
+	border-color: #cccccc;
+	margin-left: auto;
+	margin-right: auto;
+	font-size: 25px;
+	font-weight: bold;
+	border-radius: 100%;
+	border-width: 5px ;
+	width: 100px;
+	height: 100px;
 }

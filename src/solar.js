@@ -12,6 +12,7 @@ if ("serviceWorker" in navigator) {
 //variables
 let sunPreview;
 let originPoint;
+let originMatrix;
 let planets = [];
 let pivots = [];
 let orbitLines = [];
@@ -77,18 +78,11 @@ let camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeig
 camera.matrixAutoUpdate = false;
 scene.add(camera);
 
-//Test
-// let boxGeometry = new THREE.BoxGeometry( 0.01, 0.01, 0.01 );
-// let boxmaterial = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-// let cameraPoint = new THREE.Mesh( boxGeometry, boxmaterial );
-let cameraPoint = new THREE.Object3D();
-camera.add( cameraPoint );
-cameraPoint.position.z -= 0.5;
 
 /**********
 Lights
 **********/
-let sunLight = new THREE.PointLight( 0xfffee8, 2, 0, 0); //TODO: use jsonObj.sun.intensity?
+let sunLight = new THREE.PointLight( 0xfffee8, 1, 0, 0); //TODO: use jsonObj.sun.intensity?
 sunLight.position.set( 0, 0, 0);
 sunLight.visible = false;
 scene.add(sunLight);
@@ -505,9 +499,9 @@ function touchSelectEvent() {
     if (reticle.visible){
       showSolarSystem = true;
 
-      let sunPreviewMatrix = sunPreview.matrixWorld;
+      originMatrix = sunPreview.matrixWorld;
       scene.add(originPoint);
-      originPoint.position.setFromMatrixPosition(sunPreviewMatrix);
+      originPoint.position.setFromMatrixPosition(originMatrix);
     } else {
        console.log("cant place yet");
     }
@@ -520,14 +514,14 @@ function sceneEvent(intersects){
 
       case "Sun":
         console.log("sun");
-        // sunSelect();
+        sunSelect();
 
         //TEST: menu items
         // toggleOrbitLines();
         // togglePause();
         // resetSolarSystem();
         // toggleLight();
-        // xrSession.end();
+        //xrSession.end();
         break;
 
       case "Mercury":
@@ -635,45 +629,102 @@ function createReticle(){
 
 }
 
+
+//TODO:
+//The planet will be x distance away from the sun if they are two close to begin with to acomidate the size increase
+//If paused sun will rotate around the selected planet to simulate day and night
 function planetSelect(num){
+  //Pick random fact
   let ranNum = Math.floor(Math.random() * 3);
   console.log(jsonObj.planets[num].facts[ranNum]);
 
   if (!jsonObj.planets[num].beingViewed){
-    jsonObj.sun.beingViewed = false;
-    jsonObj.planets[2].moon.beingViewed = false;
     for (let i=0; i<jsonObj.numPlanets; i++){
-      jsonObj.planets[i].beingViewed = false;
+      planets[i].visible = false;
     }
-    jsonObj.planets[num].beingViewed = true;
 
-    //TODO Create a copy of the matrixWorld of the cameraPoint. This way when we are actually moving the planet we move it to one spot and not a moving spot
+    if (num != 2){
+      moonObj.visible = false;
+    }
+
+    if (jsonObj.showPlanetLines){
+      toggleOrbitLines();
+    }
+
+    jsonObj.planets[num].beingViewed = true;
+    jsonObj.planets[num].moveOrbit = false;
+    planets[num].visible = true;
+
     //TODO move to the render function
+
+    //Direction
     let dir = new THREE.Vector3();
     let dir2 = new THREE.Vector3();
-    dir.subVectors(cameraPoint.getWorldPosition(dir), planets[num].getWorldPosition(dir2)).normalize();
+    dir.subVectors(camera.getWorldPosition(dir), planets[num].getWorldPosition(dir2)).normalize();
 
+    //Distance
     let dist = new THREE.Vector3();
     let distance;
-
     planets[num].getWorldPosition(dist);
-    distance = cameraPoint.position.distanceTo(dist);
+    distance = camera.position.distanceTo(dist);
 
-    originPoint.translateOnAxis(dir, distance);
-    //TODO: will use the height below when transition is implemented
-    // originPoint.position.y = camera.position.y
-    originPoint.position.y = cameraPoint.position.y;
+    //Adjustment:
+    //TODO: Distance To Sun
+    if (num < 4){ //Mercury, Venus, Earth, Mars
 
+    }
 
+    //Scale
+    planets[num].scale.set(0.00025, 0.00025, 0.00025);
+
+    //Position
+    originPoint.translateOnAxis(dir, distance - 0.3);
+  }
+}
+
+function sunSelect(){
+  let reset = false;
+
+  for( let i=0; i<jsonObj.numPlanets; i++){
+    if (jsonObj.planets[i].beingViewed){
+      reset = true;
+      moonObj.visible = true;
+      for( let j=0; j<jsonObj.numPlanets; j++){
+        planets[j].visible = true;
+      }
+
+      if (!jsonObj.showPlanetLines){
+        toggleOrbitLines();
+      }
+
+      jsonObj.planets[i].beingViewed = false;
+      jsonObj.planets[i].moveOrbit = true;
+
+      planets[i].scale.set((jsonObj.planets[i].radius/jsonObj.sizeScale),
+                              (jsonObj.planets[i].radius/jsonObj.sizeScale),
+                              (jsonObj.planets[i].radius/jsonObj.sizeScale));
+
+      //TODO: distanceFromSun
+
+      returnToOrigin();
+    }
+  }
+
+  if (!reset){
+
+    //Be able to view the sun up close
   }
 }
 
 //TODO make part of menu
 function toggleLight(){
   if (cameraLight.visible){
+    console.log("Sun Light");
+
     cameraLight.visible = false;
     sunLight.visible = true;
   } else {
+    console.log("cameraLight");
     cameraLight.visible = true;
     sunLight.visible = false;
   }
@@ -719,7 +770,7 @@ function togglePause(){
 
 
 function returnToOrigin(){
-
+  originPoint.position.setFromMatrixPosition(originMatrix);
 }
 
 function resetSolarSystem(){

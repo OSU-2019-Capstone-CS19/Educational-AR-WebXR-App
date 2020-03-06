@@ -10,7 +10,6 @@ if ("serviceWorker" in navigator) {
 }
 
 //variables
-let sunPreview;
 let originPoint;
 let originMatrix;
 let planets = [];
@@ -87,23 +86,10 @@ function init() {
   if (navigator.xr) {
 
     checkSupportedState();
-
-    //TODO: would like to impliment the sunObj here, but transparent
-    let geometry = new THREE.SphereGeometry( 0.05, 0.05, 0.05 );
-    let green = new THREE.MeshBasicMaterial( {color: 0x00ff00, transparent: true} ); //Green
-    green.opacity = 0.5;
-    let yellow = new THREE.MeshBasicMaterial( {color: 0xffff00, transparent: true} ); //Yellow
-    yellow.opacity = 0.5;
-    let gray = new THREE.MeshBasicMaterial( {color: 0xD3D3D3, transparent: true} ); //light gray
-    gray.opacity = 0.3;
-    let gray2 = new THREE.MeshBasicMaterial( {color: 0x808080, transparent: true} ); //gray
-    gray2.opacity = 0.5;
-    sunPreview = new THREE.Mesh( geometry, yellow);
+    loadModels();
 
     originPoint = new THREE.Object3D();
     originPoint.name = "origin";
-
-    loadModels();
 
   } else {
     alert("AR no go");
@@ -152,6 +138,7 @@ Load Model Functions
 //Load Sun Model
 function loadSun(gltf) {
   sunObj = gltf.scene;
+
   //TODO: remove /10, Maybe?
   sunObj.scale.set( jsonObj.sun.radius/jsonObj.sizeScale/10,
                     jsonObj.sun.radius/jsonObj.sizeScale/10,
@@ -159,7 +146,6 @@ function loadSun(gltf) {
   sunObj.rotateZ(jsonObj.sun.rotationAngle);
   sunObj.name = jsonObj.sun.name;
   sunObj.add(sunLight);
-  originPoint.add(sunObj);
   scene.add(sunPivot);
 };
 
@@ -499,7 +485,11 @@ function touchSelectEvent() {
     if (reticle.visible){
       showSolarSystem = true;
 
-      originMatrix = sunPreview.matrixWorld;
+      originMatrix = sunObj.matrixWorld;
+      sunObj.position.y = 0;
+      sunObj.children[0].material.opacity = 1;
+      originPoint.add(sunObj);
+
       scene.add(originPoint);
       originPoint.position.setFromMatrixPosition(originMatrix);
     } else {
@@ -578,6 +568,9 @@ function menuEvent(intersects){
 
 function createReticle(){
   if (reticle){
+    reticle.add(sunObj);
+    sunObj.position.y = 0.2;
+    sunObj.children[0].material.opacity = 0.2;
     return;
   }
 
@@ -589,18 +582,16 @@ function createReticle(){
   let circle = new THREE.Mesh(ringGeometry, ringMaterial);
   circle.position.y = 0.03;
 
-  sunPreview.position.y = 0.2; //TODO could be fun to have a sit/stand mode to alter for different sizes and height
+  sunObj.position.y = 0.2; //TODO could be fun to have a sit/stand mode to alter for different sizes and height
+  sunObj.children[0].material.opacity = 0.2;
 
   reticle.add(circle);
-  reticle.add(sunPreview);
+  reticle.add(sunObj);
   reticle.name = 'reticle';
   scene.add(reticle);
-
 }
 
 
-//TODO:
-//The sun will be placed x distance away from the planet in corispondence of its distance form the sun
 function planetSelect(num){
   //Pick random fact
   let ranNum = Math.floor(Math.random() * 3);
@@ -699,7 +690,7 @@ function sunSelect(){
     planetSelect(2);
     // toggleOrbitLines();
     // togglePause();
-    // resetSolarSystem();
+    //resetSolarSystem();
     toggleLight();
     //xrSession.end();
   }

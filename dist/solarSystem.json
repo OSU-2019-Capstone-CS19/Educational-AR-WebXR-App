@@ -74,7 +74,7 @@
          "orbitInclination":0,
          "rotation":6.28,
          "rotationAngle":0.41,
-         "moveRotate": true,
+         "moveRotate": false,
          "moveOrbit": true,
          "beingViewed":false,
          "facts":[

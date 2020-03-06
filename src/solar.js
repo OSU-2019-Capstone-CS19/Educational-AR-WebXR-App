@@ -531,32 +531,7 @@ function sceneEvent(intersects){
 
         if (jsonObj.planets[2].beingViewed){
           let point = planets[2].worldToLocal(intersects[0].point);
-
-          // if (antarcticaBox.containsPoint(point)){
-          //   console.log("Antarctica");
-          // } else if (australiaBox.containsPoint(point)){
-          //   console.log("Australia");
-          // } else if (europeBox.containsPoint(point)){
-          //   console.log("Europe");
-          // } else if (africaBox1.containsPoint(point)){
-          //   console.log("Africa");
-          // } else if (africaBox2.containsPoint(point)){
-          //   console.log("Africa");
-          // } else if (southAmericaBox1.containsPoint(point)){
-          //   console.log("South America");
-          // } else if (southAmericaBox2.containsPoint(point)){
-          //   console.log("South America");
-          // } else if (northAmericaBox1.containsPoint(point)){
-          //   console.log("North America");
-          // } else if (northAmericaBox2.containsPoint(point)){
-          //   console.log("North America");
-          // } else if (asiaBox1.containsPoint(point)){
-          //   console.log("Asia");
-          // } else if (asiaBox2.containsPoint(point)){
-          //   console.log("Asia");
-          // } else {
-          //   console.log("False");
-          // }
+          checkEarthBoundingBoxs(point);
         }
         break;
 
@@ -649,6 +624,7 @@ function planetSelect(num){
     planets[num].visible = true;
 
     //TODO move to the render function
+    //TODO Will need to move the planet or the sun to establish a similar Y
 
     //Direction
     let dir = new THREE.Vector3();
@@ -720,7 +696,7 @@ function sunSelect(){
 
 
     //TEST: menu items
-    planetSelect(1);
+    planetSelect(2);
     // toggleOrbitLines();
     // togglePause();
     // resetSolarSystem();
@@ -728,6 +704,74 @@ function sunSelect(){
     //xrSession.end();
   }
 }
+
+
+/************
+Earth Bounding Boxs
+************/
+function checkEarthBoundingBoxs(point){
+
+  let antarcticaBox = new THREE.Box3();
+  antarcticaBox.setFromPoints(jsonObj.continents[6].boundingBox);
+  antarcticaBox.expandByPoint(jsonObj.continents[6].centerPoint);
+
+  let australiaBox = new THREE.Box3();
+  australiaBox.setFromPoints(jsonObj.continents[5].boundingBox);
+
+  let europeBox = new THREE.Box3();
+  europeBox.setFromPoints(jsonObj.continents[2].boundingBox);
+
+  let africaBox1 = new THREE.Box3();
+  africaBox1.setFromPoints(jsonObj.continents[3].boundingBox[0]);
+
+  let africaBox2 = new THREE.Box3();
+  africaBox2.setFromPoints(jsonObj.continents[3].boundingBox[1]);
+
+  let southAmericaBox1 = new THREE.Box3();
+  southAmericaBox1.setFromPoints(jsonObj.continents[1].boundingBox[0]);
+
+  let southAmericaBox2 = new THREE.Box3();
+  southAmericaBox2.setFromPoints(jsonObj.continents[1].boundingBox[1]);
+
+  let northAmericaBox1 = new THREE.Box3();
+  northAmericaBox1.setFromPoints(jsonObj.continents[0].boundingBox[0]);
+
+  let northAmericaBox2 = new THREE.Box3();
+  northAmericaBox2.setFromPoints(jsonObj.continents[0].boundingBox[1]);
+
+  let asiaBox1 = new THREE.Box3();
+  asiaBox1.setFromPoints(jsonObj.continents[4].boundingBox[0]);
+
+  let asiaBox2 = new THREE.Box3();
+  asiaBox2.setFromPoints(jsonObj.continents[4].boundingBox[1]);
+
+  if (antarcticaBox.containsPoint(point)){
+    console.log("Antarctica");
+  } else if (australiaBox.containsPoint(point)){
+    console.log("Australia");
+  } else if (europeBox.containsPoint(point)){
+    console.log("Europe");
+  } else if (africaBox1.containsPoint(point)){
+    console.log("Africa");
+  } else if (africaBox2.containsPoint(point)){
+    console.log("Africa");
+  } else if (southAmericaBox1.containsPoint(point)){
+    console.log("South America");
+  } else if (southAmericaBox2.containsPoint(point)){
+    console.log("South America");
+  } else if (northAmericaBox1.containsPoint(point)){
+    console.log("North America");
+  } else if (northAmericaBox2.containsPoint(point)){
+    console.log("North America");
+  } else if (asiaBox1.containsPoint(point)){
+    console.log("Asia");
+  } else if (asiaBox2.containsPoint(point)){
+    console.log("Asia");
+  } else {
+    console.log("False");
+  }
+}
+
 
 //TODO: part of menu
 function toggleLight(){

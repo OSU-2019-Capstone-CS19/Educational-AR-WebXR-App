@@ -13,7 +13,7 @@
      "rotation":0.2327,
      "rotationAngle":0.127,
      "intensity": 1.0,
-     "moveRotate": true,
+     "moveRotate":true,
      "beingViewed":false,
      "facts":[
                "The Sun accounts for 99.86% of the mass in the solar system.",

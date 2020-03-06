@@ -16,7 +16,7 @@ let originMatrix;
 let planets = [];
 let pivots = [];
 let orbitLines = [];
-let sunObj, moonObj, moonPivot;
+let sunObj, sunPivot, moonObj, moonPivot;
 
 let xrButton = document.getElementById('xr-button');
 let xrSession = null;
@@ -26,12 +26,6 @@ let arActivated = false;
 let reticle;
 let gl = null;
 
-
-let transientInputHitTestSource = null;
-let hitTestOptionsInit = {
-  profile: 'generic-touchscreen',
-  offsetRay: new XRRay()
-};
 
 /**********
 JSON file
@@ -56,23 +50,18 @@ document.body.appendChild(renderer.domElement);
 
 /**********
 Scene
-***********
-=> Create the scene
-=> Create Sun object
-=> Create Astronaut object
-=> Create all pivots for objects in the scene
 **********/
 let scene = new THREE.Scene();
 scene.background = null;
 
 sunObj = new THREE.Object3D();
+sunPivot = new THREE.Object3D();
 moonObj = new THREE.Object3D();
 moonPivot = new THREE.Object3D();
 
 
 /**********
 Camera
-=> Set starting point for camera
 **********/
 let camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 0.001, 10000000);
 camera.matrixAutoUpdate = false;
@@ -85,7 +74,6 @@ Lights
 let sunLight = new THREE.PointLight( 0xfffee8, 1, 0, 0); //TODO: use jsonObj.sun.intensity?
 sunLight.position.set( 0, 0, 0);
 sunLight.visible = false;
-scene.add(sunLight);
 
 let cameraLight = new THREE.PointLight( 0xfffee8, 2, 0, 0);
 cameraLight.visible = true;
@@ -96,25 +84,29 @@ INIT
 **********/
 function init() {
 
-  //TODO: would like to impliment the sunObj here, but transparent
-  let geometry = new THREE.SphereGeometry( 0.05, 0.05, 0.05 );
-  let green = new THREE.MeshBasicMaterial( {color: 0x00ff00, transparent: true} ); //Green
-  green.opacity = 0.5;
-  let yellow = new THREE.MeshBasicMaterial( {color: 0xffff00, transparent: true} ); //Yellow
-  yellow.opacity = 0.5;
-  let gray = new THREE.MeshBasicMaterial( {color: 0xD3D3D3, transparent: true} ); //light gray
-  gray.opacity = 0.3;
-  let gray2 = new THREE.MeshBasicMaterial( {color: 0x808080, transparent: true} ); //gray
-  gray2.opacity = 0.5;
-  sunPreview = new THREE.Mesh( geometry, yellow);
-
-  originPoint = new THREE.Object3D();
-  originPoint.name = "origin";
-
-  loadModels();
-
   if (navigator.xr) {
+
     checkSupportedState();
+
+    //TODO: would like to impliment the sunObj here, but transparent
+    let geometry = new THREE.SphereGeometry( 0.05, 0.05, 0.05 );
+    let green = new THREE.MeshBasicMaterial( {color: 0x00ff00, transparent: true} ); //Green
+    green.opacity = 0.5;
+    let yellow = new THREE.MeshBasicMaterial( {color: 0xffff00, transparent: true} ); //Yellow
+    yellow.opacity = 0.5;
+    let gray = new THREE.MeshBasicMaterial( {color: 0xD3D3D3, transparent: true} ); //light gray
+    gray.opacity = 0.3;
+    let gray2 = new THREE.MeshBasicMaterial( {color: 0x808080, transparent: true} ); //gray
+    gray2.opacity = 0.5;
+    sunPreview = new THREE.Mesh( geometry, yellow);
+
+    originPoint = new THREE.Object3D();
+    originPoint.name = "origin";
+
+    loadModels();
+
+  } else {
+    alert("AR no go");
   }
 }
 
@@ -166,7 +158,9 @@ function loadSun(gltf) {
                     jsonObj.sun.radius/jsonObj.sizeScale/10);
   sunObj.rotateZ(jsonObj.sun.rotationAngle);
   sunObj.name = jsonObj.sun.name;
+  sunObj.add(sunLight);
   originPoint.add(sunObj);
+  scene.add(sunPivot);
 };
 
 //Load Planet Models
@@ -284,11 +278,9 @@ function checkSupportedState() {
 
       xrButton.addEventListener('click', toggleAR);
 
-      console.log("AR READY!");
     } else {
-
-      // xrButton.innerHTML = 'AR not found';
-      console.log("AR unavailable");
+      xrButton.innerHTML = 'NOPE';
+      alert("AR unavailable");
     }
   });
 }
@@ -319,6 +311,12 @@ async function activateAR(){
     xrSession.updateRenderState({ baseLayer: layer });
 
     xrSession.addEventListener('end', onSessionEnd);
+
+    let transientInputHitTestSource = null;
+    let hitTestOptionsInit = {
+      profile: 'generic-touchscreen',
+      offsetRay: new XRRay()
+    };
 
     xrSession.requestHitTestSourceForTransientInput(hitTestOptionsInit).then((hitTestSource) => {
       transientInputHitTestSource = hitTestSource;
@@ -427,13 +425,16 @@ function animateScene(){
     }
   }
 
-  // //Planet Orbit (rad/day)
+  //Planet Orbit (rad/day)
   for (let i=0; i<jsonObj.numPlanets; i++){
-    //if (!jsonObj.planets[i].beingViewed){
-      if (pivots[i] && jsonObj.planets[i].moveOrbit){
-        pivots[i].rotateY(jsonObj.planets[i].orbit / jsonObj.orbitScale);
-      }
-    //}
+    if (pivots[i] && jsonObj.planets[i].moveOrbit){
+      pivots[i].rotateY(jsonObj.planets[i].orbit / jsonObj.orbitScale);
+    }
+
+    if (jsonObj.planets[i].beingViewed && sunLight.visible){
+      console.log("sun Rotate");
+      sunPivot.rotateY(jsonObj.planets[i].orbit / jsonObj.orbitScale);
+    }
   }
 
   //Moon Rotation (rad/day)
@@ -516,12 +517,6 @@ function sceneEvent(intersects){
         console.log("sun");
         sunSelect();
 
-        //TEST: menu items
-        // toggleOrbitLines();
-        // togglePause();
-        // resetSolarSystem();
-        // toggleLight();
-        //xrSession.end();
         break;
 
       case "Mercury":
@@ -631,9 +626,7 @@ function createReticle(){
 
 
 //TODO:
-//The planet will be x distance away from the sun if they are two close to begin with to acomidate the size increase
-//Clicking on the sun will return the user to seeing the solar system normally (return everything and reset originPoint)
-//If paused sun will rotate around the selected planet to simulate day and night
+//The sun will be placed x distance away from the planet in corispondence of its distance form the sun
 function planetSelect(num){
   //Pick random fact
   let ranNum = Math.floor(Math.random() * 3);
@@ -669,17 +662,22 @@ function planetSelect(num){
     planets[num].getWorldPosition(dist);
     distance = camera.position.distanceTo(dist);
 
-    //Adjustment:
-    //TODO: Distance To Sun
-    if (num < 4){ //Mercury, Venus, Earth, Mars
-
-    }
+    //Position
+    originPoint.translateOnAxis(dir, distance - 0.3);
 
     //Scale
     planets[num].scale.set(0.00025, 0.00025, 0.00025);
 
-    //Position
-    originPoint.translateOnAxis(dir, distance - 0.3);
+    sunPivot.position.copy(planets[num].position);
+    sunPivot.add(sunObj);
+
+    //Distance from sun
+    dir.subVectors(planets[num].getWorldPosition(dir), sunObj.getWorldPosition(dir2));
+
+    //TODO: talk to the team about this. Should we have the sun at a set position or variried
+    distance = jsonObj.planets[num].distanceFromSun / (jsonObj.distanceScale / 100) - planets[num].position.distanceTo(dir2);
+    sunObj.scale.set(0.0005, 0.0005, 0.0005);
+    sunObj.translateOnAxis(dir, distance );
   }
 }
 
@@ -705,25 +703,43 @@ function sunSelect(){
                               (jsonObj.planets[i].radius/jsonObj.sizeScale),
                               (jsonObj.planets[i].radius/jsonObj.sizeScale));
 
-      //TODO: distanceFromSun
+      sunObj.scale.set( jsonObj.sun.radius/jsonObj.sizeScale/10,
+                        jsonObj.sun.radius/jsonObj.sizeScale/10,
+                        jsonObj.sun.radius/jsonObj.sizeScale/10);
+
+      sunPivot.remove(sunObj);
+      originPoint.add(sunObj);
+
+      //TODO: need to put sun back into proper location
+      //sunObj.position.setFromMatrixPosition(originMatrix);
 
       returnToOrigin();
+
+      //sunObj.position.copy(originPoint.position);
     }
   }
 
   if (!reset){
+    //TODO: Be able to view the sun up close
 
-    //Be able to view the sun up close
+    planetSelect(2);
+
+    //TEST: menu items
+    // toggleOrbitLines();
+    // togglePause();
+    // resetSolarSystem();
+    toggleLight();
+    //xrSession.end();
   }
 }
 
-//TODO make part of menu
+//TODO: part of menu
 function toggleLight(){
   if (cameraLight.visible){
     console.log("Sun Light");
-
     cameraLight.visible = false;
     sunLight.visible = true;
+
   } else {
     console.log("cameraLight");
     cameraLight.visible = true;
@@ -749,6 +765,7 @@ function toggleOrbitLines(){
 function togglePause(){
   //TODO: will need to check if a planet is currently being viewed, that planet will not continue to orbit when unpaused
   if (!jsonObj.pause){
+    //Pause
     jsonObj.pause = true;
     jsonObj.sun.moveRotate = false;
     jsonObj.planets[2].moon.moveRotate = false;
@@ -758,6 +775,7 @@ function togglePause(){
       jsonObj.planets[i].moveOrbit = false;
     }
   } else {
+    //UnPause
     jsonObj.pause = false;
     jsonObj.sun.moveRotate = true;
     jsonObj.planets[2].moon.moveRotate = true;

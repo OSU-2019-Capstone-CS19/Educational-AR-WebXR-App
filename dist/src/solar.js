@@ -432,7 +432,6 @@ function animateScene(){
     }
 
     if (jsonObj.planets[i].beingViewed && sunLight.visible){
-      console.log("sun Rotate");
       sunPivot.rotateY(jsonObj.planets[i].orbit / jsonObj.orbitScale);
     }
   }
@@ -668,7 +667,7 @@ function planetSelect(num){
     //Scale
     planets[num].scale.set(0.00025, 0.00025, 0.00025);
 
-    sunPivot.position.copy(planets[num].position);
+    sunPivot.position.setFromMatrixPosition(planets[num].matrixWorld);
     sunPivot.add(sunObj);
 
     //Distance from sun
@@ -708,23 +707,20 @@ function sunSelect(){
                         jsonObj.sun.radius/jsonObj.sizeScale/10);
 
       sunPivot.remove(sunObj);
+      sunObj.position.set(0, 0, 0);
       originPoint.add(sunObj);
 
-      //TODO: need to put sun back into proper location
-      //sunObj.position.setFromMatrixPosition(originMatrix);
-
       returnToOrigin();
-
-      //sunObj.position.copy(originPoint.position);
     }
   }
 
   if (!reset){
     //TODO: Be able to view the sun up close
 
-    planetSelect(2);
+
 
     //TEST: menu items
+    planetSelect(1);
     // toggleOrbitLines();
     // togglePause();
     // resetSolarSystem();

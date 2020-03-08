@@ -6,12 +6,31 @@
       <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		  <meta charset="utf-8">
 
-      <link rel="stylesheet" href="style.css" type="text/css">
+      <link rel="stylesheet" href="Quiz.css" type="text/css">
 
 	  </head>
 	  <body>
         <h1 id="title">Solar System Quiz</h1>
-        <p id="description">This is the quiz page, which will look different later, just testing to make sure I can get the Solar System to get here after we are finished with the AR part.</p>
+        <form id="quiz" name="quiz">
+          <div id="question1">
+            <p id="questionPrompt1">Which planet is the one we inhabit?</p>
+            <input type="radio" name="choice" name="question1" value="Earth">Earth<br>
+            <input type="radio" name="choice" name="question1" value="Venus">Venus<br>
+            <input type="radio" name="choice" name="question1" value="Saturn">Saturn<br>
+            <input type="radio" name="choice" name="question1" value="Mars">Mars
+          </div>
+          <div id="question2">
+            <p id="questionPrompt2">Which planet is the biggest in our solar system?</p>
+            <input type="radio" name="choice" name="question1" value="Earth">Jupiter<br>
+            <input type="radio" name="choice" name="question1" value="Venus">Neptune<br>
+            <input type="radio" name="choice" name="question1" value="Saturn">Saturn<br>
+            <input type="radio" name="choice" name="question1" value="Mars">Uranus
+          </div>
+          <br><br>
+          <div>
+            <button id="finishQuiz">Submit Quiz</button>
+          </div>
+        </form>
         <main-app></main-app>
         <script type="module" src="src/solar.js"></script>
 

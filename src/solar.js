@@ -26,11 +26,7 @@ var reticle;
 let gl = null;
 
 //TEST: HitTestSourceInit
-let transientInputHitTestSource = null;
-let hitTestOptionsInit = {
-  profile: 'generic-touchscreen',
-  offsetRay: new XRRay()
-};
+
 
 /**********
 Load up JSON file
@@ -275,6 +271,9 @@ function checkSupportedState() {
     } else {
       //buttone change red and say error or warning.
       statusBox.innerHTML = 'Houston we have a problem, your device is not compatible';
+      xrButton.style.backgroundColor = '#cc0000';
+      xrButton.innerHTML = 'Error';
+
       console.log("AR unavailable");
     }
   });
@@ -302,8 +301,12 @@ function checkSupportedState() {
       xrSession.updateRenderState({ baseLayer: layer });
 
       //TODO 'end' eventlistener
-
-      //Test
+      let transientInputHitTestSource = null;
+      let hitTestOptionsInit = {
+        profile: 'generic-touchscreen',
+        offsetRay: new XRRay()
+      };
+    
       xrSession.requestHitTestSourceForTransientInput(hitTestOptionsInit).then((hitTestSource) => {
         transientInputHitTestSource = hitTestSource;
         transientInputHitTestSource.context = {options : hitTestOptionsInit };

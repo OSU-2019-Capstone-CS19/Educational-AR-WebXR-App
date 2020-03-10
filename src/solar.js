@@ -259,14 +259,15 @@ Check AR Support
 *********/
 function checkSupportedState() {
   navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
+    let statusBox = document.getElementById('statusbox');
     if (supported) {
-      // xrButton.innerHTML = 'Enter AR';
-
+      
       xrButton.addEventListener('click', toggleAR);
 
     } else {
-      xrButton.innerHTML = 'NOPE';
-      alert("AR unavailable");
+      statusBox.innerHTML = 'Houston we have a problem, your device is not compatible';
+      xrButton.style.backgroundColor = '#cc0000';
+      xrButton.innerHTML = 'Error';
     }
   });
 }

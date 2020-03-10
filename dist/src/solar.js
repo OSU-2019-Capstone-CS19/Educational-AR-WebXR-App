@@ -691,7 +691,7 @@ function sunSelect(){
     // toggleOrbitLines();
     // togglePause();
     //resetSolarSystem();
-    toggleLight();
+    //toggleLight();
     //xrSession.end();
   }
 }

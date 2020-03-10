@@ -689,7 +689,7 @@ function sunSelect(){
     //TEST: menu items
     planetSelect(2);
     // toggleOrbitLines();
-    // togglePause();
+    //togglePause();
     //resetSolarSystem();
     toggleLight();
     //xrSession.end();

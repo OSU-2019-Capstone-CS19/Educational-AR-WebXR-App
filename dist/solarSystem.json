@@ -1,0 +1,492 @@
+{
+   "numPlanets":9,
+   "sizeScale":1000000000,
+   "distanceScale":1000000000,
+   "orbitScale": 1,
+   "rotationScale": 10,
+   "showPlanetLines":true,
+   "pause":false,
+   "sun": {
+     "name": "Sun",
+     "file": "./model/Sun.glb",
+     "radius":695510,
+     "rotation":0.2327,
+     "rotationAngle":0.127,
+     "intensity": 1.0,
+     "moveRotate":true,
+     "beingViewed":false,
+     "facts":[
+               "The Sun accounts for 99.86% of the mass in the solar system.",
+               "The Sun is almost a perfect sphere.",
+               "The Sun rotates in the opposite direction to Earth."
+         ],
+     "standard":"Welcome to the Solar System."
+   },
+   "astronaut": {
+      "file": "./model/astronaut/scene.gltf",
+      "angle": 0,
+      "rotate": "false",
+      "visible": "true"
+   },
+   "planets":[
+      {
+         "name":"Mercury",
+         "file":"./model/planets-glb/mercury/Mercury.glb",
+         "radius":2439.7,
+         "distanceFromSun":69633000,
+         "orbit":0.0714,
+         "orbitInclination":0.1223476,
+         "rotation":0.1065,
+         "rotationAngle":0.03,
+         "moveRotate": true,
+         "moveOrbit": true,
+         "beingViewed":false,
+         "facts":[
+               "Mercury is the smallest planet.",
+               "A day on the surface of Mercury lasts 176 Earth days.",
+               "Mercury orbits so quickly around the Sun that early civilizations believed it was actually two different stars."
+         ]
+      },
+      {
+         "name":"Venus",
+         "file":"./model/planets-glb/venus/Venus.glb",
+         "radius":6051.8,
+         "distanceFromSun":108730000,
+         "orbit":0.0279,
+         "orbitInclination":0.059,
+         "rotation":0.0259,
+         "rotationAngle":3.089,
+         "moveRotate": true,
+         "moveOrbit": true,
+         "beingViewed":false,
+         "facts":[
+               "Venus is the second brightest natural object in the sky.",
+               "Venus rotates in the opposite direction to other planets.",
+               "Venus orbits the sun in an ellipse, but its orbit is the closest to being a circle out of all the planets in the Solar System."
+         ]
+      },
+      {
+         "name":"Earth",
+         "file":"./model/planets-glb/earth/Earth.glb",
+         "radius":6371,
+         "distanceFromSun":147120000,
+         "orbit":0.0172,
+         "orbitInclination":0,
+         "rotation":6.28,
+         "rotationAngle":0.41,
+         "moveRotate": false,
+         "moveOrbit": true,
+         "beingViewed":false,
+         "facts":[
+               "This is the planet we live on.",
+               "Earth is the only planet not named after a god.",
+               "The Earth is the densest planet in the Solar System."
+         ],
+         "moon":{
+            "name":"Moon",
+            "file":"./model/planets-glb/Moon.glb",
+            "radius":1737.12,
+            "distanceFromEarth":384399,
+            "orbit":0.01721,
+            "orbitInclination": 0.087,
+            "rotation":0.2327,
+            "rotationAngle":0.026,
+            "moveRotate": true,
+            "moveOrbit": true,
+            "beingViewed":false,
+            "facts":[
+               "The Moon.",
+               "Full of craters.",
+               "Rotatoes Earth."
+            ]
+         }
+      },
+      {
+         "name":"Mars",
+         "file":"./model/planets-glb/mars/Mars.glb",
+         "radius":3389.5,
+         "distanceFromSun":240010000,
+         "orbit":0.00915,
+         "orbitInclination":0.032288,
+         "rotation":6.1299,
+         "rotationAngle":0.436,
+         "moveRotate": true,
+         "moveOrbit": true,
+         "beingViewed":false,
+         "facts":[
+               "Mars is home to the tallest mountain in the solar system.",
+               "Mars has the largest dust storms in the solar system.",
+               "Mars does not have a magnetic field."
+         ]
+      },
+      {
+         "name":"Jupiter",
+         "file":"./model/planets-glb/jupiter/Jupiter.glb",
+         "radius":69911,
+         "distanceFromSun":782670000,
+         "orbit":0.00143,
+         "orbitInclination":0.02286,
+         "rotation":15.232,
+         "rotationAngle":0.05,
+         "moveRotate": true,
+         "moveOrbit": true,
+         "beingViewed":false,
+         "facts":[
+               "Jupiter has 67 moons.",
+               "The largest of Jupiter’s moons, Ganymede is the largest moon in the solar system.",
+               "Jupiter’s Great Red Spot is an enormous storm that has been raging for over 300 years."
+         ]
+      },
+      {
+         "name":"Saturn",
+         "file":"./model/planets-glb/saturn/Saturn.glb",
+         "radius":58232,
+         "distanceFromSun":1498400000,
+         "orbit":0.0005936,
+         "orbitInclination":0.04328,
+         "rotation":14.094,
+         "rotationAngle":0.466,
+         "moveRotate": true,
+         "moveOrbit": true,
+         "beingViewed":false,
+         "facts":[
+               "Saturn has oval-shaped storms similar to Jupiter’s.",
+               "Saturn has more moons than any other planet.",
+               "Saturn is known as a gas giant, but scientists believe it has a solid rocky core."
+         ]
+      },
+      {
+         "name":"Uranus",
+         "file":"./model/planets-glb/uranus/Uranus.glb",
+         "radius":25362,
+         "distanceFromSun":2965000000,
+         "orbit":0.000205,
+         "orbitInclination":0.01347,
+         "rotation":8.875,
+         "rotationAngle":1.71,
+         "moveRotate": true,
+         "moveOrbit": true,
+         "beingViewed":false,
+         "facts":[
+               "Uranus hits the coldest temperatures of any planet.",
+               "Uranus is the coldest planet in the solar system.",
+               "The mass of Uranus is about 14.5 times the mass of Earth."
+         ]
+      },
+      {
+         "name":"Neptune",
+         "file":"./model/planets-glb/neptune/Neptune.glb",
+         "radius":24622,
+         "distanceFromSun":4477200000,
+         "orbit":0.000104,
+         "orbitInclination":0.003089,
+         "rotation":8.875,
+         "rotationAngle":0.524,
+         "moveRotate": true,
+         "moveOrbit": true,
+         "beingViewed":false,
+         "facts":[
+               "Neptune has an average surface temperature of -214°C.",
+               "Neptune has a storm similar to the Great Red Spot on Jupiter.",
+               "Neptune is the smallest gas giant."
+         ]
+      },
+      {
+         "name":"Pluto",
+         "file":"./model/planets-glb/pluto/Pluto.glb",
+         "radius":1188.3,
+         "distanceFromSun":5906380000,
+         "orbit":0.0000694,
+         "orbitInclination":0.2967,
+         "rotation":0.98,
+         "rotationAngle":2.09,
+         "moveRotate": true,
+         "moveOrbit": true,
+         "beingViewed":false,
+         "facts":[
+               "Pluto was reclassified from a planet to a dwarf planet in 2006.",
+               "Pluto is one third water.",
+               "Pluto sometimes has an atmosphere."
+         ]
+      }
+   ],
+   "continents": [
+      {
+        "name": "North America",
+        "boundingBox": [
+                          [
+                            {
+                              "x": 32.11,
+                              "y": 460.14,
+                              "z": 188.61
+                            },
+                            {
+                              "x": 199.63,
+                              "y": 412.08,
+                              "z": -197.58
+                            },
+                            {
+                              "x": 257.76,
+                              "y": 354.82,
+                              "z": 240.54
+                            },
+                            {
+                              "x": 353.67,
+                              "y": 313.89,
+                              "z": -163.21
+                            }
+                          ],
+                          [
+                            {
+                              "x": 267.44,
+                              "y": 367.11,
+                              "z": 209.21
+                            },
+                            {
+                              "x": 353.15,
+                              "y": 324.78,
+                              "z": -139.98
+                            },
+                            {
+                              "x": 486.45,
+                              "y": 19.28,
+                              "z": 109.98
+                            },
+                            {
+                              "x": 454.67,
+                              "y": 134.89,
+                              "z": -157.15
+                            }
+                          ]
+                        ]
+      },
+      {
+        "name": "South America",
+        "boundingBox": [
+                          [
+                            {
+                              "x": 489.81,
+                              "y": 78.94,
+                              "z": -55.15
+                            },
+                            {
+                              "x": 287.1,
+                              "y": 96.99,
+                              "z": -397.93
+                            },
+                            {
+                              "x": 469.44,
+                              "y": -157.75,
+                              "z": -62.02
+                            },
+                            {
+                              "x": 257.84,
+                              "y": -154.92,
+                              "z": -399.65
+                            }
+                          ],
+                          [
+                            {
+                              "x": 454.79,
+                              "y": -142.58,
+                              "z": -150.57
+                            },
+                            {
+                              "x": 299.05,
+                              "y": -178.82,
+                              "z": -359.91
+                            },
+                            {
+                              "x": 289.96,
+                              "y": -404.24,
+                              "z": -40.4
+                            },
+                            {
+                              "x": 213.14,
+                              "y": -413.33,
+                              "z": -181.58
+                            }
+                          ]
+                        ]
+      },
+      {
+        "name": "Europe",
+        "boundingBox": [
+                          {
+                              "x": 99.75,
+                              "y": 451.39,
+                              "z": -187.18
+                          },
+                          {
+                              "x": -128.82,
+                              "y": 470.62,
+                              "z": -99.85
+                          },
+                          {
+                              "x": 62.22,
+                              "y": 291.92,
+                              "z": -400.33
+                          },
+                          {
+                              "x": -177.63,
+                              "y": 289.50,
+                              "z": -367.14
+                          }
+                        ]
+      },
+      {
+        "name": "Africa",
+        "boundingBox": [
+                          [
+                            {
+                              "x": -82.04,
+                              "y": 33.14,
+                              "z": -491.11
+                            },
+                            {
+                              "x": -372.92,
+                              "y": 103.07,
+                              "z": -317.49
+                            },
+                            {
+                              "x": -68.84,
+                              "y": -281.75,
+                              "z": -406.73
+                            },
+                            {
+                              "x": -340.24,
+                              "y": -257.19,
+                              "z": -262.45
+                            }
+                          ],
+                          [
+                            {
+                              "x": 161.55,
+                              "y": 265.95,
+                              "z": -391.71
+                            },
+                            {
+                              "x": -310.83,
+                              "y": 272.38,
+                              "z": -283.79
+                            },
+                            {
+                              "x": 158.16,
+                              "y": 8.39,
+                              "z": -473.68
+                            },
+                            {
+                              "x": -332.73,
+                              "y": 48.06,
+                              "z": -370.52
+                            }
+                          ]
+                        ]
+      },
+      {
+        "name": "Asia",
+        "boundingBox": [
+                          [
+                            {
+                              "x": -90.84,
+                              "y": 480.33,
+                              "z": -96.54
+                            },
+                            {
+                              "x": -104.76,
+                              "y": 484.76,
+                              "z": -45.38
+                            },
+                            {
+                              "x": -203.04,
+                              "y": 311.66,
+                              "z": -334.92
+                            },
+                            {
+                              "x": -483.7,
+                              "y": 58.29,
+                              "z": -109.2
+                            }
+                          ],
+                          [
+                            {
+                              "x": -102.19,
+                              "y": 485.37,
+                              "z": -46.02
+                            },
+                            {
+                              "x": 9.02,
+                              "y": 449.11,
+                              "z": 215.45
+                            },
+                            {
+                              "x": -483.95,
+                              "y": 61.18,
+                              "z": -106.47
+                            },
+                            {
+                              "x": -440.31,
+                              "y": 78.68,
+                              "z": 222.91
+                            }
+                          ]
+                        ]
+      },
+      {
+        "name": "Australia",
+        "boundingBox": [
+                          {
+                              "x": -436.9,
+                              "y": -104.6,
+                              "z": 218.68
+                          },
+                          {
+                              "x": -218.7,
+                              "y": -104.6,
+                              "z": 436.9
+                          },
+                          {
+                              "x": -395.2,
+                              "y": -283.9,
+                              "z": 113.12
+                          },
+                          {
+                              "x": -148.27,
+                              "y": -314.79,
+                              "z": 358.96
+                          }
+                        ]
+      },
+      {
+        "name": "Antarctica",
+        "centerPoint": {
+                          "x": 0,
+                          "y": -500,
+                          "z": 0
+                        },
+        "boundingBox": [
+                          {
+                            "x": -211.22,
+                            "y": -423.11,
+                            "z": 157.56
+                          },
+                          {
+                            "x": -181.72,
+                            "y": -429.05,
+                            "z": -179.47
+                          },
+                          {
+                            "x": 174.06,
+                            "y": -432.02,
+                            "z": -178.67
+                          },
+                          {
+                            "x": 145.08,
+                            "y": -449.6,
+                            "z": 158.58
+                          }
+                        ]
+      }
+   ]
+
+}

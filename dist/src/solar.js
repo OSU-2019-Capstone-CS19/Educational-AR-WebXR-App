@@ -139,7 +139,7 @@ Load Model Functions
 function loadSun(gltf) {
   sunObj = gltf.scene;
 
-  //TODO: remove /10, Maybe?
+  //SunObj is scalled a 10th more due to its size
   sunObj.scale.set( jsonObj.sun.radius/jsonObj.sizeScale/10,
                     jsonObj.sun.radius/jsonObj.sizeScale/10,
                     jsonObj.sun.radius/jsonObj.sizeScale/10);
@@ -259,14 +259,15 @@ Check AR Support
 *********/
 function checkSupportedState() {
   navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
+    let statusBox = document.getElementById('statusbox');
     if (supported) {
-      // xrButton.innerHTML = 'Enter AR';
 
       xrButton.addEventListener('click', toggleAR);
 
     } else {
-      xrButton.innerHTML = 'NOPE';
-      alert("AR unavailable");
+      statusBox.innerHTML = 'Houston we have a problem, your device is not compatible';
+      xrButton.style.backgroundColor = '#cc0000';
+      xrButton.innerHTML = 'Error';
     }
   });
 }
@@ -275,7 +276,7 @@ function checkSupportedState() {
 async function toggleAR(){
   if (arActivated){
     console.log("AR is already activated");
-    return; //TODO: Would close down the XR (Would be linked to another button within the AR scene so we can activate the quiz)
+    return;
   }
   return activateAR();
 }
@@ -561,7 +562,6 @@ function sceneEvent(intersects){
 
 
 function menuEvent(intersects){
-  //TEST
   console.log("Menu Fired");
 }
 
@@ -582,7 +582,7 @@ function createReticle(){
   let circle = new THREE.Mesh(ringGeometry, ringMaterial);
   circle.position.y = 0.03;
 
-  sunObj.position.y = 0.2; //TODO could be fun to have a sit/stand mode to alter for different sizes and height
+  sunObj.position.y = 0.2;
   sunObj.children[0].material.opacity = 0.2;
 
   reticle.add(circle);
@@ -615,7 +615,6 @@ function planetSelect(num){
     planets[num].visible = true;
 
     //TODO move to the render function
-    //TODO Will need to move the planet or the sun to establish a similar Y
 
     //Direction
     let dir = new THREE.Vector3();
@@ -629,18 +628,28 @@ function planetSelect(num){
     distance = camera.position.distanceTo(dist);
 
     //Position
-    originPoint.translateOnAxis(dir, distance - 0.3);
+    originPoint.translateOnAxis(dir, distance - 0.4);
 
     //Scale
-    planets[num].scale.set(0.00025, 0.00025, 0.00025);
+    planets[num].scale.set(0.0003, 0.0003, 0.0003);
 
-    sunPivot.position.setFromMatrixPosition(planets[num].matrixWorld);
+    let centerPoint = new THREE.Vector3();
+    let planetGeometry = planets[num].children[0].geometry
+
+    let height = (planetGeometry.boundingBox.max.y + planetGeometry.boundingBox.min.y)/2;
+    planets[num].getWorldPosition(sunPivot.position);
+
+    originPoint.remove(sunObj);
+    sunPivot.position.y += height;
     sunPivot.add(sunObj);
+    sunObj.position.set(0, 0, 0);
+
 
     //Distance from sun
     dir.subVectors(planets[num].getWorldPosition(dir), sunObj.getWorldPosition(dir2));
+    dir.y = 0;
 
-    //TODO: talk to the team about this. Should we have the sun at a set position or variried
+    //TODO: Work on the size of the sun so its visible from all planets
     distance = jsonObj.planets[num].distanceFromSun / (jsonObj.distanceScale / 100) - planets[num].position.distanceTo(dir2);
     sunObj.scale.set(0.0005, 0.0005, 0.0005);
     sunObj.translateOnAxis(dir, distance );
@@ -684,15 +693,6 @@ function sunSelect(){
   if (!reset){
     //TODO: Be able to view the sun up close
 
-
-
-    //TEST: menu items
-    planetSelect(2);
-    // toggleOrbitLines();
-    // togglePause();
-    //resetSolarSystem();
-    //toggleLight();
-    //xrSession.end();
   }
 }
 
@@ -794,7 +794,6 @@ function toggleOrbitLines(){
 }
 
 function togglePause(){
-  //TODO: will need to check if a planet is currently being viewed, that planet will not continue to orbit when unpaused
   if (!jsonObj.pause){
     //Pause
     jsonObj.pause = true;

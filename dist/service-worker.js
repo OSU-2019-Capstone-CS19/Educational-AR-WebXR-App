@@ -27,7 +27,7 @@ self.addEventListener('message', (event) => {
 self.__precacheManifest = [
   {
     "url": "index.html",
-    "revision": "e1877f797cd42953b61b3a722d8aa5cf"
+    "revision": "429b0f21b0cb22cf6fe78df4a0f8a54b"
   },
   {
     "url": "model/planets-glb/neptune/Neptune.glb",
@@ -54,20 +54,20 @@ self.__precacheManifest = [
     "revision": "e90bc4e3aa3ed407808c7b2726581d33"
   },
   {
-    "url": "solar-22318e52.js",
-    "revision": "e2b4bb49147d182324b19b17df7111aa"
+    "url": "solar-582388df.js",
+    "revision": "610599fff79975ad996ea5b1506e5341"
   },
   {
     "url": "solarSystem.json",
-    "revision": "cc0ee8bc5ad63551bdde8b916b16945f"
+    "revision": "50a681f7b6064a90720b36b657b0d607"
   },
   {
     "url": "src/solar.js",
-    "revision": "8ad7d3aee4c1942897351e9893468771"
+    "revision": "ec97fa084ca08f389c345fdf331ee462"
   },
   {
     "url": "style.css",
-    "revision": "698b0960afaaf3a1d8fb020f0f16f258"
+    "revision": "93a077fe6c5b06a11ae4ba9ffe6f4416"
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});

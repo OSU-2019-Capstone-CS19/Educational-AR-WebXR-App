@@ -457,7 +457,7 @@ function touchSelectEvent() {
       let sceneRaycaster = new THREE.Raycaster();
       sceneRaycaster.set(rayOrigin, rayDirection);
 
-      let intersectsArray = [sunObj, planets[1], planets[2], planets[3], planets[4], planets[5], planets[6], planets[7], planets[8], cameraPoint];
+      let intersectsArray = [sunObj, planets[1], planets[2], planets[3], planets[4], planets[5], planets[6], planets[7], planets[8], cameraPoint];  //CameraPoint is the Drawer UI thing
 
       let intersects = sceneRaycaster.intersectObjects(intersectsArray, true);
       if (intersects.length > 0){

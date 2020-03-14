@@ -189,6 +189,71 @@
          ]
       }
    ],
+   "ui": [
+      {
+        "name":"Drawer",
+        "texture": "./model/UI-textures/drawer-icon.png",
+        "position": 
+          {
+            "x": 0.13,
+            "y": 0.25,
+            "z": 0.5
+          }        
+      },
+      {
+        "name": "Lines",
+        "position":
+        {
+          "x": 0.13,
+          "y": 0.20,
+          "z": 0.50
+        }
+      },
+      {
+        "name":"Planets",
+        "position": 
+        {
+          "x": 0.13,
+          "y": 0.15,
+          "z": 0.5
+        },
+        "options":[
+          {
+            "name": "Mercury"
+          },
+          {
+            "name": "Venus"
+          },
+          {
+            "name": "Earth"
+          },
+          {
+            "name": "Mars"
+          },
+          {
+            "name": "Jupiter"
+          },
+          {
+            "name": "Saturn"
+          },
+          {
+            "name": "Uranus"
+          },
+          {
+            "name": "Neptune"
+          },
+          {
+            "name": "Pluto"
+          },
+          {
+            "name": "Sun"
+          },
+          {
+            "name": "Moon"
+          }
+        ]
+      }
+   ],
    "continents": [
       {
         "name": "North America",

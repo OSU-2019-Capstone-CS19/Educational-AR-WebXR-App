@@ -33,9 +33,10 @@ JSON file
 **********/
 let jsonObj;
 let request = new XMLHttpRequest();
-  request.open("GET", "./solarSystem.json", false);
-  request.send(null);
-  jsonObj = JSON.parse(request.responseText);
+
+request.open("GET", "./solarSystem.json", false);
+request.send(null);
+jsonObj = JSON.parse(request.responseText);
 
 
 /**********
@@ -140,6 +141,7 @@ function loadSun(gltf) {
   sunObj = gltf.scene;
 
   //SunObj is scalled a 10th more due to its size
+
   sunObj.scale.set( jsonObj.sun.radius/jsonObj.sizeScale/10,
                     jsonObj.sun.radius/jsonObj.sizeScale/10,
                     jsonObj.sun.radius/jsonObj.sizeScale/10);
@@ -199,6 +201,7 @@ function loadPlanet(gltf) {
   planets[num].position.set(pivots[num].position.x + jsonObj.planets[num].distanceFromSun/jsonObj.distanceScale,
                             pivots[num].position.y,
                             pivots[num].position.z);
+
   planets[num].rotateZ(jsonObj.planets[num].rotationAngle);
   planets[num].name = jsonObj.planets[num].name;
 

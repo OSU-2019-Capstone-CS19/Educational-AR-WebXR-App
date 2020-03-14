@@ -2,169 +2,158 @@ import {Workbox} from 'workbox-window';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-//import { render } from './render.js';
 
+//Service Worker
 if ("serviceWorker" in navigator) {
   const wb = new Workbox('service-worker.js');
   wb.register();
 }
 
-var planets = [];
-var pivots = [];
-var planetTargets = [];
-var orbitLines = [];
-var continentBoxs = [];
-var sunObj, moonObj, moonPivot;
-var astronautObj, cameraPivot;
-var cameraTarget;
+//variables
+let originPoint;
+let originMatrix;
+let planets = [];
+let pivots = [];
+let orbitLines = [];
+let sunObj, sunPivot, moonObj, moonPivot;
+
+let xrButton = document.getElementById('xr-button');
+let xrSession = null;
+let xrRefSpace = null;
+let showSolarSystem = false;
+let arActivated = false;
+let reticle;
+let gl = null;
 
 
 /**********
-Load up JSON file
+JSON file
 ***********
 => This file contains all relevent information concerning all the objects in the scene
 **********/
-var jsonObj;
-var request = new XMLHttpRequest();
-  request.open("GET", "./solarSystem.json", false);
-  request.send(null);
-  jsonObj = JSON.parse(request.responseText);
+let jsonObj;
+let request = new XMLHttpRequest();
+
+request.open("GET", "./solarSystem.json", false);
+request.send(null);
+jsonObj = JSON.parse(request.responseText);
 
 
 /**********
-Create Renderer
+Renderer
 **********/
-var renderer = new THREE.WebGLRenderer({antialias: true});
-renderer.setSize( window.innerWidth, window.innerHeight );
-document.body.appendChild( renderer.domElement );
+let renderer = new THREE.WebGLRenderer({antialias: true});
+renderer.autoClear = false;
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
 
 
 /**********
-Create Scene
-***********
-=> Create the scene
-=> Create Sun object
-=> Create Astronaut object
-=> Create all pivots for objects in the scene
+Scene
 **********/
-var scene = new THREE.Scene();
+let scene = new THREE.Scene();
+scene.background = null;
+
 sunObj = new THREE.Object3D();
+sunPivot = new THREE.Object3D();
 moonObj = new THREE.Object3D();
 moonPivot = new THREE.Object3D();
-astronautObj = new THREE.Object3D();
-
-for (var i=0; i < jsonObj.numPlanets; i++){
-  pivots[i] = new THREE.Object3D();
-  pivots[i].position.set(0, 0, 0);
-  scene.add(pivots[i]);
-  planetTargets[i] = new THREE.Object3D();
-}
 
 
 /**********
-Create Camera
-=> NOTE: cameraControls will not be implemented in the AR build, instead an AR camera will be used
-=> Set starting point for camera
+Camera
 **********/
-var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000000 );
-var cameraControls = new OrbitControls(camera, renderer.domElement);
-cameraControls.target = new THREE.Vector3( 0, 0, 0);
-cameraControls.update();
-
-camera.position.y = 700;
+let camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 0.001, 10000000);
+camera.matrixAutoUpdate = false;
+scene.add(camera);
 
 
 /**********
-Create Lights
+Lights
 **********/
-var sunLight = new THREE.PointLight( 0xfffee8, jsonObj.sun.intensity, 0, 0);
+let sunLight = new THREE.PointLight( 0xfffee8, 1, 0, 0); //TODO: use jsonObj.sun.intensity?
 sunLight.position.set( 0, 0, 0);
-scene.add(sunLight);
+sunLight.visible = false;
 
+let cameraLight = new THREE.PointLight( 0xfffee8, 2, 0, 0);
+cameraLight.visible = true;
+camera.add(cameraLight);
 
 /**********
-Raycasting and Mouse
+INIT
 **********/
-var raycaster = new THREE.Raycaster();
-var mouse = new THREE.Vector2();
+function init() {
 
+  if (navigator.xr) {
+
+    checkSupportedState();
+    loadModels();
+
+    originPoint = new THREE.Object3D();
+    originPoint.name = "origin";
+
+  } else {
+    alert("AR no go");
+  }
+}
 
 /**********
 Load Models
-=> Use the GLTFLoader to load all nessisary models and set the models to appropriate objects
 **********/
-var loader = new GLTFLoader();
+function loadModels() {
 
-//Sun
-loader.load(
-  jsonObj.sun.file,
-  gltf => loadSun( gltf ),
-  xhr => onProgress(xhr),
-  error => onError(error)
-);
+  let loader = new GLTFLoader();
 
-//Planets
-//NOTE: Loads planets in the wrong order
-for (var i=0; i < jsonObj.numPlanets; i++){
+  //Sun
   loader.load(
-    jsonObj.planets[i].file,
-    gltf => loadPlanet( gltf ),
+    jsonObj.sun.file,
+    gltf => loadSun( gltf ),
+    xhr => onProgress(xhr),
+    error => onError(error)
+  );
+
+  //Planets
+  //NOTE: Loads planets in the wrong order
+  for (let i=0; i < jsonObj.numPlanets; i++){
+    loader.load(
+      jsonObj.planets[i].file,
+      gltf => loadPlanet( gltf ),
+      xhr => onProgress(xhr),
+      error => onError(error)
+    );
+  }
+
+  //Earths Moon
+  loader.load(
+    jsonObj.planets[2].moon.file,
+    gltf => loadMoon( gltf ),
     xhr => onProgress(xhr),
     error => onError(error)
   );
 }
-var num;
-
-//Earths Moon
-loader.load(
-  jsonObj.planets[2].moon.file,
-  gltf => loadMoon( gltf ),
-  xhr => onProgress(xhr),
-  error => onError(error)
-);
-
 
 /**********
 Load Model Functions
-***********
-=> These functions are called when the model is first loaded
-=> Sun:
-  => Set scale based on Json values
-  => Set Y axis angle based on Json value
-  => add to scene (Note: will be position to (0,0,0))
-
-=> Planets:
-  => Uses switch statement to determin which planet is loading in at this time (Note: planets dont load in order)
-  => Set scale and position based on Json values
-  => Set Y axis angle based on Json value
-  => Set planets parent to proper pivot object (Pivot is already set to scene, and set to (0, 0, 0))
-  => Set Y axis of the pivot to the orbit inclination value in the json
-  => Create orbit rings and set Y axis of orbit ring based on the orbit inclination
-  => Add to scene(Note: will be set to (0, 0, 0))
-
-=> Moon:
-  => Set moonPivot to the location of the Earth (uses the same values from the Json)
-  => Set the scale and position of the moon based on json values
-  => Set hierarchy as Earth > moonPivot > moonObj
-  => Set Y axis of the pivot and the moon obj based on the json values
-
-=> Note: Each Planet, Sun, and Moon begins with a scale of 1, equivalent to (1000, 1000, 1000)
-**********/
+***********/
 
 //Load Sun Model
-var loadSun = ( gltf ) => {
+function loadSun(gltf) {
   sunObj = gltf.scene;
-  //TODO: remove /10, Maybe?
+
+  //SunObj is scalled a 10th more due to its size
+
   sunObj.scale.set( jsonObj.sun.radius/jsonObj.sizeScale/10,
                     jsonObj.sun.radius/jsonObj.sizeScale/10,
                     jsonObj.sun.radius/jsonObj.sizeScale/10);
   sunObj.rotateZ(jsonObj.sun.rotationAngle);
   sunObj.name = jsonObj.sun.name;
-  scene.add(sunObj);
+  sunObj.add(sunLight);
+  scene.add(sunPivot);
 };
 
 //Load Planet Models
-var loadPlanet = ( gltf ) => {
+function loadPlanet(gltf) {
+  let num;
 
   //Order Planets
   switch (gltf.parser.options.path){
@@ -199,8 +188,12 @@ var loadPlanet = ( gltf ) => {
       break;
   }
 
-  //Planet
-  //Note: Scale is 1=1000 based on original model
+  //Add pivot to center
+  pivots[num] = new THREE.Object3D();
+  pivots[num].name = "pivotPoint";
+  originPoint.add(pivots[num]);
+
+  //Add Planet based on Json
   planets[num] = gltf.scene
   planets[num].scale.set((jsonObj.planets[num].radius/jsonObj.sizeScale),
                           (jsonObj.planets[num].radius/jsonObj.sizeScale),
@@ -212,511 +205,628 @@ var loadPlanet = ( gltf ) => {
   planets[num].rotateZ(jsonObj.planets[num].rotationAngle);
   planets[num].name = jsonObj.planets[num].name;
 
-  //Planet Target
-  planetTargets[num].position.set(planets[num].position.x - (jsonObj.planets[num].radius)*1500 / jsonObj.sizeScale,
-                            planets[num].position.y,
-                            planets[num].position.z);
-
-  //Pivot
+  //Add planet to pivot
   pivots[num].add(planets[num]);
-  pivots[num].add(planetTargets[num]);
   pivots[num].rotateZ(jsonObj.planets[num].orbitInclination);
 
-  //Draw Orbit Lines
-  var material = new THREE.LineBasicMaterial({ color:0xffffa1 });
-  var orbitCircle = new THREE.CircleGeometry(jsonObj.planets[num].distanceFromSun/jsonObj.distanceScale, 100);
+  //Draw orbit lines based on planet
+  let orbitMaterial = new THREE.LineBasicMaterial({ color:0xffffa1 });
+  let orbitCircle = new THREE.CircleGeometry(jsonObj.planets[num].distanceFromSun/jsonObj.distanceScale, 100);
   orbitCircle.vertices.shift();
   orbitCircle.rotateX(Math.PI * 0.5);
   orbitCircle.rotateZ(jsonObj.planets[num].orbitInclination);
 
-  orbitLines[num] = new THREE.LineLoop( orbitCircle, material);
-  scene.add(orbitLines[num]);
+  orbitLines[num] = new THREE.LineLoop( orbitCircle, orbitMaterial);
+  orbitLines[num].name = "oribitLine";
+  originPoint.add(orbitLines[num]);
+
+  //Add Moon
+  //Note: Currently only for earth but could be altered to incoperate moons for any planet in the solar system
+  if (jsonObj.planets[num].moon){
+
+    pivots[num].add(moonPivot);
+    moonPivot.add(moonObj);
+    moonPivot.position.copy(planets[num].position);
+
+    moonObj.scale.set(jsonObj.planets[2].moon.radius/jsonObj.sizeScale,
+                      jsonObj.planets[2].moon.radius/jsonObj.sizeScale,
+                      jsonObj.planets[2].moon.radius/jsonObj.sizeScale);
+
+    //Get the size of the planet to determin radius
+    let planetBox = new THREE.Box3().setFromObject( planets[num] );
+
+    moonObj.position.x = planetBox.getSize().x/2 + jsonObj.planets[2].moon.distanceFromEarth/jsonObj.distanceScale;
+
+    moonObj.rotateZ(jsonObj.planets[2].moon.rotationAngle);
+    moonObj.name = jsonObj.planets[2].moon.name;
+    moonPivot.rotateZ(jsonObj.planets[2].moon.orbitInclination);
+  }
 };
 
 //Load Moon Model
-var loadMoon = ( gltf ) => {
+function loadMoon(gltf) {
   moonObj = gltf.scene;
-
-  moonPivot.position.set( jsonObj.planets[2].distanceFromSun/jsonObj.distanceScale,
-                          moonPivot.position.y,
-                          moonPivot.position.z);
-
-  moonObj.scale.set(jsonObj.planets[2].moon.radius/jsonObj.sizeScale,
-                    jsonObj.planets[2].moon.radius/jsonObj.sizeScale,
-                    jsonObj.planets[2].moon.radius/jsonObj.sizeScale);
-
-  moonObj.position.set( //jsonObj.planets[2].radius/jsonObj.sizeScale + jsonObj.planets[2].moon.distanceFromEarth/jsonObj.distanceScale,
-                        5,
-                        moonPivot.position.y,
-                        moonPivot.position.z);
-
-  moonObj.rotateZ(jsonObj.planets[2].moon.rotationAngle);
-  moonObj.name = jsonObj.planets[2].moon.name;
-
-  pivots[2].add(moonPivot);
-  moonPivot.add(moonObj);
-
-  moonPivot.rotateZ(jsonObj.planets[2].moon.orbitInclination);
 };
 
-//Model Load Progress
-var onProgress = (xhr) => {
-  //console.log(( xhr.loaded / xhr.total * 100 ) + '% loaded');
-};
+function onProgress(xhr) {
+  // console.log((xhr.loaded / xhr.total *100) + '% loaded');
+}
 
-//Model Load Error
-var onError = (errorMessage) => {
-  console.log(errorMessage);
-};
+function onError(error) {
+  console.log(error);
+}
 
 
-/***********
-Planet Selection
-***********/
-var planetSelect = (planetNum) => {
-  var ranNum = Math.floor(Math.random() * 3);
-  document.getElementById("TextBox").innerHTML = jsonObj.planets[planetNum].facts[ranNum];
+/*********
+Check AR Support
+*********/
+function checkSupportedState() {
+  navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
+    let statusBox = document.getElementById('statusbox');
+    if (supported) {
 
-  if (!jsonObj.planets[planetNum].beingViewed){
-    jsonObj.sun.beingViewed = false;
-    jsonObj.planets[2].moon.beingViewed = false;
-    for (var i=0; i<jsonObj.numPlanets; i++){
-      jsonObj.planets[i].beingViewed = false;
+      xrButton.addEventListener('click', toggleAR);
+
+    } else {
+      statusBox.innerHTML = 'Houston we have a problem, your device is not compatible';
+      xrButton.style.backgroundColor = '#cc0000';
+      xrButton.innerHTML = 'Error';
     }
-    jsonObj.planets[planetNum].beingViewed = true;
+  });
+}
 
-    planetTargets[planetNum].add(camera);
-    camera.position.set(0,0,0);
+//NOTE: This function can be removed if we want to (AR activated could be a json componet)
+async function toggleAR(){
+  if (arActivated){
+    console.log("AR is already activated");
+    return;
   }
-};
+  return activateAR();
+}
 
-var sunSelect = () => {
-  var ranNum = Math.floor(Math.random() * 3);
-  document.getElementById("TextBox").innerHTML = jsonObj.sun.facts[ranNum];
 
-  if (!jsonObj.sun.beingViewed){
-    jsonObj.sun.beingViewed = false;
-    jsonObj.planets[2].moon.beingViewed = false;
-    for (var i=0; i<jsonObj.numPlanets; i++){
-      jsonObj.planets[i].beingViewed = false;
-    }
-    jsonObj.sun.beingViewed = true;
+/**********
+XR Session
+**********/
+async function activateAR(){
+  try{
+    xrSession = await navigator.xr.requestSession('immersive-ar');
+    xrRefSpace = await xrSession.requestReferenceSpace('local');
 
-    sunObj.add(camera);
+    xrSession.addEventListener('select', touchSelectEvent);
 
-    //TODO: this is hard coded
-    camera.position.set(0, 700, 1500);
-    cameraControls.target = sunObj.position;
-    cameraControls.update();
+    let gl = renderer.getContext();
+    await gl.makeXRCompatible();
+    let layer = new XRWebGLLayer(xrSession, gl);
+    xrSession.updateRenderState({ baseLayer: layer });
 
-  } else {
+    xrSession.addEventListener('end', onSessionEnd);
 
-    //Solar System View
-    jsonObj.sun.beingViewed = false;
-    sunObj.remove(camera);
+    let transientInputHitTestSource = null;
+    let hitTestOptionsInit = {
+      profile: 'generic-touchscreen',
+      offsetRay: new XRRay()
+    };
 
-    //TODO: this is hard coded
-    camera.position.set(0, 700, 0);
-    cameraControls.target = new THREE.Vector3(0,0,0);
-    cameraControls.update();
-  }
-};
+    xrSession.requestHitTestSourceForTransientInput(hitTestOptionsInit).then((hitTestSource) => {
+      transientInputHitTestSource = hitTestSource;
+      transientInputHitTestSource.context = {options : hitTestOptionsInit };
+    });
 
-var moonSelect = () => {
-  var ranNum = Math.floor(Math.random() * 3);
-  document.getElementById("TextBox").innerHTML = jsonObj.planets[2].moon.facts[ranNum];
+    xrSession.requestAnimationFrame(renderXR);
+    arActivated = true;
 
-  if (!jsonObj.planets[2].moon.beingViewed){
-    jsonObj.sun.beingViewed = false;
-    jsonObj.planets[2].moon.beingViewed = false;
-    for (var i=0; i<jsonObj.numPlanets; i++){
-      jsonObj.planets[i].beingViewed = false;
-    }
-    jsonObj.planets[2].moon.beingViewed = true;
-
-    moonPivot.add(camera);
-
-    //TODO hard coded
-    camera.position.set( -1, 0, 0);
+  } catch (error){
+    console.log("Catch: "+ error);
   }
 }
 
 
 /*********
-Implementing bounding boxes for all the continenets
+Session End
 *********/
-var antarcticaBox = new THREE.Box3();
-antarcticaBox.setFromPoints(jsonObj.continents[6].boundingBox);
-antarcticaBox.expandByPoint(jsonObj.continents[6].centerPoint);
-
-var australiaBox = new THREE.Box3();
-australiaBox.setFromPoints(jsonObj.continents[5].boundingBox);
-//australiaBox.expandByPoint(jsonObj.continents[5].centerPoint);
-
-var europeBox = new THREE.Box3();
-europeBox.setFromPoints(jsonObj.continents[2].boundingBox);
-//europeBox.expandByPoint(jsonObj.continents[2].centerPoint);
-
-var africaBox1 = new THREE.Box3();
-africaBox1.setFromPoints(jsonObj.continents[3].boundingBox[0]);
-//africaBox.expandByPoint(jsonObj.continenets[3].centerPoint)
-
-var africaBox2 = new THREE.Box3();
-africaBox2.setFromPoints(jsonObj.continents[3].boundingBox[1]);
-
-var southAmericaBox1 = new THREE.Box3();
-southAmericaBox1.setFromPoints(jsonObj.continents[1].boundingBox[0]);
-
-var southAmericaBox2 = new THREE.Box3();
-southAmericaBox2.setFromPoints(jsonObj.continents[1].boundingBox[1]);
-
-var northAmericaBox1 = new THREE.Box3();
-northAmericaBox1.setFromPoints(jsonObj.continents[0].boundingBox[0]);
-
-var northAmericaBox2 = new THREE.Box3();
-northAmericaBox2.setFromPoints(jsonObj.continents[0].boundingBox[1]);
-
-var asiaBox1 = new THREE.Box3();
-asiaBox1.setFromPoints(jsonObj.continents[4].boundingBox[0]);
-
-var asiaBox2 = new THREE.Box3();
-asiaBox2.setFromPoints(jsonObj.continents[4].boundingBox[1]);
+function onSessionEnd(){
+  console.log("SESSION ENDED");
+  arActivated = false;
+  xrSession = null;
+}
 
 
-//NOTE: Couldnt really find a good way to run all the javascripts together. Will look more into it later
+/*********
+Render XR
+*********/
+function renderXR(timestamp, xrFrame){
 
+  if (!xrFrame || !xrSession || !arActivated){
+    return;
+  }
 
-/**********
-Click Event Listener
-***********
-=> Use a raycaster to find intersects with mouse location
-=> Check if click was on the Sun
-  => Check if planet is currently being being viewed
-    => No: Set all other planets.beingViewed to false and set the sun.beingViewed to true
-           Set camera parent to planets pivot point so camera orbits around the sun
-    => Yes: Set sun.beingViewed to false
-            Return to original view of the solar system
+  let pose = xrFrame.getViewerPose(xrRefSpace);
+  if (!pose){
+    xrSession.requestAnimationFrame(renderXR);
+    return;
+  }
 
-=> Check if click was on a planet
- => Check if planet is currently being viewed
-    => No: Set all other planets.beingViewed to false and this planet.beingViewed to true
-           Set camera parent to planets pivot point so camera orbits around with the planet
-    => Yes: Set camera parent to planet so camera orbits around the planet
-**********/
-window.addEventListener('mousedown', () => {
+  if (!showSolarSystem){
 
-  mouse.x = (event.clientX / window.innerWidth) *2 -1;
-  mouse.y = - (event.clientY / window.innerHeight) *2 +1;
+    createReticle();
 
-  console.log("mousedown");
-  console.log(mouse);
+    const x=0;
+    const y=0;
+    let raycaster = new THREE.Raycaster();
+    raycaster.setFromCamera({ x, y }, camera);
 
-  checkRaycasting(mouse);
-}, false);
+    let rayOrigin = raycaster.ray.origin;
+    let rayDirection = raycaster.ray.direction;
+    let ray = new XRRay({x : rayOrigin.x, y : rayOrigin.y, z : rayOrigin.z},
+      {x : rayDirection.x, y : rayDirection.y, z : rayDirection.z});
 
-window.addEventListener('touchstart', () => {
+    xrSession.requestHitTest(ray, xrRefSpace).then((results) => {
+      if (results.length) {
+        console.log("raycast good");
+        let hitResult = results[0];
+        reticle.visible = true;
+        originPoint.visible = false;
+        let hitMatrix = new THREE.Matrix4();
+        hitMatrix.fromArray(hitResult.hitMatrix);
+        reticle.position.setFromMatrixPosition(hitMatrix);
 
-  mouse.x = (event.targetTouches[0].pageX / window.innerWidth) *2 -1;
-  mouse.y = - (event.targetTouches[0].pageY / window.innerHeight) *2 +1;
-
-  console.log("touchstart");
-  console.log(mouse);
-
-  checkRaycasting(mouse);
-}, false);
-
-var checkRaycasting = (mouse) => {
-
-    console.log("raycasting");
-
-    raycaster.setFromCamera( mouse, camera );
-	  var intersects = raycaster.intersectObjects(scene.children, true);
-    if (intersects.length > 0){
-
-      if(intersects[0].object.parent.name){
-        switch(intersects[0].object.parent.name){
-
-          case "Sun":
-            sunSelect();
-            break;
-
-          case "Mercury":
-            planetSelect(0);
-            break;
-
-          case "Venus":
-            planetSelect(1);
-            break;
-
-          case "Earth":
-            planetSelect(2);
-
-            if (jsonObj.planets[2].beingViewed){
-              var point = planets[2].worldToLocal(intersects[0].point);
-
-              if (antarcticaBox.containsPoint(point)){
-                console.log("Antarctica");
-              } else if (australiaBox.containsPoint(point)){
-                console.log("Australia");
-              } else if (europeBox.containsPoint(point)){
-                console.log("Europe");
-              } else if (africaBox1.containsPoint(point)){
-                console.log("Africa");
-              } else if (africaBox2.containsPoint(point)){
-                console.log("Africa");
-              } else if (southAmericaBox1.containsPoint(point)){
-                console.log("South America");
-              } else if (southAmericaBox2.containsPoint(point)){
-                console.log("South America");
-              } else if (northAmericaBox1.containsPoint(point)){
-                console.log("North America");
-              } else if (northAmericaBox2.containsPoint(point)){
-                console.log("North America");
-              } else if (asiaBox1.containsPoint(point)){
-                console.log("Asia");
-              } else if (asiaBox2.containsPoint(point)){
-                console.log("Asia");
-              } else {
-                console.log("False");
-              }
-            }
-            break;
-
-          case "Moon":
-            moonSelect();
-            break;
-
-          case "Mars":
-            planetSelect(3);
-            break;
-
-          case "Jupiter":
-            planetSelect(4);
-            break;
-
-          case "Saturn":
-            planetSelect(5);
-            break;
-
-          case "Uranus":
-            planetSelect(6);
-            break;
-
-          case "Neptune":
-            planetSelect(7);
-            break;
-
-          case "Pluto":
-            planetSelect(8);
-            break;
-
-          default:
-            break;
-        }
+      } else {
+        console.log("Keep looking");
+        reticle.visible = false;
       }
-   }
-}
+    });
 
-/***************************
-MenuEventHandler
-***************************/
-
-document.getElementById("testButton").addEventListener("click", function(){
-  document.getElementById("mySidenav").style.width = "250px";
-});
-
-document.getElementById("closeNav").addEventListener("click", function(){
-  document.getElementById("mySidenav").style.width = "0";
-});
-
-document.getElementById("openPlanetsNav").addEventListener("click", function(){
-  document.getElementById("planetsNav").style.width = "250px";
-});
-
-document.getElementById("closePlanetsNav").addEventListener("click", function(){
-  document.getElementById("planetsNav").style.width = "0px";
-});
-
-document.getElementById("showSun").addEventListener("click", function(){
-  sunSelect();
-});
-
-document.getElementById("showMoon").addEventListener("click", function(){
-  moonSelect();
-});
-
-document.getElementById("showMercury").addEventListener("click", function(){
-  planetSelect(0);
-});
-
-document.getElementById("showVenus").addEventListener("click", function(){
-  planetSelect(1);
-});
-
-document.getElementById("showEarth").addEventListener("click", function(){
-  planetSelect(2);
-});
-
-document.getElementById("showMars").addEventListener("click", function(){
-  planetSelect(3);
-});
-
-document.getElementById("showJupiter").addEventListener("click", function(){
-  planetSelect(4);
-});
-
-document.getElementById("showSaturn").addEventListener("click", function(){
-  planetSelect(5);
-});
-
-document.getElementById("showUranus").addEventListener("click", function(){
-  planetSelect(6);
-});
-
-document.getElementById("showNeptune").addEventListener("click", function(){
-  planetSelect(7);
-});
-
-document.getElementById("showPluto").addEventListener("click", function(){
-  planetSelect(8);
-});
-
-document.getElementById("toggleAstronaut").addEventListener("click", function(){
-  jsonObj.astronaut.visible=!(jsonObj.astronaut.visible);
-  console.log("astronaut.visible = ", jsonObj.astronaut.visible);
-});
-
-document.getElementById("toggleTrace").addEventListener("click", function(){
-  //jsonObj.showPlanetLines=!(jsonObj.showPlanetLines);
-  //console.log("showPlanetLines = ", jsonObj.showPlanetLines);
-  if(jsonObj.showPlanetLines){
-    jsonObj.showPlanetLines = false;
-    for (var i=0; i<jsonObj.numPlanets; i++){
-      scene.remove(orbitLines[i]);
+  } else {
+    if (reticle){
+      reticle.visible = false;
+      originPoint.visible = true;
     }
+
+    animateScene();
   }
-  else if(!jsonObj.showPlanetLines){
-    jsonObj.showPlanetLines = true;
-    for (var i=0;i<jsonObj.numPlanets; i++){
-      scene.add(orbitLines[i]);
-    }
+
+  let xrLayer = xrSession.renderState.baseLayer;
+  renderer.setFramebuffer(xrLayer.framebuffer);
+
+  for (let xrView of pose.views){
+    let viewport = xrLayer.getViewport(xrView);
+    renderView(xrView, viewport);
   }
-});
 
-// Start of Range slider collapsible content
-var coll = document.getElementsByClassName("collapsible");
-var i;
-
-for (i = 0; i < coll.length; i++) {
-  coll[i].addEventListener("click", function() {
-    this.classList.toggle("active");
-    var content = this.nextElementSibling;
-    if (content.style.display === "block") {
-      content.style.display = "none";
-    } else {
-      content.style.display = "block";
-    }
-  });
+  xrSession.requestAnimationFrame(renderXR);
 }
 
-////----- Here's range slider stuff
 
-var sunSlider = document.getElementById("sunRange");
-var output = document.getElementById("sunVal");
-sunSlider.value = jsonObj.sun.intensity;
-output.innerHTML = sunSlider.value;
-
-sunSlider.oninput = function() {
-  output.innerHTML = this.value;
-  jsonObj.sun.intensity=this.value;
-}
-
-var speedSlider = document.getElementById("speedRange");
-var speedOutput = document.getElementById("speedVal");
-speedSlider.value = jsonObj.orbitScale;
-speedOutput.innerHTML = speedSlider.value;
-
-speedSlider.oninput = function() {
-  speedOutput.innerHTML = this.value;
-  jsonObj.orbitScale = this.value;
-  jsonObj.rotationScale = this.value;
-
-}
-
-/**********
-Render/Animate Function
-***********
-=> Check if sunObj exists
-  => Yes: Rotate the sunObj about its Y axis
-
-=> Check if planets exists
-  => Yes: Rotate the planets based on their Y axis
-
-=> Check if planets pivots exists
-  => Yes: Rotate each pivot about its Y axis, resulting in an orbit around the sun
-
-=> Check if moonObj exists
-  => Yes: Rotate the moonObj about its Y axis
-
-=> Check if moonPivot exists
-  => Yes: Rotate the moonPivot about its Y axis, resulting in an orbit around the earth
-
-=> Check if any planet is currently being viewed
-  => Yes: Update cameraControls.Target to the planet
-  => NOTE: This will not be in the AR version of the application
-
-=> Update camera controls
-=> Call render
-**********/
-var render = () => {
-  requestAnimationFrame( render );
-
-  sunLight.intensity = jsonObj.sun.intensity;
+/*********
+Animate 3D scene
+*********/
+function animateScene(){
 
   //Sun Rotation
-  if (sunObj){
+  if (sunObj && jsonObj.sun.moveRotate){
     sunObj.rotateY(jsonObj.sun.rotation / jsonObj.rotationScale);
   }
 
   //Planet Rotation (rad/day)
-  for (var i=0; i<jsonObj.numPlanets; i++){
-    if (planets[i]){
-        planets[i].rotateY(jsonObj.planets[i].rotation / jsonObj.rotationScale);
+  for (let i=0; i<jsonObj.numPlanets; i++){
+    if (planets[i] && jsonObj.planets[i].moveRotate){
+      planets[i].rotateY(jsonObj.planets[i].rotation / jsonObj.rotationScale);
     }
   }
 
-  // //Planet Orbit (rad/day)
-  for (var i=0; i<jsonObj.numPlanets; i++){ //will use jsonObj.numElements
-    if (pivots[i]){
+  //Planet Orbit (rad/day)
+  for (let i=0; i<jsonObj.numPlanets; i++){
+    if (pivots[i] && jsonObj.planets[i].moveOrbit){
       pivots[i].rotateY(jsonObj.planets[i].orbit / jsonObj.orbitScale);
+    }
+
+    if (jsonObj.planets[i].beingViewed && sunLight.visible){
+      sunPivot.rotateY(jsonObj.planets[i].orbit / jsonObj.orbitScale);
     }
   }
 
   //Moon Rotation (rad/day)
-  if (moonObj){
+  if (moonObj && jsonObj.planets[2].moon.moveRotate){
     moonObj.rotateY(jsonObj.planets[2].moon.rotation / jsonObj.rotationScale);
   }
 
   //Moon Orbit (rad/day)
-  if (moonPivot){
+  if (moonPivot && jsonObj.planets[2].moon.moveOrbit){
     moonPivot.rotateY(jsonObj.planets[2].moon.orbit / jsonObj.orbitScale);
   }
+}
 
-  //Camera rotation if viewing planet
-  //NOTE: this will not be present in the AR build
-  for (var i=0; i<jsonObj.numPlanets; i++){
+
+function renderView(xrView, viewport){
+  renderer.setViewport(viewport.x, viewport.y, viewport.width, viewport.height);
+  const viewMatrix = xrView.transform.inverse.matrix;
+
+  //camera
+  camera.projectionMatrix.fromArray(xrView.projectionMatrix);
+  camera.matrix.fromArray(viewMatrix).getInverse(camera.matrix);
+  camera.updateMatrixWorld(true);
+
+  renderer.render(scene, camera)
+}
+
+
+/**********
+Event Handler
+**********/
+function touchSelectEvent() {
+  if (showSolarSystem){
+
+    let inputPose = event.frame.getPose(event.inputSource.targetRaySpace, xrRefSpace);
+    if (inputPose) {
+
+      let targetRay = new XRRay(inputPose.transform);
+      let rayOrigin = new THREE.Vector3(targetRay.origin.x, targetRay.origin.y, targetRay.origin.z);
+      let rayDirection = new THREE.Vector3(targetRay.direction.x, targetRay.direction.y, targetRay.direction.z);
+
+      let sceneRaycaster = new THREE.Raycaster();
+      sceneRaycaster.set(rayOrigin, rayDirection);
+
+      let sceneIntersectsArray = [sunObj, moonObj, planets[0], planets[1], planets[2], planets[3], planets[4], planets[5], planets[6], planets[7], planets[8]];
+
+      //TODO add 3D menu objs here
+      let menuIntersectsArray = [];
+
+      let intersects = sceneRaycaster.intersectObjects(menuIntersectsArray, true);
+
+      if (intersects.length > 0){
+        menuEvent(intersects);
+
+      } else {
+        let intersects = sceneRaycaster.intersectObjects(sceneIntersectsArray, true);
+        if (intersects.length > 0){
+          sceneEvent(intersects);
+        }
+      }
+    }
+
+  } else {
+    if (reticle.visible){
+      showSolarSystem = true;
+
+      originMatrix = sunObj.matrixWorld;
+      sunObj.position.y = 0;
+      sunObj.children[0].material.opacity = 1;
+      originPoint.add(sunObj);
+
+      scene.add(originPoint);
+      originPoint.position.setFromMatrixPosition(originMatrix);
+    } else {
+       console.log("cant place yet");
+    }
+  }
+}
+
+function sceneEvent(intersects){
+  if (intersects[0].object.parent.name){
+    switch(intersects[0].object.parent.name){
+
+      case "Sun":
+        console.log("sun");
+        sunSelect();
+
+        break;
+
+      case "Mercury":
+        planetSelect(0);
+        break;
+
+      case "Venus":
+        planetSelect(1);
+        break;
+
+      case "Earth":
+        planetSelect(2);
+
+        if (jsonObj.planets[2].beingViewed){
+          let point = planets[2].worldToLocal(intersects[0].point);
+          checkEarthBoundingBoxs(point);
+        }
+        break;
+
+      // case "Moon":
+      //   moonSelect();
+      //   break;
+
+      case "Mars":
+        planetSelect(3);
+        break;
+
+      case "Jupiter":
+        planetSelect(4);
+        break;
+
+      case "Saturn":
+        planetSelect(5);
+        break;
+
+      case "Uranus":
+        planetSelect(6);
+        break;
+
+      case "Neptune":
+        planetSelect(7);
+        break;
+
+      case "Pluto":
+        planetSelect(8);
+        break;
+
+      default:
+        break;
+    }
+  }
+}
+
+
+function menuEvent(intersects){
+  console.log("Menu Fired");
+}
+
+
+function createReticle(){
+  if (reticle){
+    reticle.add(sunObj);
+    sunObj.position.y = 0.2;
+    sunObj.children[0].material.opacity = 0.2;
+    return;
+  }
+
+  reticle = new THREE.Object3D();
+
+  let ringGeometry = new THREE.RingGeometry(0.07, 0.09, 24, 1);
+  let ringMaterial = new THREE.MeshBasicMaterial({ color: 0x34d2eb });
+  ringGeometry.applyMatrix(new THREE.Matrix4().makeRotationX(THREE.Math.degToRad(-90)));
+  let circle = new THREE.Mesh(ringGeometry, ringMaterial);
+  circle.position.y = 0.03;
+
+  sunObj.position.y = 0.2;
+  sunObj.children[0].material.opacity = 0.2;
+
+  reticle.add(circle);
+  reticle.add(sunObj);
+  reticle.name = 'reticle';
+  scene.add(reticle);
+}
+
+
+function planetSelect(num){
+  //Pick random fact
+  let ranNum = Math.floor(Math.random() * 3);
+  console.log(jsonObj.planets[num].facts[ranNum]);
+
+  if (!jsonObj.planets[num].beingViewed){
+    for (let i=0; i<jsonObj.numPlanets; i++){
+      planets[i].visible = false;
+    }
+
+    if (num != 2){
+      moonObj.visible = false;
+    }
+
+    if (jsonObj.showPlanetLines){
+      toggleOrbitLines();
+    }
+
+    jsonObj.planets[num].beingViewed = true;
+    jsonObj.planets[num].moveOrbit = false;
+    planets[num].visible = true;
+
+    //TODO move to the render function
+
+    //Direction
+    let dir = new THREE.Vector3();
+    let dir2 = new THREE.Vector3();
+    dir.subVectors(camera.getWorldPosition(dir), planets[num].getWorldPosition(dir2)).normalize();
+
+    //Distance
+    let dist = new THREE.Vector3();
+    let distance;
+    planets[num].getWorldPosition(dist);
+    distance = camera.position.distanceTo(dist);
+
+    //Position
+    originPoint.translateOnAxis(dir, distance - 0.4);
+
+    //Scale
+    planets[num].scale.set(0.0003, 0.0003, 0.0003);
+
+    let centerPoint = new THREE.Vector3();
+    let planetGeometry = planets[num].children[0].geometry
+
+    let height = (planetGeometry.boundingBox.max.y + planetGeometry.boundingBox.min.y)/2;
+    planets[num].getWorldPosition(sunPivot.position);
+
+    originPoint.remove(sunObj);
+    sunPivot.position.y += height;
+    sunPivot.add(sunObj);
+    sunObj.position.set(0, 0, 0);
+
+
+    //Distance from sun
+    dir.subVectors(planets[num].getWorldPosition(dir), sunObj.getWorldPosition(dir2));
+    dir.y = 0;
+
+    //TODO: Work on the size of the sun so its visible from all planets
+    distance = jsonObj.planets[num].distanceFromSun / (jsonObj.distanceScale / 100) - planets[num].position.distanceTo(dir2);
+    sunObj.scale.set(0.0005, 0.0005, 0.0005);
+    sunObj.translateOnAxis(dir, distance );
+  }
+}
+
+function sunSelect(){
+  let reset = false;
+
+  for( let i=0; i<jsonObj.numPlanets; i++){
     if (jsonObj.planets[i].beingViewed){
-      cameraControls.target = new THREE.Vector3().setFromMatrixPosition(planets[i].matrixWorld);
+      reset = true;
+      moonObj.visible = true;
+      for( let j=0; j<jsonObj.numPlanets; j++){
+        planets[j].visible = true;
+      }
 
-    } else if (jsonObj.planets[2].moon.beingViewed){
-      cameraTarget = new THREE.Vector3().setFromMatrixPosition(moonObj.matrixWorld);
-      cameraControls.target = cameraTarget;
+      if (!jsonObj.showPlanetLines){
+        toggleOrbitLines();
+      }
+
+      jsonObj.planets[i].beingViewed = false;
+      jsonObj.planets[i].moveOrbit = true;
+
+      planets[i].scale.set((jsonObj.planets[i].radius/jsonObj.sizeScale),
+                              (jsonObj.planets[i].radius/jsonObj.sizeScale),
+                              (jsonObj.planets[i].radius/jsonObj.sizeScale));
+
+      sunObj.scale.set( jsonObj.sun.radius/jsonObj.sizeScale/10,
+                        jsonObj.sun.radius/jsonObj.sizeScale/10,
+                        jsonObj.sun.radius/jsonObj.sizeScale/10);
+
+      sunPivot.remove(sunObj);
+      sunObj.position.set(0, 0, 0);
+      originPoint.add(sunObj);
+
+      returnToOrigin();
     }
   }
 
-  cameraControls.update();
+  if (!reset){
+    //TODO: Be able to view the sun up close
 
-  renderer.render( scene, camera );
-};
+  }
+}
 
-render();
+
+/************
+Earth Bounding Boxs
+************/
+function checkEarthBoundingBoxs(point){
+
+  let antarcticaBox = new THREE.Box3();
+  antarcticaBox.setFromPoints(jsonObj.continents[6].boundingBox);
+  antarcticaBox.expandByPoint(jsonObj.continents[6].centerPoint);
+
+  let australiaBox = new THREE.Box3();
+  australiaBox.setFromPoints(jsonObj.continents[5].boundingBox);
+
+  let europeBox = new THREE.Box3();
+  europeBox.setFromPoints(jsonObj.continents[2].boundingBox);
+
+  let africaBox1 = new THREE.Box3();
+  africaBox1.setFromPoints(jsonObj.continents[3].boundingBox[0]);
+
+  let africaBox2 = new THREE.Box3();
+  africaBox2.setFromPoints(jsonObj.continents[3].boundingBox[1]);
+
+  let southAmericaBox1 = new THREE.Box3();
+  southAmericaBox1.setFromPoints(jsonObj.continents[1].boundingBox[0]);
+
+  let southAmericaBox2 = new THREE.Box3();
+  southAmericaBox2.setFromPoints(jsonObj.continents[1].boundingBox[1]);
+
+  let northAmericaBox1 = new THREE.Box3();
+  northAmericaBox1.setFromPoints(jsonObj.continents[0].boundingBox[0]);
+
+  let northAmericaBox2 = new THREE.Box3();
+  northAmericaBox2.setFromPoints(jsonObj.continents[0].boundingBox[1]);
+
+  let asiaBox1 = new THREE.Box3();
+  asiaBox1.setFromPoints(jsonObj.continents[4].boundingBox[0]);
+
+  let asiaBox2 = new THREE.Box3();
+  asiaBox2.setFromPoints(jsonObj.continents[4].boundingBox[1]);
+
+  if (antarcticaBox.containsPoint(point)){
+    console.log("Antarctica");
+  } else if (australiaBox.containsPoint(point)){
+    console.log("Australia");
+  } else if (europeBox.containsPoint(point)){
+    console.log("Europe");
+  } else if (africaBox1.containsPoint(point)){
+    console.log("Africa");
+  } else if (africaBox2.containsPoint(point)){
+    console.log("Africa");
+  } else if (southAmericaBox1.containsPoint(point)){
+    console.log("South America");
+  } else if (southAmericaBox2.containsPoint(point)){
+    console.log("South America");
+  } else if (northAmericaBox1.containsPoint(point)){
+    console.log("North America");
+  } else if (northAmericaBox2.containsPoint(point)){
+    console.log("North America");
+  } else if (asiaBox1.containsPoint(point)){
+    console.log("Asia");
+  } else if (asiaBox2.containsPoint(point)){
+    console.log("Asia");
+  } else {
+    console.log("False");
+  }
+}
+
+
+//TODO: part of menu
+function toggleLight(){
+  if (cameraLight.visible){
+    console.log("Sun Light");
+    cameraLight.visible = false;
+    sunLight.visible = true;
+
+  } else {
+    console.log("cameraLight");
+    cameraLight.visible = true;
+    sunLight.visible = false;
+  }
+}
+
+function toggleOrbitLines(){
+  if (jsonObj.showPlanetLines){
+    jsonObj.showPlanetLines = false;
+    for (var i=0; i<jsonObj.numPlanets; i++){
+      orbitLines[i].visible = false;
+    }
+
+  } else {
+    jsonObj.showPlanetLines = true;
+    for (var i=0; i<jsonObj.numPlanets; i++){
+      orbitLines[i].visible = true;
+    }
+  }
+}
+
+function togglePause(){
+  if (!jsonObj.pause){
+    //Pause
+    jsonObj.pause = true;
+    jsonObj.sun.moveRotate = false;
+    jsonObj.planets[2].moon.moveRotate = false;
+    jsonObj.planets[2].moon.moveOrbit = false;
+    for (let i=0; i<jsonObj.numPlanets; i++){
+      jsonObj.planets[i].moveRotate = false;
+      jsonObj.planets[i].moveOrbit = false;
+    }
+  } else {
+    //UnPause
+    jsonObj.pause = false;
+    jsonObj.sun.moveRotate = true;
+    jsonObj.planets[2].moon.moveRotate = true;
+    jsonObj.planets[2].moon.moveOrbit = true;
+    for (let i=0; i<jsonObj.numPlanets; i++){
+      jsonObj.planets[i].moveRotate = true;
+      jsonObj.planets[i].moveOrbit = true;
+    }
+  }
+}
+
+
+function returnToOrigin(){
+  originPoint.position.setFromMatrixPosition(originMatrix);
+}
+
+function resetSolarSystem(){
+  showSolarSystem = false;
+}
+
+init();

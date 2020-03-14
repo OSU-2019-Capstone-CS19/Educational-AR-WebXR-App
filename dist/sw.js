@@ -27,7 +27,7 @@ self.addEventListener('message', (event) => {
 self.__precacheManifest = [
   {
     "url": "index.html",
-    "revision": "42f294fe2dc16c02eccda32e9a7e1df3"
+    "revision": "429b0f21b0cb22cf6fe78df4a0f8a54b"
   },
   {
     "url": "polyfills/custom-elements-es5-adapter.84b300ee818dce8b351c7cc7c100bcf7.js",
@@ -38,32 +38,20 @@ self.__precacheManifest = [
     "revision": "ed55766050be285197b8f511eacedb62"
   },
   {
-    "url": "polyfills/webcomponents.d406f4685fdfb412c61f23b3ae18f2dc.js",
-    "revision": "b1db7cb76380495a55ff4f65a9648f0e"
+    "url": "polyfills/webcomponents.d67d6757b8cd44bc35b021ee0b71d197.js",
+    "revision": "e90bc4e3aa3ed407808c7b2726581d33"
   },
   {
-    "url": "solar-04e0d62d.js",
-    "revision": "478280224348798154a5af9167972d06"
-  },
-  {
-    "url": "src/menuEventHandler.js",
-    "revision": "77099a211d999429a9a73cd672c976ba"
-  },
-  {
-    "url": "src/render.js",
-    "revision": "5cc34e971a5c55f05a06ad5cf00f9e5b"
-  },
-  {
-    "url": "src/sceneEventHandler.js",
-    "revision": "b4c988c47bcdacb562ca422f18a80a99"
+    "url": "solar-582388df.js",
+    "revision": "610599fff79975ad996ea5b1506e5341"
   },
   {
     "url": "src/solar.js",
-    "revision": "0118deb81f4ed2fbf54d85a3c0dfbcf3"
+    "revision": "ec97fa084ca08f389c345fdf331ee462"
   },
   {
     "url": "style.css",
-    "revision": "a8c9c8f9cdb280da77523b371625fbf1"
+    "revision": "93a077fe6c5b06a11ae4ba9ffe6f4416"
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});

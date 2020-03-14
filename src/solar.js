@@ -78,11 +78,15 @@ camera.matrixAutoUpdate = false;
 scene.add(camera);
 
 //Test
-let boxGeometry = new THREE.BoxGeometry( 0.1, 0.1, 0.1 );
-let boxmaterial = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-let cameraPoint = new THREE.Mesh( boxGeometry, boxmaterial );
+//let boxGeometry = new THREE.BoxGeometry( 0.05, 0.05, 0.05 );
+let drawerGeometry = new THREE.PlaneGeometry( .05,.05,.05 );
+let drawerTexture = new THREE.ImageUtils.loadTexture('./model/UI-textures/drawer-icon.png');
+let boxmaterial = new THREE.MeshBasicMaterial( /*{color: 0x00fff0}*/ {map: drawerTexture} );     //UI box 
+let cameraPoint = new THREE.Mesh( drawerGeometry, boxmaterial );
 camera.add( cameraPoint );
 cameraPoint.position.z -= 0.5;
+cameraPoint.position.x += 0.13;
+cameraPoint.position.y +=.25;
 
 /**********
 Create Lights
@@ -545,7 +549,7 @@ function touchSelectEvent() {
 
     //TODO Change this to a reset button when the solar system is in place (in menu)
     //showSolarSystem = false;
-
+  
   } else {
     //TODO check redical
     //if (redical.visible){

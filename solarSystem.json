@@ -189,6 +189,7 @@
          ]
       }
    ],
+   "ui_size": 3,
    "ui": [
       {
         "name":"Drawer",
@@ -202,6 +203,7 @@
       },
       {
         "name": "Lines",
+        "texture": "./model/UI-textures/Lines.png",
         "position":
         {
           "x": 0.13,
@@ -211,6 +213,8 @@
       },
       {
         "name":"Planets",
+        "size": 11,
+        "texture": "./model/UI-textures/Planets.png",
         "position": 
         {
           "x": 0.13,
@@ -219,37 +223,114 @@
         },
         "options":[
           {
-            "name": "Mercury"
+            "name": "Mercury",
+            "texture": "./model/UI-textures/Mercury.png",
+            "position": 
+            {
+              "x": 0.05,
+              "y": 0.25,
+              "z": 0.5
+            }    
           },
           {
-            "name": "Venus"
+            "name": "Venus",
+            "texture": "./model/UI-textures/Venus.png",
+            "position": 
+            {
+              "x": 0.05,
+              "y": 0.20,
+              "z": 0.5
+            }   
           },
           {
-            "name": "Earth"
+            "name": "Earth",
+            "texture": "./model/UI-textures/Earth.png",
+            "position": 
+            {
+              "x": 0.05,
+              "y": 0.15,
+              "z": 0.5
+            }   
           },
           {
-            "name": "Mars"
+            "name": "Mars",
+            "texture": "./model/UI-textures/Mars.png",
+            "position": 
+            {
+              "x": 0.05,
+              "y": 0.10,
+              "z": 0.5
+            }   
           },
           {
-            "name": "Jupiter"
+            "name": "Jupiter",
+            "texture": "./model/UI-textures/Jupiter.png",
+            "position": 
+            {
+              "x": 0.05,
+              "y": 0.05,
+              "z": 0.5
+            }   
           },
           {
-            "name": "Saturn"
+            "name": "Saturn",
+            "texture": "./model/UI-textures/Saturn.png",
+            "position": 
+            {
+              "x": 0.05,
+              "y": 0.0,
+              "z": 0.5
+            }   
           },
           {
-            "name": "Uranus"
+            "name": "Uranus",
+            "texture": "./model/UI-textures/Uranus.png",
+            "position": 
+            {
+              "x": 0.05,
+              "y": -0.05,
+              "z": 0.5
+            }   
           },
           {
-            "name": "Neptune"
+            "name": "Neptune",
+            "texture": "./model/UI-textures/Neptune.png",
+            "position": 
+            {
+              "x": 0.05,
+              "y": -0.1,
+              "z": 0.5
+            }   
           },
           {
-            "name": "Pluto"
+            "name": "Pluto",
+            "texture": "./model/UI-textures/Pluto.png",
+            "position": 
+            {
+              "x": 0.05,
+              "y": -0.15,
+              "z": 0.5
+            }   
           },
           {
-            "name": "Sun"
+            "name": "Sun",
+            "texture": "./model/UI-textures/Sun.png",
+            "position": 
+            {
+              "x": 0.05,
+              "y": -0.20,
+              "z": 0.5
+            }   
           },
           {
-            "name": "Moon"
+            "name": "Moon",
+            "texture": "./model/UI-textures/Moon.png",
+            "position": 
+            {
+              "x": 0.05,
+              "y": -0.25,
+              "z": 0.5
+            }   
           }
         ]
       }

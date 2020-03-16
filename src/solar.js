@@ -26,6 +26,8 @@ let showSolarSystem = false;
 let arActivated = false;
 let reticle;
 let gl = null;
+let planetOptionsVisible = false;
+let uiOptionsVisible = false;
 
 
 /**********
@@ -121,7 +123,11 @@ function loadUI(){
     let uiMaterial = new THREE.MeshBasicMaterial( {map: uiTexture} );     //UI box 
     uiOptions[i] = new THREE.Mesh( uiGeometry, uiMaterial );
     uiOptions[i].name = jsonObj.ui[i].name;
-    uiOptions[i].position.x += jsonObj.ui[i].position.x;
+    if (i == 0){
+      uiOptions[i].position.x = jsonObj.ui[0].position.x;
+    } else{
+      uiOptions[i].position.x = 1.0;
+    }
     uiOptions[i].position.y += jsonObj.ui[i].position.y;
     uiOptions[i].position.z -= jsonObj.ui[i].position.z;
     camera.add(uiOptions[i]);
@@ -134,7 +140,7 @@ function loadUI(){
     let uiMaterial = new THREE.MeshBasicMaterial(  {map: uiTexture} ); 
     planetOptions[i]= new THREE.Mesh(uiGeometry, uiMaterial);
     planetOptions[i].name = jsonObj.ui[2].options[i].name;
-    planetOptions[i].position.x += jsonObj.ui[2].options[i].position.x;
+    planetOptions[i].position.x = 1.0;
     planetOptions[i].position.y += jsonObj.ui[2].options[i].position.y;
     planetOptions[i].position.z -= jsonObj.ui[2].options[i].position.z;
     camera.add(planetOptions[i]);
@@ -514,7 +520,7 @@ function touchSelectEvent() {
       let sceneIntersectsArray = [sunObj, moonObj, planets[0], planets[1], planets[2], planets[3], planets[4], planets[5], planets[6], planets[7], planets[8]];
 
       //TODO add 3D menu objs here
-      let menuIntersectsArray = [];
+      let menuIntersectsArray = [uiOptions[0], uiOptions[1], uiOptions[2], planetOptions[0], planetOptions[1], planetOptions[2], planetOptions[3], planetOptions[4], planetOptions[5], planetOptions[6], planetOptions[7], planetOptions[8], planetOptions[9], planetOptions[10]];
 
       let intersects = sceneRaycaster.intersectObjects(menuIntersectsArray, true);
 
@@ -607,9 +613,134 @@ function sceneEvent(intersects){
   }
 }
 
+function toggleUIOptionsVisibility(){
+  uiOptionsVisible = !uiOptionsVisible;
+
+  
+  for(let i=1; i<jsonObj.ui_size; i++){
+    if(uiOptionsVisible){
+      uiOptions[i].position.x = 0.13;
+    } else {
+      uiOptions[i].position.x = 1.0;
+    }
+    
+  }
+    
+}
+
+function togglePlanetsOptionsVisibility(){
+  planetOptionsVisible = !planetOptionsVisible;
+
+  
+  for(let i=0; i<jsonObj.ui[2].size; i++){
+    if(planetOptionsVisible){
+      planetOptions[i].position.x = 0.05;
+    } else {
+      planetOptions[i].position.x = 1.0;
+    }
+    
+  }
+    
+}
 
 function menuEvent(intersects){
-  console.log("Menu Fired");
+  console.log(intersects);
+  if (intersects[0].object.name){
+    switch(intersects[0].object.name){
+      case "Drawer":
+        console.log("Drawer button touched!!!!");
+        toggleUIOptionsVisibility();
+        break;
+      case "Lines":
+        toggleOrbitLines();
+        toggleUIOptionsVisibility();
+        break;
+      case "Planets":
+        togglePlanetsOptionsVisibility();
+        break;  
+      case "Sun":
+        console.log("sun");
+        togglePlanetsOptionsVisibility();
+        
+        sunSelect();
+
+        break;
+      case "Mercury":
+        console.log("mercury");
+        togglePlanetsOptionsVisibility();
+        
+        planetSelect(0);
+        break;
+
+      case "Venus":
+        console.log("venus");
+        togglePlanetsOptionsVisibility();
+        
+        planetSelect(1);
+        break;
+
+      case "Earth":
+        console.log("earth");
+        togglePlanetsOptionsVisibility();
+        
+        planetSelect(2);
+
+        if (jsonObj.planets[2].beingViewed){
+          let point = planets[2].worldToLocal(intersects[0].point);
+          
+          checkEarthBoundingBoxs(point);
+        }
+        break;
+
+      // case "Moon":
+      //   moonSelect();
+      //   break;
+
+      case "Mars":
+        console.log("mars");
+        togglePlanetsOptionsVisibility();
+        
+        planetSelect(3);
+        break;
+
+      case "Jupiter":
+        console.log("jupiter");
+        togglePlanetsOptionsVisibility();
+        
+        planetSelect(4);
+        break;
+
+      case "Saturn":
+        console.log("saturn");
+        togglePlanetsOptionsVisibility();
+        
+        planetSelect(5);
+        break;
+
+      case "Uranus":
+        console.log("uranus");
+        togglePlanetsOptionsVisibility();
+        
+        planetSelect(6);
+        break;
+
+      case "Neptune":
+        console.log("neptune");
+        togglePlanetsOptionsVisibility();
+        
+        planetSelect(7);
+        break;
+
+      case "Pluto":
+        console.log("pluto");
+        togglePlanetsOptionsVisibility();
+        
+        planetSelect(8);
+        break;
+      default:
+        break;
+    }
+  }
 }
 
 

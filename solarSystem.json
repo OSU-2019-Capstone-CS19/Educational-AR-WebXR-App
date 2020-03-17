@@ -189,7 +189,7 @@
          ]
       }
    ],
-   "ui_size": 3,
+   "ui_size": 4,
    "ui": [
       {
         "name":"Drawer",
@@ -333,6 +333,16 @@
             }   
           }
         ]
+      },
+      {
+        "name": "Pause-Play",
+        "texture": "./model/UI-textures/pause-play.png",
+        "position": 
+          {
+            "x": -0.13,
+            "y": 0.25,
+            "z": 0.5
+          }    
       }
    ],
    "continents": [

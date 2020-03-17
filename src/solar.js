@@ -125,7 +125,9 @@ function loadUI(){
     uiOptions[i].name = jsonObj.ui[i].name;
     if (i == 0){
       uiOptions[i].position.x = jsonObj.ui[0].position.x;
-    } else{
+    } else if (i==3){
+      uiOptions[i].position.x = jsonObj.ui[3].position.x;
+    } else {
       uiOptions[i].position.x = 1.0;
     }
     uiOptions[i].position.y += jsonObj.ui[i].position.y;
@@ -520,7 +522,7 @@ function touchSelectEvent() {
       let sceneIntersectsArray = [sunObj, moonObj, planets[0], planets[1], planets[2], planets[3], planets[4], planets[5], planets[6], planets[7], planets[8]];
 
       //TODO add 3D menu objs here
-      let menuIntersectsArray = [uiOptions[0], uiOptions[1], uiOptions[2], planetOptions[0], planetOptions[1], planetOptions[2], planetOptions[3], planetOptions[4], planetOptions[5], planetOptions[6], planetOptions[7], planetOptions[8], planetOptions[9], planetOptions[10]];
+      let menuIntersectsArray = [uiOptions[0], uiOptions[1], uiOptions[2], uiOptions[3], planetOptions[0], planetOptions[1], planetOptions[2], planetOptions[3], planetOptions[4], planetOptions[5], planetOptions[6], planetOptions[7], planetOptions[8], planetOptions[9], planetOptions[10]];
 
       let intersects = sceneRaycaster.intersectObjects(menuIntersectsArray, true);
 
@@ -619,13 +621,22 @@ function toggleUIOptionsVisibility(){
   
   for(let i=1; i<jsonObj.ui_size; i++){
     if(uiOptionsVisible){
-      uiOptions[i].position.x = 0.13;
+      uiOptions[i].position.x = jsonObj.ui[i].position.x;
     } else {
       uiOptions[i].position.x = 1.0;
     }
     
   }
     
+}
+
+function toggleUIOptionsVisibilityOff(){
+  
+  uiOptionsVisible = false;
+  for(let i=1; i<jsonObj.ui_size; i++){
+    uiOptions[i].position.x = 1.0;
+    
+  }      
 }
 
 function togglePlanetsOptionsVisibility(){
@@ -643,6 +654,15 @@ function togglePlanetsOptionsVisibility(){
     
 }
 
+function togglePlanetsOptionsVisibilityOff(){
+  planetOptionsVisible = false;  
+  console.log("toggle off planets options");
+  for(let i=0; i<jsonObj.ui[2].size; i++){
+    planetOptions[i].position.x = 1.0;
+  }
+    
+}
+
 function menuEvent(intersects){
   console.log(intersects);
   if (intersects[0].object.name){
@@ -654,34 +674,35 @@ function menuEvent(intersects){
       case "Lines":
         toggleOrbitLines();
         toggleUIOptionsVisibility();
+        togglePlanetsOptionsVisibilityOff();
         break;
       case "Planets":
         togglePlanetsOptionsVisibility();
         break;  
       case "Sun":
         console.log("sun");
-        togglePlanetsOptionsVisibility();
+        togglePlanetsOptionsVisibilityOff();
         
         sunSelect();
 
         break;
       case "Mercury":
         console.log("mercury");
-        togglePlanetsOptionsVisibility();
+        togglePlanetsOptionsVisibilityOff();
         
         planetSelect(0);
         break;
 
       case "Venus":
         console.log("venus");
-        togglePlanetsOptionsVisibility();
+        togglePlanetsOptionsVisibilityOff();
         
         planetSelect(1);
         break;
 
       case "Earth":
         console.log("earth");
-        togglePlanetsOptionsVisibility();
+        togglePlanetsOptionsVisibilityOff();
         
         planetSelect(2);
 
@@ -698,44 +719,47 @@ function menuEvent(intersects){
 
       case "Mars":
         console.log("mars");
-        togglePlanetsOptionsVisibility();
+        togglePlanetsOptionsVisibilityOff();
         
         planetSelect(3);
         break;
 
       case "Jupiter":
         console.log("jupiter");
-        togglePlanetsOptionsVisibility();
+        togglePlanetsOptionsVisibilityOff();
         
         planetSelect(4);
         break;
 
       case "Saturn":
         console.log("saturn");
-        togglePlanetsOptionsVisibility();
+        togglePlanetsOptionsVisibilityOff();
         
         planetSelect(5);
         break;
 
       case "Uranus":
         console.log("uranus");
-        togglePlanetsOptionsVisibility();
+        togglePlanetsOptionsVisibilityOff();
         
         planetSelect(6);
         break;
 
       case "Neptune":
         console.log("neptune");
-        togglePlanetsOptionsVisibility();
+        togglePlanetsOptionsVisibilityOff();
         
         planetSelect(7);
         break;
 
       case "Pluto":
         console.log("pluto");
-        togglePlanetsOptionsVisibility();
+        togglePlanetsOptionsVisibilityOff();
         
         planetSelect(8);
+        break;
+      case "Pause-Play":
+        togglePause();
         break;
       default:
         break;

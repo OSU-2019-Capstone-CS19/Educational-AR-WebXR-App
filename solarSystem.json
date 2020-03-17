@@ -28,6 +28,10 @@
       "rotate": "false",
       "visible": "true"
    },
+   "planetTranslation": {
+     "distance": 0,
+     "scale": 0
+   },
    "planets":[
       {
          "name":"Mercury",

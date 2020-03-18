@@ -71,7 +71,7 @@ scene.add(camera);
 /**********
 Lights
 **********/
-let sunLight = new THREE.PointLight( 0xfffee8, 1, 0, 0); //TODO: use jsonObj.sun.intensity?
+let sunLight = new THREE.PointLight( 0xfffee8, 1, 0, 0);
 sunLight.position.set( 0, 0, 0);
 sunLight.visible = false;
 
@@ -404,11 +404,13 @@ Animate 3D scene
 function animateScene(){
 
   //Sun Rotation
+  //TODO updateSun() function
   if (sunObj && jsonObj.sun.moveRotate){
     sunObj.rotateY(jsonObj.sun.rotation / jsonObj.rotationScale);
   }
 
   //Planet Rotation (rad/day)
+  //TODO updatePlanet() function
   for (let i=0; i<jsonObj.numPlanets; i++){
     if (planets[i] && jsonObj.planets[i].moveRotate){
       planets[i].rotateY(jsonObj.planets[i].rotation / jsonObj.rotationScale);
@@ -431,6 +433,7 @@ function animateScene(){
   }
 
   //Moon Rotation (rad/day)
+  //updateMoon() function
   if (moonObj && jsonObj.planets[2].moon.moveRotate){
     moonObj.rotateY(jsonObj.planets[2].moon.rotation / jsonObj.rotationScale);
   }
@@ -445,26 +448,42 @@ function animateScene(){
 function planetTranslation(num){
   //if planet is still moving
   if (jsonObj.planetTranslation.distance > 0){
-
-    //Direction
+    let timeStep = 100;
     let dir = new THREE.Vector3();
     let dir2 = new THREE.Vector3();
-    dir.subVectors(camera.getWorldPosition(dir), planets[num].getWorldPosition(dir2)).normalize();
-
-    //Distance
     let dist = new THREE.Vector3();
-    planets[num].getWorldPosition(dist);
-    let distance = camera.position.distanceTo(dist);
 
-    //console.log(distance);
+    //TODO: Origin and Planet Distances need to be bigger (Will need to scale the distace similar to how scaling is done)
+
+    //Move Origin Position
+    dir.subVectors(originPoint.getWorldPosition(dir), planets[num].getWorldPosition(dir2)).normalize();
+    let distance = jsonObj.planets[num].distanceFromSun / jsonObj.distanceScale / timeStep;
+    distance *= 5;
+    originPoint.translateOnAxis(dir, distance);
+
+    //Update Planet Position
+    for (let i=0; i<jsonObj.numPlanets; i++){
+      dir.subVectors(originPoint.getWorldPosition(dir), planets[i].getWorldPosition(dir2)).normalize();
+      distance = jsonObj.planets[i].distanceFromSun / jsonObj.distanceScale / 100;
+      distance *= 5;
+      planets[i].position.add(dir.multiplyScalar((-1)*distance));
+
+      //Scale SolarSystem
+      console.log(jsonObj.planetTranslation.scale);
+      planets[i].scale.addScalar( (jsonObj.planets[i].radius / jsonObj.sizeScale) * jsonObj.planetTranslation.scale / 100);
+    }
+
+    //Move Selected Planet Towards Camera
+    dir.subVectors(camera.getWorldPosition(dir), planets[num].getWorldPosition(dir2)).normalize();
+    planets[num].getWorldPosition(dist);
+    distance = camera.position.distanceTo(dist);
+
     if (distance >= 0.4){
-      originPoint.translateOnAxis(dir, jsonObj.planetTranslation.distance/100);
-      planets[num].scale.addScalar(jsonObj.planetTranslation.scale/100);
+      originPoint.translateOnAxis(dir, jsonObj.planetTranslation.distance / timeStep);
 
     } else {
       jsonObj.planetTranslation.distance = 0;
       jsonObj.planetTranslation.scale = 0;
-      planets[num].scale.set(0.0003, 0.0003, 0.0003);
     }
 
   } else {
@@ -505,7 +524,6 @@ function touchSelectEvent() {
 
       let sceneIntersectsArray = [sunObj, moonObj, planets[0], planets[1], planets[2], planets[3], planets[4], planets[5], planets[6], planets[7], planets[8]];
 
-      //TODO add 3D menu objs here
       let menuIntersectsArray = [];
 
       let intersects = sceneRaycaster.intersectObjects(menuIntersectsArray, true);
@@ -638,19 +656,19 @@ function planetSelect(num){
 
   if (!jsonObj.planets[num].beingViewed){
 
-    for (let i=0; i<jsonObj.numPlanets; i++){
-      planets[i].visible = false;
-    }
-    if (num != 2){
-      moonObj.visible = false;
-    }
+    // for (let i=0; i<jsonObj.numPlanets; i++){
+    //   planets[i].visible = false;
+    // }
+    // if (num != 2){
+    //   moonObj.visible = false;
+    // }
 
-    if (jsonObj.showPlanetLines){
-      toggleOrbitLines();
-    }
+    // if (jsonObj.showPlanetLines){
+    //   toggleOrbitLines();
+    // }
 
     //TODO: Work on the sunobj to move it to the appropriate position
-    sunObj.visible = false;
+    //sunObj.visible = false;
 
     jsonObj.planets[num].beingViewed = true;
     jsonObj.planets[num].moveOrbit = false;
@@ -661,29 +679,8 @@ function planetSelect(num){
     planets[num].getWorldPosition(dist);
     jsonObj.planetTranslation.distance = camera.position.distanceTo(dist);
     let desiredScale = 0.0003;
-    jsonObj.planetTranslation.scale = desiredScale - planets[num].scale.x;
+    jsonObj.planetTranslation.scale = desiredScale / planets[num].scale.x;
 
-
-    //TODO move to render
-    // let centerPoint = new THREE.Vector3();
-    // let planetGeometry = planets[num].children[0].geometry
-    //
-    // let height = (planetGeometry.boundingBox.max.y + planetGeometry.boundingBox.min.y)/2;
-    // planets[num].getWorldPosition(sunPivot.position);
-    //
-    // originPoint.remove(sunObj);
-    // sunPivot.position.y += height;
-    // sunPivot.add(sunObj);
-    // sunObj.position.set(0, 0, 0);
-
-    //Distance from sun
-    // dir.subVectors(planets[num].getWorldPosition(dir), sunObj.getWorldPosition(dir2));
-    // dir.y = 0;
-    //
-    // //TODO: Work on the size of the sun so its visible from all planets
-    // distance = jsonObj.planets[num].distanceFromSun / (jsonObj.distanceScale / 100) - planets[num].position.distanceTo(dir2);
-    // sunObj.scale.set(0.0005, 0.0005, 0.0005);
-    // sunObj.translateOnAxis(dir, distance );
   }
 }
 
@@ -724,6 +721,8 @@ function sunSelect(){
   if (!reset){
     //TODO: Be able to view the sun up close
     console.log("sun");
+
+    planetSelect(2);
   }
 }
 
@@ -794,8 +793,6 @@ function checkEarthBoundingBoxs(point){
   }
 }
 
-
-//TODO: part of menu
 function toggleLight(){
   if (cameraLight.visible){
     console.log("Sun Light");

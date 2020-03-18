@@ -124,9 +124,9 @@ function loadUI(){
     uiOptions[i] = new THREE.Mesh( uiGeometry, uiMaterial );
     uiOptions[i].name = jsonObj.ui[i].name;
     if (i == 0){
-      uiOptions[i].position.x = jsonObj.ui[0].position.x;
-    } else if (i==3){
-      uiOptions[i].position.x = jsonObj.ui[3].position.x;
+      uiOptions[i].position.x = jsonObj.ui[i].position.x;
+    } else if (i==2){
+      uiOptions[i].position.x = jsonObj.ui[i].position.x;
     } else {
       uiOptions[i].position.x = 1.0;
     }
@@ -136,15 +136,15 @@ function loadUI(){
   }
 
   
-  for(let i=0; i< jsonObj.ui[2].size ; i++){
+  for(let i=0; i< jsonObj.ui[3].size ; i++){
     let uiGeometry = new THREE.PlaneGeometry( .07,.05,.05 );
-    let uiTexture = new THREE.ImageUtils.loadTexture(jsonObj.ui[2].options[i].texture);
+    let uiTexture = new THREE.ImageUtils.loadTexture(jsonObj.ui[3].options[i].texture);
     let uiMaterial = new THREE.MeshBasicMaterial(  {map: uiTexture} ); 
     planetOptions[i]= new THREE.Mesh(uiGeometry, uiMaterial);
-    planetOptions[i].name = jsonObj.ui[2].options[i].name;
+    planetOptions[i].name = jsonObj.ui[3].options[i].name;
     planetOptions[i].position.x = 1.0;
-    planetOptions[i].position.y += jsonObj.ui[2].options[i].position.y;
-    planetOptions[i].position.z -= jsonObj.ui[2].options[i].position.z;
+    planetOptions[i].position.y += jsonObj.ui[3].options[i].position.y;
+    planetOptions[i].position.z -= jsonObj.ui[3].options[i].position.z;
     camera.add(planetOptions[i]);
   }
 }
@@ -623,6 +623,7 @@ function toggleUIOptionsVisibility(){
     if(uiOptionsVisible){
       uiOptions[i].position.x = jsonObj.ui[i].position.x;
     } else {
+      if (i!=2)
       uiOptions[i].position.x = 1.0;
     }
     
@@ -643,7 +644,7 @@ function togglePlanetsOptionsVisibility(){
   planetOptionsVisible = !planetOptionsVisible;
 
   
-  for(let i=0; i<jsonObj.ui[2].size; i++){
+  for(let i=0; i<jsonObj.ui[3].size; i++){
     if(planetOptionsVisible){
       planetOptions[i].position.x = 0.05;
     } else {
@@ -657,7 +658,8 @@ function togglePlanetsOptionsVisibility(){
 function togglePlanetsOptionsVisibilityOff(){
   planetOptionsVisible = false;  
   console.log("toggle off planets options");
-  for(let i=0; i<jsonObj.ui[2].size; i++){
+  for(let i=0; i<jsonObj.ui[3].size; i++){
+    
     planetOptions[i].position.x = 1.0;
   }
     

@@ -212,6 +212,16 @@
         }
       },
       {
+        "name": "Pause-Play",
+        "texture": "./model/UI-textures/pause-play.png",
+        "position": 
+          {
+            "x": -0.13,
+            "y": 0.25,
+            "z": 0.5
+          }    
+      },
+      {
         "name":"Planets",
         "size": 11,
         "texture": "./model/UI-textures/Planets.png",
@@ -333,17 +343,8 @@
             }   
           }
         ]
-      },
-      {
-        "name": "Pause-Play",
-        "texture": "./model/UI-textures/pause-play.png",
-        "position": 
-          {
-            "x": -0.13,
-            "y": 0.25,
-            "z": 0.5
-          }    
       }
+      
    ],
    "continents": [
       {

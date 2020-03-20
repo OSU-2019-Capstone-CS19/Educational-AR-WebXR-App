@@ -29,7 +29,7 @@
       "visible": "true"
    },
    "planetTranslation": {
-     "distance": 0,
+     "distanceToCamera": 0,
      "scale": 0
    },
    "planets":[

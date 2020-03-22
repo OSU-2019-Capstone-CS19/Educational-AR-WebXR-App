@@ -28,7 +28,7 @@
       "rotate": "false",
       "visible": "true"
    },
-   "planetTranslation": {
+   "objTranslation": {
      "distanceToCamera": 0,
      "scale": 0
    },

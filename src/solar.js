@@ -1,8 +1,6 @@
 import {Workbox} from 'workbox-window';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { SceneUtils } from 'three/examples/jsm/utils/SceneUtils.js'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 //Service Worker
 if ("serviceWorker" in navigator) {
@@ -412,11 +410,11 @@ function animateScene(){
   updatePlanets();
   updateMoon();
 
-  // for (let i=0; i<jsonObj.numPlanets; i++){
-  //   checkInsideObject(planets[i]);
-  // }
-  //checkInsideObject(sunObj);
-  //checkInsideObject(moonObj);
+  for (let i=0; i<jsonObj.numPlanets; i++){
+    checkInsideObject(planets[i]);
+  }
+  checkInsideObject(sunObj);
+  checkInsideObject(moonObj);
 }
 
 
@@ -533,24 +531,18 @@ function planetTranslation(num){
 function checkInsideObject(object){
   let objectBox = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
   let cameraPos = new THREE.Vector3();
-  let objectPos = new THREE.Vector3();
-
-  //TODO: Notifier will be turned off. if still in range, the notifier will turn on, causeing a blinking icon
 
   objectBox.setFromObject(object);
-  let radius = (objectBox.max.y - objectBox.min.y) / 2;
-  object.getWorldPosition(objectPos);
   camera.getWorldPosition(cameraPos);
-  objectPos.subVectors(cameraPos, objectPos);
-  let distance = (objectPos.x + objectPos.y + objectPos.z) / 3;
 
-  //TODO will need to check when in the negitive (need to be abit more persise)
-  if( distance < radius && distance > 0){
+  if (objectBox.containsPoint(cameraPos)){
     console.log("Inside");
-    console.log(distance);
-    console.log(radius);
+    //TODO: Notifier will be turned on
+  } else {
+    //TODO: Notifier will be turned off
   }
 }
+
 
 function renderView(xrView, viewport){
   renderer.setViewport(viewport.x, viewport.y, viewport.width, viewport.height);

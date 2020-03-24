@@ -5,7 +5,8 @@
    "orbitScale": 1,
    "rotationScale": 10,
    "showPlanetLines":true,
-   "pause":false,
+   "originReturn": false,
+   "pause": false,
    "sun": {
      "name": "Sun",
      "file": "./model/Sun.glb",
@@ -29,8 +30,10 @@
       "visible": "true"
    },
    "objTranslation": {
-     "distanceToCamera": 0,
-     "scale": 0
+     "distance": 0,
+     "scale": 0,
+     "inTransit": false,
+     "timeStep": 100
    },
    "planets":[
       {

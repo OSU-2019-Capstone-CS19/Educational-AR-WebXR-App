@@ -30,8 +30,6 @@
       "visible": "true"
    },
    "objTranslation": {
-     "distance": 0,
-     "scale": 0,
      "inTransit": false,
      "timeStep": 100
    },

@@ -445,7 +445,7 @@ function updatePlanets(){
   for (let i=0; i<jsonObj.numPlanets; i++){
 
     //If planet is being viewed
-    if (jsonObj.planets[i].beingViewed){
+    if (jsonObj.planets[i].beingViewed && jsonObj.objTranslation.inTransit){
       planetTranslation(i);
 
     } else {
@@ -464,9 +464,15 @@ function updateMoon(){
     moonObj.rotateY(jsonObj.planets[2].moon.rotation / jsonObj.rotationScale);
   }
 
-  //Moon Orbit
-  if (moonPivot && jsonObj.planets[2].moon.moveOrbit){
-    moonPivot.rotateY(jsonObj.planets[2].moon.orbit / jsonObj.orbitScale);
+
+  //Check if moon is being viewed
+  if (jsonObj.planets[2].moon.beingViewed && jsonObj.objTranslation.inTransit){
+    moonTraslation();
+  } else {
+    //Moon Orbit
+    if (moonPivot && jsonObj.planets[2].moon.moveOrbit){
+      moonPivot.rotateY(jsonObj.planets[2].moon.orbit / jsonObj.orbitScale);
+    }
   }
 }
 
@@ -533,20 +539,22 @@ function sunTranslation(){
 
 function planetTranslation(num){
   //if planet is still moving
-  if (jsonObj.objTranslation.distance > 0){
-    let timeStep = 100;
+  if (jsonObj.objTranslation.timeStep > 0){
+    let distance;
+    let cameraPos = new THREE.Vector3();
     let originPos = new THREE.Vector3();
     let planetPos = new THREE.Vector3();
+    let moonPos = new THREE.Vector3();
     let dir = new THREE.Vector3();
-    let dir2 = new THREE.Vector3();
-    let dist = new THREE.Vector3();
+    let desiredScale = 0.0003;
+    let scaledPercent = (desiredScale - (jsonObj.planets[num].radius / jsonObj.sizeScale)) / 100;
+    scaledPercent /= (jsonObj.planets[num].radius / jsonObj.sizeScale);
 
     //Move Origin Position
     originPoint.getWorldPosition(originPos);
     planetOrigins[num].getWorldPosition(planetPos);
     dir.subVectors(originPos, planetPos).normalize();
-    let distance = jsonObj.planets[num].distanceFromSun / jsonObj.distanceScale / timeStep;
-    distance *= 100;
+    distance = (jsonObj.planets[num].distanceFromSun / jsonObj.distanceScale) * 10 * scaledPercent;
     originPoint.translateOnAxis(dir, distance);
 
     //Update Planet Position
@@ -555,42 +563,134 @@ function planetTranslation(num){
       originPoint.getWorldPosition(originPos);
       planetOrigins[i].getWorldPosition(planetPos);
       dir.subVectors(planetPos, originPos).normalize();
-      distance = jsonObj.planets[i].distanceFromSun / jsonObj.distanceScale / 100;
-      distance *= 100;
+      distance = (jsonObj.planets[i].distanceFromSun / jsonObj.distanceScale) * 10 * scaledPercent;
+      planetOrigins[i].position.add(dir.multiplyScalar(distance));
+      pivots[i].attach( planetOrigins[i]);
+
+      planets[i].scale.addScalar((jsonObj.planets[i].radius / jsonObj.sizeScale) * scaledPercent);
+    }
+
+    //Update Earths Moon
+    scene.attach(moonObj);
+    moonObj.getWorldPosition(moonPos);
+    planetOrigins[2].getWorldPosition(planetPos);
+    dir.subVectors(moonPos, planetPos).normalize();
+    distance = (jsonObj.planets[2].moon.distanceFromEarth / jsonObj.distanceScale) * 20 * scaledPercent;
+    moonObj.position.add(dir.multiplyScalar(distance));
+    moonPivot.attach(moonObj);
+    moonObj.scale.addScalar((jsonObj.planets[2].moon.radius / jsonObj.sizeScale) * scaledPercent);
+
+    sunObj.scale.addScalar((jsonObj.sun.radius / jsonObj.sizeScale) * scaledPercent);
+
+    //Move Selected Planet Towards Camera
+    camera.getWorldPosition(cameraPos);
+    planetOrigins[num].getWorldPosition(planetPos);
+
+    //Direction
+    dir.subVectors(cameraPos, planetPos).normalize();
+
+    //Distance
+    let planetBox = new THREE.Box3().setFromObject(planets[num]);
+    distance = planetBox.distanceToPoint(cameraPos);
+    distance -= 0.1; //Camera Buffer
+    originPoint.translateOnAxis(dir, distance / jsonObj.objTranslation.timeStep);
+
+    jsonObj.objTranslation.timeStep--;
+
+  } else {
+
+    //Reset Values
+    for (let i=0; i<jsonObj.numPlanets; i++){
+      if (i != num){
+        jsonObj.planets[i].moveOrbit = true;
+      }
+      if (jsonObj.planets[i].moon){
+        jsonObj.planets[i].moon.moveOrbit = true;
+      }
+    }
+
+    jsonObj.objTranslation.inTransit = false;
+    jsonObj.objTranslation.timeStep = 100;
+
+    // if (sunLight.visible){
+    //   sunPivot.rotateY(jsonObj.planets[num].orbit / jsonObj.orbitScale);
+    // }
+  }
+}
+
+
+function moonTraslation(){
+  //if planet is still moving
+  if (jsonObj.objTranslation.timeStep > 0){
+    let distance;
+    let cameraPos = new THREE.Vector3();
+    let originPos = new THREE.Vector3();
+    let planetPos = new THREE.Vector3();
+    let moonPos = new THREE.Vector3();
+    let dir = new THREE.Vector3();
+    let desiredScale = 0.0003;
+    let scaledPercent = (desiredScale - (jsonObj.planets[2].moon.radius / jsonObj.sizeScale)) / 100;
+    scaledPercent /= (jsonObj.planets[2].moon.radius / jsonObj.sizeScale);
+    console.log(scaledPercent);
+
+    //Move Origin Position
+    originPoint.getWorldPosition(originPos);
+    planetOrigins[2].getWorldPosition(planetPos);
+    dir.subVectors(originPos, planetPos).normalize();
+    distance = (jsonObj.planets[2].distanceFromSun / jsonObj.distanceScale) * 10 * scaledPercent;
+    originPoint.translateOnAxis(dir, distance);
+
+    //Update Planet Position
+    for (let i=0; i<jsonObj.numPlanets; i++){
+      scene.attach( planetOrigins[i]);
+      originPoint.getWorldPosition(originPos);
+      planetOrigins[i].getWorldPosition(planetPos);
+      dir.subVectors(planetPos, originPos).normalize();
+      distance = (jsonObj.planets[i].distanceFromSun / jsonObj.distanceScale) * 10 * scaledPercent;
       planetOrigins[i].position.add(dir.multiplyScalar(distance));
       pivots[i].attach( planetOrigins[i]);
 
       //Scale SolarSystem
-      planets[i].scale.addScalar((jsonObj.planets[i].radius / jsonObj.sizeScale) * jsonObj.objTranslation.scale / 100);
-      sunObj.scale.addScalar((jsonObj.sun.radius / jsonObj.sizeScale) * jsonObj.objTranslation.scale / 10000);
+      planets[i].scale.addScalar((jsonObj.planets[i].radius / jsonObj.sizeScale) * scaledPercent);
     }
+    sunObj.scale.addScalar((jsonObj.sun.radius / jsonObj.sizeScale) * scaledPercent);
 
-    //Move Selected Planet Towards Camera
-    dir.subVectors(camera.getWorldPosition(dir), planetOrigins[num].getWorldPosition(dir2)).normalize();
-    planetOrigins[num].getWorldPosition(planetPos);
-    camera.getWorldPosition(originPos);
-    distance = originPos.distanceTo(planetPos);
+    //Update Earths Moon
+    scene.attach(moonObj);
+    moonObj.getWorldPosition(moonPos);
+    planetOrigins[2].getWorldPosition(planetPos);
+    dir.subVectors(moonPos, planetPos).normalize();
+    distance = (jsonObj.planets[2].moon.distanceFromEarth / jsonObj.distanceScale) * 25 * scaledPercent;
+    moonObj.position.add(dir.multiplyScalar(distance));
+    moonPivot.attach(moonObj);
+    moonObj.scale.addScalar((jsonObj.planets[2].moon.radius / jsonObj.sizeScale) * scaledPercent);
 
-    if (distance >= 0.4){
-      originPoint.translateOnAxis(dir, jsonObj.objTranslation.distance / timeStep);
+    //Move Selected Moon Towards Camera
+    camera.getWorldPosition(cameraPos);
+    moonObj.getWorldPosition(moonPos);
 
-    } else {
+    //Direction
+    dir.subVectors(cameraPos, moonPos).normalize();
 
-      for (let i=0; i<jsonObj.numPlanets; i++){
-        if (i != num){
-          jsonObj.planets[i].moveOrbit = true;
-        }
-      }
+    //Distance
+    let moonBox = new THREE.Box3().setFromObject(moonObj);
+    distance = moonBox.distanceToPoint(cameraPos);
+    distance -= 0.1; //Camera Buffer
+    originPoint.translateOnAxis(dir, distance / jsonObj.objTranslation.timeStep);
 
-      jsonObj.objTranslation.distance = 0;
-      jsonObj.objTranslation.scale = 0;
-    }
+    jsonObj.objTranslation.timeStep--;
 
   } else {
-    console.log("else");
-    if (sunLight.visible){
-      sunPivot.rotateY(jsonObj.planets[num].orbit / jsonObj.orbitScale);
+
+    //Reset Values
+    for (let i=0; i<jsonObj.numPlanets; i++){
+      if (i != 2){
+        jsonObj.planets[i].moveOrbit = true;
+      }
     }
+
+    jsonObj.objTranslation.inTransit = false;
+    jsonObj.objTranslation.timeStep = 100;
   }
 }
 
@@ -603,6 +703,7 @@ function returnToOrigin(){
     let dir = new THREE.Vector3();
     let originPos = new THREE.Vector3();
     let planetPos = new THREE.Vector3();
+    let moonPos = new THREE.Vector3();
 
     originPoint.getWorldPosition(originPos);
 
@@ -617,9 +718,7 @@ function returnToOrigin(){
 
         //Distance
         distance = planetPos.distanceTo(originPos) - (jsonObj.planets[i].distanceFromSun / jsonObj.distanceScale);
-
         planetOrigins[i].position.sub(dir.multiplyScalar(distance));
-
         pivots[i].attach( planetOrigins[i]);
 
       } else {
@@ -640,8 +739,43 @@ function returnToOrigin(){
       planets[i].scale.subScalar(reduceScale);
     }
 
+    //Sun
     reduceScale = (sunObj.scale.x - jsonObj.sun.radius/jsonObj.sizeScale/10) / jsonObj.objTranslation.timeStep;
     sunObj.scale.subScalar(reduceScale);
+
+    //Moon
+    if (jsonObj.objTranslation.timeStep == 1){
+      scene.attach(moonObj);
+
+      //Direction
+      planetOrigins[2].getWorldPosition(planetPos);
+      moonObj.getWorldPosition(moonPos);
+      dir.subVectors(moonPos, planetPos).normalize();
+
+      //Distance
+      let planetBox = new THREE.Box3().setFromObject( planets[2] );
+
+      distance = moonPos.distanceTo(planetPos) - (planetBox.getSize().x/2 + jsonObj.planets[2].moon.distanceFromEarth / jsonObj.distanceScale);
+      moonObj.position.sub(dir.multiplyScalar(distance));
+
+    } else {
+      scene.attach(moonObj);
+
+      //Direction
+      planetOrigins[2].getWorldPosition(planetPos);
+      moonObj.getWorldPosition(moonPos);
+      dir.subVectors(moonPos, planetPos).normalize();
+
+      //Distance
+      distance = moonPos.distanceTo(planetPos) - (jsonObj.planets[2].moon.distanceFromEarth / jsonObj.distanceScale);
+      distance /= jsonObj.objTranslation.timeStep;
+      moonObj.position.sub(dir.multiplyScalar(distance));
+    }
+
+    //Scale
+    reduceScale = (moonObj.scale.x - jsonObj.planets[2].moon.radius/jsonObj.sizeScale) / jsonObj.objTranslation.timeStep;
+    moonObj.scale.subScalar(reduceScale);
+    moonPivot.attach(moonObj);
 
     //Moves towards placementPos
     //Direction
@@ -654,10 +788,14 @@ function returnToOrigin(){
     jsonObj.objTranslation.timeStep--;
 
   } else {
-    //get percise location
+    //Get percise location
     originPoint.position.copy(placementPos);
 
     //Reset Values
+    for (let i=0; i<jsonObj.numPlanets; i++){
+      jsonObj.planets[i].beingViewed = false;
+      jsonObj.planets[i].moveOrbit = true;
+    }
     jsonObj.sun.beingViewed = false;
     jsonObj.originReturn = false;
     jsonObj.objTranslation.timeStep = 100;
@@ -771,9 +909,9 @@ function sceneEvent(intersects){
         }
         break;
 
-      // case "Moon":
-      //   moonSelect();
-      //   break;
+      case "Moon":
+        moonSelect();
+        break;
 
       case "Mars":
         planetSelect(3);
@@ -843,38 +981,26 @@ function sunSelect(){
 
   if (!jsonObj.sun.beingViewed){
 
-    for (let i=0; i<jsonObj.numPlanets; i++){
-      jsonObj.planets[i].beingViewed = false;
-      jsonObj.planets[i].moveOrbit = false;
-      if ( jsonObj.planets[i].moon ){
-        jsonObj.planets[i].moon.beingViewed = false;
-        jsonObj.planets[i].moon.moveOrbit = false;
-      }
-    }
-    jsonObj.sun.beingViewed = true;
-
-    if (jsonObj.showPlanetLines){
-      toggleOrbitLines();
-    }
-
-    // //Distance
-    // let sunPos = new THREE.Vector3();
-    // sunObj.getWorldPosition(sunPos);
-    // jsonObj.objTranslation.distance = camera.position.distanceTo(sunPos);
+    planetSelect(2);
+    //moonSelect();
+    // for (let i=0; i<jsonObj.numPlanets; i++){
+    //   jsonObj.planets[i].beingViewed = false;
+    //   jsonObj.planets[i].moveOrbit = false;
+    //   if ( jsonObj.planets[i].moon ){
+    //     jsonObj.planets[i].moon.beingViewed = false;
+    //     jsonObj.planets[i].moon.moveOrbit = false;
+    //   }
+    // }
+    // jsonObj.sun.beingViewed = true;
     //
-    // //Scale
-    // let desiredScale = 0.00005;
-    // jsonObj.objTranslation.scale =  desiredScale / sunObj.scale.x;
-    jsonObj.objTranslation.timeStep = 100;
-    jsonObj.objTranslation.inTransit = true;
-  } else {
+    // if (jsonObj.showPlanetLines){
+    //   toggleOrbitLines();
+    // }
+    //
+    // jsonObj.objTranslation.timeStep = 100;
+    // jsonObj.objTranslation.inTransit = true;
 
-    //Test
-    toggleReturnToOrigin();
-  }
-
-    //Test (comment out the above code)
-    //planetSelect(0);
+  } 
 }
 
 
@@ -887,21 +1013,52 @@ function planetSelect(num){
 
     //TODO get the orbit lines reconfigured. Add new function for that
     //Be able to switch between different planets
+
+    for (let i=0; i<jsonObj.numPlanets; i++){
+      jsonObj.planets[i].beingViewed = false;
+      jsonObj.planets[i].moveOrbit = false;
+      if ( jsonObj.planets[i].moon ){
+        jsonObj.planets[i].moon.beingViewed = false;
+        jsonObj.planets[i].moon.moveOrbit = false;
+      }
+    }
+    jsonObj.sun.beingViewed = false;
+    jsonObj.planets[num].beingViewed = true;
+
     if (jsonObj.showPlanetLines){
       toggleOrbitLines();
     }
 
-    jsonObj.planets[num].beingViewed = true;
+    jsonObj.objTranslation.timeStep = 100;
+    jsonObj.objTranslation.inTransit = true;
+
+  }
+}
+
+function moonSelect(){
+  //Pick random fact
+  let ranNum = Math.floor(Math.random() * 3);
+  console.log(jsonObj.planets[2].moon.facts[ranNum]);
+
+  if (!jsonObj.planets[2].moon.beingViewed){
+
     for (let i=0; i<jsonObj.numPlanets; i++){
+      jsonObj.planets[i].beingViewed = false;
       jsonObj.planets[i].moveOrbit = false;
+      if ( jsonObj.planets[i].moon ){
+        jsonObj.planets[i].moon.beingViewed = false;
+        jsonObj.planets[i].moon.moveOrbit = false;
+      }
+    }
+    jsonObj.sun.beingViewed = false;
+    jsonObj.planets[2].moon.beingViewed = true;
+
+    if (jsonObj.showPlanetLines){
+      toggleOrbitLines();
     }
 
-    //Distance
-    let dist = new THREE.Vector3();
-    planets[num].getWorldPosition(dist);
-    jsonObj.objTranslation.distance = camera.position.distanceTo(dist);
-    let desiredScale = 0.0003;
-    jsonObj.objTranslation.scale = desiredScale / planets[num].scale.x;
+    jsonObj.objTranslation.timeStep = 100;
+    jsonObj.objTranslation.inTransit = true;
 
   }
 }

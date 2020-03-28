@@ -27,7 +27,11 @@ self.addEventListener('message', (event) => {
 self.__precacheManifest = [
   {
     "url": "index.html",
+<<<<<<< HEAD
     "revision": "8a2639ca86953b5c56f705c036dd5327"
+=======
+    "revision": "429b0f21b0cb22cf6fe78df4a0f8a54b"
+>>>>>>> 08e3cd7cbb41c4066a15f6cdd35b04fd38e4062d
   },
   {
     "url": "polyfills/custom-elements-es5-adapter.84b300ee818dce8b351c7cc7c100bcf7.js",
@@ -42,6 +46,7 @@ self.__precacheManifest = [
     "revision": "e90bc4e3aa3ed407808c7b2726581d33"
   },
   {
+<<<<<<< HEAD
     "url": "solar-6137d5ae.js",
     "revision": "5800105cd947e0d49bf085b9d44b50cd"
   },
@@ -56,14 +61,18 @@ self.__precacheManifest = [
   {
     "url": "src/sceneEventHandler.js",
     "revision": "b4c988c47bcdacb562ca422f18a80a99"
+=======
+    "url": "solar-582388df.js",
+    "revision": "610599fff79975ad996ea5b1506e5341"
+>>>>>>> 08e3cd7cbb41c4066a15f6cdd35b04fd38e4062d
   },
   {
     "url": "src/solar.js",
-    "revision": "0118deb81f4ed2fbf54d85a3c0dfbcf3"
+    "revision": "ec97fa084ca08f389c345fdf331ee462"
   },
   {
     "url": "style.css",
-    "revision": "a8c9c8f9cdb280da77523b371625fbf1"
+    "revision": "93a077fe6c5b06a11ae4ba9ffe6f4416"
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});

@@ -27,7 +27,11 @@ self.addEventListener('message', (event) => {
 self.__precacheManifest = [
   {
     "url": "index.html",
+<<<<<<< HEAD
     "revision": "8a2639ca86953b5c56f705c036dd5327"
+=======
+    "revision": "429b0f21b0cb22cf6fe78df4a0f8a54b"
+>>>>>>> 08e3cd7cbb41c4066a15f6cdd35b04fd38e4062d
   },
   {
     "url": "model/planets-glb/neptune/Neptune.glb",
@@ -54,6 +58,7 @@ self.__precacheManifest = [
     "revision": "e90bc4e3aa3ed407808c7b2726581d33"
   },
   {
+<<<<<<< HEAD
     "url": "solar-6137d5ae.js",
     "revision": "5800105cd947e0d49bf085b9d44b50cd"
   },
@@ -83,3 +88,23 @@ self.__precacheManifest = [
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
+=======
+    "url": "solar-582388df.js",
+    "revision": "610599fff79975ad996ea5b1506e5341"
+  },
+  {
+    "url": "solarSystem.json",
+    "revision": "50a681f7b6064a90720b36b657b0d607"
+  },
+  {
+    "url": "src/solar.js",
+    "revision": "ec97fa084ca08f389c345fdf331ee462"
+  },
+  {
+    "url": "style.css",
+    "revision": "93a077fe6c5b06a11ae4ba9ffe6f4416"
+  }
+].concat(self.__precacheManifest || []);
+workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
+
+>>>>>>> 08e3cd7cbb41c4066a15f6cdd35b04fd38e4062d

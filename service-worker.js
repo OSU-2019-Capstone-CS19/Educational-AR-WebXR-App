@@ -25,13 +25,13 @@ workbox.routing.registerRoute(
   /\.glb$/,
   // Use the cache if it's available.
   new workbox.strategies.CacheFirst({
-    cacheName: 'modelCache',
+    cacheName: 'assetCache',
     plugins: [
-     new workbox.expiration.Plugin({
-       maxEntries: 15,
-       // Cache for a maximum of 3 weeks.
-       maxAgeSeconds: 21 * 24 * 60 * 60,
-     })
-   ],
+      new workbox.expiration.Plugin({
+        maxEntries: 15,
+        // Cache for a maximum of 3 weeks.
+        maxAgeSeconds: 21 * 24 * 60 * 60,
+      })
+    ],
   })
 );

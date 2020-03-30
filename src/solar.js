@@ -278,7 +278,6 @@ function checkSupportedState() {
   });
 }
 
-//NOTE: This function can be removed if we want to (AR activated could be a json componet)
 async function toggleAR(){
   if (arActivated){
     console.log("AR is already activated");
@@ -426,6 +425,18 @@ function updateSun(){
   //Sun Rotation
   if (sunObj && jsonObj.sun.moveRotate){
     sunObj.rotateY(jsonObj.sun.rotation / jsonObj.rotationScale);
+  }
+
+  if (sunLight.visible && !jsonObj.objTranslation.inTransit){
+    for (let i=0; i<jsonObj.numPlanets; i++){
+      if (jsonObj.planets[i].beingViewed){
+        sunPivot.rotateY(jsonObj.planets[i].orbit / jsonObj.orbitScale);
+      }
+    }
+
+    if (jsonObj.planets[2].moon.beingViewed){
+      sunPivot.rotateY(jsonObj.planets[2].moon.orbit / jsonObj.orbitScale);
+    }
   }
 
   if (jsonObj.sun.beingViewed && jsonObj.objTranslation.inTransit){
@@ -599,6 +610,19 @@ function planetTranslation(num){
 
   } else {
 
+    /*
+    pivot => planetOrigin => planet
+    planetOrigin => sunPivot //Solar system orbits around the right point
+    sunPivot => originPoint //Entire solar system rotates
+    scene => planetOrigin //Prevents from rotating away
+    */
+
+    console.log(originPoint.position);
+    scene.attach(planetOrigins[num]);
+    planetOrigins[num].add(sunPivot);
+    sunPivot.position.set(0, 0, 0);
+    sunPivot.attach(originPoint);
+
     //Reset Values
     for (let i=0; i<jsonObj.numPlanets; i++){
       if (i != num){
@@ -611,10 +635,6 @@ function planetTranslation(num){
 
     jsonObj.objTranslation.inTransit = false;
     jsonObj.objTranslation.timeStep = 100;
-
-    // if (sunLight.visible){
-    //   sunPivot.rotateY(jsonObj.planets[num].orbit / jsonObj.orbitScale);
-    // }
   }
 }
 
@@ -705,7 +725,19 @@ function returnToOrigin(){
     let planetPos = new THREE.Vector3();
     let moonPos = new THREE.Vector3();
 
+    scene.attach(originPoint);
     originPoint.getWorldPosition(originPos);
+
+    for (let i=0; i<jsonObj.numPlanets; i++){
+      if (jsonObj.planets[i].beingViewed){
+        planetOrigins[i].remove(sunPivot);
+        pivots[i].attach(planetOrigins[i]);
+      }
+    }
+
+    if (jsonObj.planets[2].moon.beingViewed){
+        //TODO fill in moon parts
+    }
 
     for (let i=0; i<jsonObj.numPlanets; i++){
       if (jsonObj.objTranslation.timeStep == 1){
@@ -982,6 +1014,7 @@ function sunSelect(){
   if (!jsonObj.sun.beingViewed){
 
     planetSelect(2);
+    toggleLight();
     //moonSelect();
     // for (let i=0; i<jsonObj.numPlanets; i++){
     //   jsonObj.planets[i].beingViewed = false;
@@ -1000,7 +1033,7 @@ function sunSelect(){
     // jsonObj.objTranslation.timeStep = 100;
     // jsonObj.objTranslation.inTransit = true;
 
-  } 
+  }
 }
 
 
@@ -1032,6 +1065,9 @@ function planetSelect(num){
     jsonObj.objTranslation.timeStep = 100;
     jsonObj.objTranslation.inTransit = true;
 
+  } else {
+    //TEST
+    toggleReturnToOrigin();
   }
 }
 

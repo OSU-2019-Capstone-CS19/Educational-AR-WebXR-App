@@ -189,7 +189,7 @@
          ]
       }
    ],
-   "ui_size": 4,
+   "ui_size": 6,
    "ui": [
       {
         "name":"Drawer",
@@ -220,6 +220,26 @@
             "y": 0.25,
             "z": 0.5
           }    
+      },
+      {
+        "name": "Light",
+        "texture": "./model/UI-textures/Light.png",
+        "position":
+        {
+          "x": 0.13,
+          "y": 0.10,
+          "z": 0.50
+        }
+      },
+      {
+        "name": "Reset",
+        "texture": "./model/UI-textures/Reset.png",
+        "position":
+        {
+          "x": 0.13,
+          "y": 0.05,
+          "z": 0.50
+        }
       },
       {
         "name":"Planets",

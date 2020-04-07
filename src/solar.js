@@ -115,7 +115,7 @@ function init() {
 }
 
 function loadUI(){
-  console.log("ui_size = ", jsonObj.ui_size);
+  
   for (let i=0; i< jsonObj.ui_size ; i++){
     let uiGeometry = new THREE.PlaneGeometry( .05,.05,.05 );
     var uiTexture = new THREE.TextureLoader().load( jsonObj.ui[i].texture );
@@ -136,15 +136,15 @@ function loadUI(){
   }
 
   
-  for(let i=0; i< jsonObj.ui[3].size ; i++){
+  for(let i=0; i< jsonObj.ui[5].size ; i++){
     let uiGeometry = new THREE.PlaneGeometry( .07,.05,.05 );
-    let uiTexture = new THREE.ImageUtils.loadTexture(jsonObj.ui[3].options[i].texture);
+    let uiTexture = new THREE.ImageUtils.loadTexture(jsonObj.ui[5].options[i].texture);
     let uiMaterial = new THREE.MeshBasicMaterial(  {map: uiTexture} ); 
     planetOptions[i]= new THREE.Mesh(uiGeometry, uiMaterial);
-    planetOptions[i].name = jsonObj.ui[3].options[i].name;
+    planetOptions[i].name = jsonObj.ui[5].options[i].name;
     planetOptions[i].position.x = 1.0;
-    planetOptions[i].position.y += jsonObj.ui[3].options[i].position.y;
-    planetOptions[i].position.z -= jsonObj.ui[3].options[i].position.z;
+    planetOptions[i].position.y += jsonObj.ui[5].options[i].position.y;
+    planetOptions[i].position.z -= jsonObj.ui[5].options[i].position.z;
     camera.add(planetOptions[i]);
   }
 }
@@ -522,7 +522,7 @@ function touchSelectEvent() {
       let sceneIntersectsArray = [sunObj, moonObj, planets[0], planets[1], planets[2], planets[3], planets[4], planets[5], planets[6], planets[7], planets[8]];
 
       //TODO add 3D menu objs here
-      let menuIntersectsArray = [uiOptions[0], uiOptions[1], uiOptions[2], uiOptions[3], planetOptions[0], planetOptions[1], planetOptions[2], planetOptions[3], planetOptions[4], planetOptions[5], planetOptions[6], planetOptions[7], planetOptions[8], planetOptions[9], planetOptions[10]];
+      let menuIntersectsArray = [uiOptions[0], uiOptions[1], uiOptions[2], uiOptions[3], uiOptions[4], uiOptions[5], planetOptions[0], planetOptions[1], planetOptions[2], planetOptions[3], planetOptions[4], planetOptions[5], planetOptions[6], planetOptions[7], planetOptions[8], planetOptions[9], planetOptions[10]];
 
       let intersects = sceneRaycaster.intersectObjects(menuIntersectsArray, true);
 
@@ -644,7 +644,7 @@ function togglePlanetsOptionsVisibility(){
   planetOptionsVisible = !planetOptionsVisible;
 
   
-  for(let i=0; i<jsonObj.ui[3].size; i++){
+  for(let i=0; i<jsonObj.ui[5].size; i++){
     if(planetOptionsVisible){
       planetOptions[i].position.x = 0.05;
     } else {
@@ -658,7 +658,7 @@ function togglePlanetsOptionsVisibility(){
 function togglePlanetsOptionsVisibilityOff(){
   planetOptionsVisible = false;  
   console.log("toggle off planets options");
-  for(let i=0; i<jsonObj.ui[3].size; i++){
+  for(let i=0; i<jsonObj.ui[5].size; i++){
     
     planetOptions[i].position.x = 1.0;
   }
@@ -679,8 +679,21 @@ function menuEvent(intersects){
         togglePlanetsOptionsVisibilityOff();
         break;
       case "Planets":
+        console.log("show planet options");
         togglePlanetsOptionsVisibility();
         break;  
+      case "Light":
+        console.log("toggle Light");
+        toggleLight();
+        toggleUIOptionsVisibility();
+        togglePlanetsOptionsVisibilityOff();
+        break;
+      case "Reset":
+        console.log("reset anchor");
+        resetSolarSystem();
+        toggleUIOptionsVisibility();
+        togglePlanetsOptionsVisibilityOff();
+        break;
       case "Sun":
         console.log("sun");
         togglePlanetsOptionsVisibilityOff();

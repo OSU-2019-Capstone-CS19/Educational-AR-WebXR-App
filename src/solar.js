@@ -17,6 +17,7 @@ let pivots = [];
 let orbitLines = [];
 let uiOptions = [];
 let planetOptions = [];
+let anchorAlert;
 let sunObj, sunPivot, moonObj, moonPivot;
 
 let xrButton = document.getElementById('xr-button');
@@ -116,6 +117,16 @@ function init() {
 
 function loadUI(){
   
+  let alertGeometry = new THREE.PlaneGeometry(.15,.15, .05);
+  var alertTexture = new THREE.TextureLoader().load("./model/UI-Textures/Anchor.png");
+
+  let alertMaterial = new THREE.MeshBasicMaterial({map: alertTexture});
+  anchorAlert = new THREE.Mesh(alertGeometry, alertMaterial);
+  anchorAlert.position.x = 0.0;
+  anchorAlert.position.y = .25;
+  anchorAlert.position.z = -.50;
+  camera.add(anchorAlert);
+
   for (let i=0; i< jsonObj.ui_size ; i++){
     let uiGeometry = new THREE.PlaneGeometry( .05,.05,.05 );
     var uiTexture = new THREE.TextureLoader().load( jsonObj.ui[i].texture );
@@ -416,14 +427,16 @@ function renderXR(timestamp, xrFrame){
     xrSession.requestHitTest(ray, xrRefSpace).then((results) => {
       if (results.length) {
         console.log("raycast good");
+        anchorAlert.position.z = 1.0;
         let hitResult = results[0];
         reticle.visible = true;
         originPoint.visible = false;
         let hitMatrix = new THREE.Matrix4();
         hitMatrix.fromArray(hitResult.hitMatrix);
         reticle.position.setFromMatrixPosition(hitMatrix);
-
+        
       } else {
+        anchorAlert.position.z = -0.5;
         console.log("Keep looking");
         reticle.visible = false;
       }
@@ -540,7 +553,7 @@ function touchSelectEvent() {
   } else {
     if (reticle.visible){
       showSolarSystem = true;
-
+      
       originMatrix = sunObj.matrixWorld;
       sunObj.position.y = 0;
       sunObj.children[0].material.opacity = 1;
@@ -549,7 +562,8 @@ function touchSelectEvent() {
       scene.add(originPoint);
       originPoint.position.setFromMatrixPosition(originMatrix);
     } else {
-       console.log("cant place yet");
+      
+      console.log("cant place yet");
     }
   }
 }
@@ -785,6 +799,7 @@ function menuEvent(intersects){
 
 function createReticle(){
   if (reticle){
+    
     reticle.add(sunObj);
     sunObj.position.y = 0.2;
     sunObj.children[0].material.opacity = 0.2;

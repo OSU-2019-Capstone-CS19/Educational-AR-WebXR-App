@@ -562,7 +562,6 @@ function planetTranslation(num){
     let moonPos = new THREE.Vector3();
     let dir = new THREE.Vector3();
 
-    //TODO: TESTING TO SEE HOW WELL JUST MOVING THE ORIGIN LOOKS WHEN SWICHING OBJS
     if (!jsonObj.objTranslation.switchObj){
 
       let desiredScale = 0.0003;
@@ -641,7 +640,6 @@ function planetTranslation(num){
 
   } else {
 
-    //TEST
     if (jsonObj.objTranslation.switchObj) {
       console.log("SWITCH");
       jsonObj.objTranslation.switchObj = false;
@@ -1158,9 +1156,7 @@ function planetSelect(num){
     jsonObj.objTranslation.inTransit = true;
 
   } else {
-    //TEST
-    //toggleReturnToOrigin();
-    resetSolarSystem();
+    toggleReturnToOrigin();
   }
 }
 

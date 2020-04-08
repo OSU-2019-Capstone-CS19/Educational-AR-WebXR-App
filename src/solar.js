@@ -798,7 +798,6 @@ function returnToOrigin(){
       reduceScale = (planets[i].scale.x - jsonObj.planets[i].radius/jsonObj.sizeScale) / jsonObj.objTranslation.timeStep;
       planets[i].scale.subScalar(reduceScale);
     }
-  }
 
     //Sun
     reduceScale = (sunObj.scale.x - jsonObj.sun.radius/jsonObj.sizeScale/10) / jsonObj.objTranslation.timeStep;
@@ -1163,12 +1162,6 @@ function menuEvent(intersects){
   }
 }
 
-
-function menuEvent(intersects){
-  console.log("Menu Fired");
-}
-
-
 function createReticle(){
   if (reticle){
     reticle.add(sunObj);
@@ -1221,7 +1214,7 @@ function sunSelect(){
     // jsonObj.objTranslation.timeStep = 100;
     // jsonObj.objTranslation.inTransit = true;
 
-  } 
+  }
 }
 
 
@@ -1411,10 +1404,6 @@ function togglePause(){
       jsonObj.planets[i].moveOrbit = true;
     }
   }
-}
-
-function returnToOrigin(){
-  originPoint.position.setFromMatrixPosition(originMatrix);
 }
 
 function resetSolarSystem(){

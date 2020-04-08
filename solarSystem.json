@@ -30,6 +30,7 @@
       "visible": "true"
    },
    "objTranslation": {
+     "switchObj": false,
      "inTransit": false,
      "timeStep": 100
    },

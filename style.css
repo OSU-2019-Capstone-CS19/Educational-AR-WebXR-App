@@ -1,7 +1,50 @@
 body {
-  background-color: #000;
+  background-image: url("./model/backgrounds/StarryBackground.png");
+  background-size: inherit;
+  width: 100%;
+  height: 100%;
   margin: 0px;
   overflow: hidden;
   color: white;
   text-align: center;
+}
+
+#title {
+	color: #dddd00;
+	font-size: 50px;
+}
+
+#description {
+	margin-left: auto;
+	margin-right: auto; 
+	background-color: #000;
+	color: #ffdd00;
+	border: 2px solid #ffdd00;
+	width: 70%;
+	text-align: center;
+	padding: 10px;
+}
+
+#statusbox {
+	color: #dddd00;
+	font-size: 35px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 70%;
+	padding-top: 20%;
+	padding-bottom: 5%;
+}
+
+#xr-button {
+	background-color: #00cc00;
+	border-color: #cccccc;
+	margin-left: auto;
+	margin-right: auto;
+	font-size: 25px;
+	font-weight: bold;
+	border-radius: 100%;
+	border-width: 5px ;
+	width: 100px;
+	height: 100px;
+	margin-bottom: 100%;
 }

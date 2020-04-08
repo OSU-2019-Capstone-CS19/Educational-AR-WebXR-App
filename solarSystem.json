@@ -5,7 +5,8 @@
    "orbitScale": 1,
    "rotationScale": 10,
    "showPlanetLines":true,
-   "traversal":false,
+   "originReturn": false,
+   "pause": false,
    "sun": {
      "name": "Sun",
      "file": "./model/Sun.glb",
@@ -13,6 +14,7 @@
      "rotation":0.2327,
      "rotationAngle":0.127,
      "intensity": 1.0,
+     "moveRotate":true,
      "beingViewed":false,
      "facts":[
                "The Sun accounts for 99.86% of the mass in the solar system.",
@@ -27,6 +29,10 @@
       "rotate": "false",
       "visible": "true"
    },
+   "objTranslation": {
+     "inTransit": false,
+     "timeStep": 100
+   },
    "planets":[
       {
          "name":"Mercury",
@@ -37,6 +43,8 @@
          "orbitInclination":0.1223476,
          "rotation":0.1065,
          "rotationAngle":0.03,
+         "moveRotate": true,
+         "moveOrbit": true,
          "beingViewed":false,
          "facts":[
                "Mercury is the smallest planet.",
@@ -53,6 +61,8 @@
          "orbitInclination":0.059,
          "rotation":0.0259,
          "rotationAngle":3.089,
+         "moveRotate": true,
+         "moveOrbit": true,
          "beingViewed":false,
          "facts":[
                "Venus is the second brightest natural object in the sky.",
@@ -69,6 +79,8 @@
          "orbitInclination":0,
          "rotation":6.28,
          "rotationAngle":0.41,
+         "moveRotate": true,
+         "moveOrbit": true,
          "beingViewed":false,
          "facts":[
                "This is the planet we live on.",
@@ -84,6 +96,8 @@
             "orbitInclination": 0.087,
             "rotation":0.2327,
             "rotationAngle":0.026,
+            "moveRotate": true,
+            "moveOrbit": true,
             "beingViewed":false,
             "facts":[
                "The Moon.",
@@ -101,6 +115,8 @@
          "orbitInclination":0.032288,
          "rotation":6.1299,
          "rotationAngle":0.436,
+         "moveRotate": true,
+         "moveOrbit": true,
          "beingViewed":false,
          "facts":[
                "Mars is home to the tallest mountain in the solar system.",
@@ -117,6 +133,8 @@
          "orbitInclination":0.02286,
          "rotation":15.232,
          "rotationAngle":0.05,
+         "moveRotate": true,
+         "moveOrbit": true,
          "beingViewed":false,
          "facts":[
                "Jupiter has 67 moons.",
@@ -133,6 +151,8 @@
          "orbitInclination":0.04328,
          "rotation":14.094,
          "rotationAngle":0.466,
+         "moveRotate": true,
+         "moveOrbit": true,
          "beingViewed":false,
          "facts":[
                "Saturn has oval-shaped storms similar to Jupiter’s.",
@@ -149,6 +169,8 @@
          "orbitInclination":0.01347,
          "rotation":8.875,
          "rotationAngle":1.71,
+         "moveRotate": true,
+         "moveOrbit": true,
          "beingViewed":false,
          "facts":[
                "Uranus hits the coldest temperatures of any planet.",
@@ -165,6 +187,8 @@
          "orbitInclination":0.003089,
          "rotation":8.875,
          "rotationAngle":0.524,
+         "moveRotate": true,
+         "moveOrbit": true,
          "beingViewed":false,
          "facts":[
                "Neptune has an average surface temperature of -214°C.",
@@ -181,6 +205,8 @@
          "orbitInclination":0.2967,
          "rotation":0.98,
          "rotationAngle":2.09,
+         "moveRotate": true,
+         "moveOrbit": true,
          "beingViewed":false,
          "facts":[
                "Pluto was reclassified from a planet to a dwarf planet in 2006.",

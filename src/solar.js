@@ -8,13 +8,18 @@ if ("serviceWorker" in navigator) {
   wb.register();
 }
 
-//variables
+//Scene Variables
 let originPoint;
 let placementPos = new THREE.Vector3();
 let planets = [];
 let planetOrigins = [];
 let pivots = [];
 let orbitLines = [];
+
+//UI Elements
+let uiOptions = [];
+let planetOptions = [];
+let anchorAlert;
 let sunObj, sunPivot, moonObj, moonPivot;
 
 let xrButton = document.getElementById('xr-button');
@@ -24,6 +29,8 @@ let showSolarSystem = false;
 let arActivated = false;
 let reticle;
 let gl = null;
+let planetOptionsVisible = false;
+let uiOptionsVisible = false;
 
 
 /**********
@@ -79,6 +86,7 @@ let cameraLight = new THREE.PointLight( 0xfffee8, 2, 0, 0);
 cameraLight.visible = true;
 camera.add(cameraLight);
 
+
 /**********
 INIT
 **********/
@@ -88,14 +96,66 @@ function init() {
 
     checkSupportedState();
     loadModels();
+    loadUI();
 
     originPoint = new THREE.Object3D();
     originPoint.name = "origin";
 
   } else {
     alert("AR no go");
+
   }
 }
+
+
+/**********
+Load UI
+**********/
+function loadUI(){
+
+  let alertGeometry = new THREE.PlaneGeometry(.15,.15, .05);
+  var alertTexture = new THREE.TextureLoader().load("./model/UI-Textures/Anchor.png");
+
+  let alertMaterial = new THREE.MeshBasicMaterial({map: alertTexture});
+  anchorAlert = new THREE.Mesh(alertGeometry, alertMaterial);
+  anchorAlert.position.x = 0.0;
+  anchorAlert.position.y = .25;
+  anchorAlert.position.z = -.50;
+  camera.add(anchorAlert);
+
+  for (let i=0; i< jsonObj.ui_size ; i++){
+    let uiGeometry = new THREE.PlaneGeometry( .05,.05,.05 );
+    var uiTexture = new THREE.TextureLoader().load( jsonObj.ui[i].texture );
+    //let uiTexture = new THREE.ImageUtils.loadTexture(jsonObj.ui[i].texture);
+    let uiMaterial = new THREE.MeshBasicMaterial( {map: uiTexture} );     //UI box
+    uiOptions[i] = new THREE.Mesh( uiGeometry, uiMaterial );
+    uiOptions[i].name = jsonObj.ui[i].name;
+    if (i == 0){
+      uiOptions[i].position.x = jsonObj.ui[i].position.x;
+    } else if (i==2){
+      uiOptions[i].position.x = jsonObj.ui[i].position.x;
+    } else {
+      uiOptions[i].position.x = 1.0;
+    }
+    uiOptions[i].position.y += jsonObj.ui[i].position.y;
+    uiOptions[i].position.z -= jsonObj.ui[i].position.z;
+    camera.add(uiOptions[i]);
+  }
+
+
+  for(let i=0; i< jsonObj.ui[5].size ; i++){
+    let uiGeometry = new THREE.PlaneGeometry( .07,.05,.05 );
+    let uiTexture = new THREE.ImageUtils.loadTexture(jsonObj.ui[5].options[i].texture);
+    let uiMaterial = new THREE.MeshBasicMaterial(  {map: uiTexture} );
+    planetOptions[i]= new THREE.Mesh(uiGeometry, uiMaterial);
+    planetOptions[i].name = jsonObj.ui[5].options[i].name;
+    planetOptions[i].position.x = 1.0;
+    planetOptions[i].position.y += jsonObj.ui[5].options[i].position.y;
+    planetOptions[i].position.z -= jsonObj.ui[5].options[i].position.z;
+    camera.add(planetOptions[i]);
+  }
+}
+
 
 /**********
 Load Models
@@ -738,6 +798,7 @@ function returnToOrigin(){
       reduceScale = (planets[i].scale.x - jsonObj.planets[i].radius/jsonObj.sizeScale) / jsonObj.objTranslation.timeStep;
       planets[i].scale.subScalar(reduceScale);
     }
+  }
 
     //Sun
     reduceScale = (sunObj.scale.x - jsonObj.sun.radius/jsonObj.sizeScale/10) / jsonObj.objTranslation.timeStep;
@@ -850,7 +911,7 @@ function touchSelectEvent() {
 
       let sceneIntersectsArray = [sunObj, moonObj, planets[0], planets[1], planets[2], planets[3], planets[4], planets[5], planets[6], planets[7], planets[8]];
 
-      let menuIntersectsArray = [];
+      let menuIntersectsArray = [uiOptions[0], uiOptions[1], uiOptions[2], uiOptions[3], uiOptions[4], uiOptions[5], planetOptions[0], planetOptions[1], planetOptions[2], planetOptions[3], planetOptions[4], planetOptions[5], planetOptions[6], planetOptions[7], planetOptions[8], planetOptions[9], planetOptions[10]];
 
       let intersects = sceneRaycaster.intersectObjects(menuIntersectsArray, true);
 
@@ -868,7 +929,6 @@ function touchSelectEvent() {
   } else {
     if (reticle.visible){
       showSolarSystem = true;
-
       sunObj.getWorldPosition(placementPos);
       sunObj.position.y = 0;
       sunObj.children[0].material.opacity = 1;
@@ -943,6 +1003,166 @@ function sceneEvent(intersects){
   }
 }
 
+function toggleUIOptionsVisibility(){
+  uiOptionsVisible = !uiOptionsVisible;
+
+  for(let i=1; i<jsonObj.ui_size; i++){
+    if(uiOptionsVisible){
+      uiOptions[i].position.x = jsonObj.ui[i].position.x;
+    } else {
+      if (i!=2)
+      uiOptions[i].position.x = 1.0;
+    }
+  }
+}
+
+function toggleUIOptionsVisibilityOff(){
+
+  uiOptionsVisible = false;
+  for(let i=1; i<jsonObj.ui_size; i++){
+    uiOptions[i].position.x = 1.0;
+  }
+}
+
+function togglePlanetsOptionsVisibility(){
+  planetOptionsVisible = !planetOptionsVisible;
+
+  for(let i=0; i<jsonObj.ui[5].size; i++){
+    if(planetOptionsVisible){
+      planetOptions[i].position.x = 0.05;
+    } else {
+      planetOptions[i].position.x = 1.0;
+    }
+  }
+}
+
+function togglePlanetsOptionsVisibilityOff(){
+  planetOptionsVisible = false;
+  console.log("toggle off planets options");
+  for(let i=0; i<jsonObj.ui[5].size; i++){
+    planetOptions[i].position.x = 1.0;
+  }
+}
+
+function menuEvent(intersects){
+  console.log(intersects);
+  if (intersects[0].object.name){
+    switch(intersects[0].object.name){
+      case "Drawer":
+        console.log("Drawer button touched!!!!");
+        toggleUIOptionsVisibility();
+        break;
+      case "Lines":
+        toggleOrbitLines();
+        toggleUIOptionsVisibility();
+        togglePlanetsOptionsVisibilityOff();
+        break;
+      case "Planets":
+        console.log("show planet options");
+        togglePlanetsOptionsVisibility();
+        break;
+      case "Light":
+        console.log("toggle Light");
+        toggleLight();
+        toggleUIOptionsVisibility();
+        togglePlanetsOptionsVisibilityOff();
+        break;
+      case "Reset":
+        console.log("reset anchor");
+        resetSolarSystem();
+        toggleUIOptionsVisibility();
+        togglePlanetsOptionsVisibilityOff();
+        break;
+      case "Sun":
+        console.log("sun");
+        togglePlanetsOptionsVisibilityOff();
+
+        sunSelect();
+
+        break;
+      case "Mercury":
+        console.log("mercury");
+        togglePlanetsOptionsVisibilityOff();
+
+        planetSelect(0);
+        break;
+
+      case "Venus":
+        console.log("venus");
+        togglePlanetsOptionsVisibilityOff();
+
+        planetSelect(1);
+        break;
+
+      case "Earth":
+        console.log("earth");
+        togglePlanetsOptionsVisibilityOff();
+
+        planetSelect(2);
+
+        if (jsonObj.planets[2].beingViewed){
+          let point = planets[2].worldToLocal(intersects[0].point);
+
+          checkEarthBoundingBoxs(point);
+        }
+        break;
+
+      case "Moon":
+        moonSelect();
+        break;
+
+      case "Mars":
+        console.log("mars");
+        togglePlanetsOptionsVisibilityOff();
+
+        planetSelect(3);
+        break;
+
+      case "Jupiter":
+        console.log("jupiter");
+        togglePlanetsOptionsVisibilityOff();
+
+        planetSelect(4);
+        break;
+
+      case "Saturn":
+        console.log("saturn");
+        togglePlanetsOptionsVisibilityOff();
+
+        planetSelect(5);
+        break;
+
+      case "Uranus":
+
+        console.log("uranus");
+        togglePlanetsOptionsVisibilityOff();
+
+        planetSelect(6);
+        break;
+
+      case "Neptune":
+        console.log("neptune");
+        togglePlanetsOptionsVisibilityOff();
+
+        planetSelect(7);
+        break;
+
+      case "Pluto":
+        console.log("pluto");
+        togglePlanetsOptionsVisibilityOff();
+
+        planetSelect(8);
+        break;
+      case "Pause-Play":
+        togglePause();
+        break;
+
+      default:
+        break;
+    }
+  }
+}
+
 
 function menuEvent(intersects){
   console.log("Menu Fired");
@@ -972,6 +1192,7 @@ function createReticle(){
   reticle.add(sunObj);
   reticle.name = 'reticle';
   scene.add(reticle);
+
 }
 
 function sunSelect(){
@@ -1024,6 +1245,8 @@ function planetSelect(num){
     }
     jsonObj.sun.beingViewed = false;
     jsonObj.planets[num].beingViewed = true;
+    jsonObj.planets[num].moveOrbit = false;
+    planets[num].visible = true;
 
     if (jsonObj.showPlanetLines){
       toggleOrbitLines();
@@ -1190,6 +1413,9 @@ function togglePause(){
   }
 }
 
+function returnToOrigin(){
+  originPoint.position.setFromMatrixPosition(originMatrix);
+}
 
 function resetSolarSystem(){
   showSolarSystem = false;

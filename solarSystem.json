@@ -93,6 +93,7 @@
             "file":"./model/planets-glb/Moon.glb",
             "radius":1737.12,
             "distanceFromEarth":384399,
+            "distanceFromSun":0,
             "orbit":0.01721,
             "orbitInclination": 0.087,
             "rotation":0.2327,
@@ -221,12 +222,12 @@
       {
         "name":"Drawer",
         "texture": "./model/UI-textures/drawer-icon.png",
-        "position": 
+        "position":
           {
             "x": 0.13,
             "y": 0.25,
             "z": 0.5
-          }        
+          }
       },
       {
         "name": "Lines",
@@ -241,12 +242,12 @@
       {
         "name": "Pause-Play",
         "texture": "./model/UI-textures/pause-play.png",
-        "position": 
+        "position":
           {
             "x": -0.13,
             "y": 0.25,
             "z": 0.5
-          }    
+          }
       },
       {
         "name": "Light",
@@ -272,7 +273,7 @@
         "name":"Planets",
         "size": 11,
         "texture": "./model/UI-textures/Planets.png",
-        "position": 
+        "position":
         {
           "x": 0.13,
           "y": 0.15,
@@ -282,116 +283,116 @@
           {
             "name": "Mercury",
             "texture": "./model/UI-textures/Mercury.png",
-            "position": 
+            "position":
             {
               "x": 0.05,
               "y": 0.25,
               "z": 0.5
-            }    
+            }
           },
           {
             "name": "Venus",
             "texture": "./model/UI-textures/Venus.png",
-            "position": 
+            "position":
             {
               "x": 0.05,
               "y": 0.20,
               "z": 0.5
-            }   
+            }
           },
           {
             "name": "Earth",
             "texture": "./model/UI-textures/Earth.png",
-            "position": 
+            "position":
             {
               "x": 0.05,
               "y": 0.15,
               "z": 0.5
-            }   
+            }
           },
           {
             "name": "Mars",
             "texture": "./model/UI-textures/Mars.png",
-            "position": 
+            "position":
             {
               "x": 0.05,
               "y": 0.10,
               "z": 0.5
-            }   
+            }
           },
           {
             "name": "Jupiter",
             "texture": "./model/UI-textures/Jupiter.png",
-            "position": 
+            "position":
             {
               "x": 0.05,
               "y": 0.05,
               "z": 0.5
-            }   
+            }
           },
           {
             "name": "Saturn",
             "texture": "./model/UI-textures/Saturn.png",
-            "position": 
+            "position":
             {
               "x": 0.05,
               "y": 0.0,
               "z": 0.5
-            }   
+            }
           },
           {
             "name": "Uranus",
             "texture": "./model/UI-textures/Uranus.png",
-            "position": 
+            "position":
             {
               "x": 0.05,
               "y": -0.05,
               "z": 0.5
-            }   
+            }
           },
           {
             "name": "Neptune",
             "texture": "./model/UI-textures/Neptune.png",
-            "position": 
+            "position":
             {
               "x": 0.05,
               "y": -0.1,
               "z": 0.5
-            }   
+            }
           },
           {
             "name": "Pluto",
             "texture": "./model/UI-textures/Pluto.png",
-            "position": 
+            "position":
             {
               "x": 0.05,
               "y": -0.15,
               "z": 0.5
-            }   
+            }
           },
           {
             "name": "Sun",
             "texture": "./model/UI-textures/Sun.png",
-            "position": 
+            "position":
             {
               "x": 0.05,
               "y": -0.20,
               "z": 0.5
-            }   
+            }
           },
           {
             "name": "Moon",
             "texture": "./model/UI-textures/Moon.png",
-            "position": 
+            "position":
             {
               "x": 0.05,
               "y": -0.25,
               "z": 0.5
-            }   
+            }
           }
         ]
       }
-      
+
    ],
    "continents": [
       {

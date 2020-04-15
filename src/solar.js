@@ -540,8 +540,11 @@ function updateMoon(){
 
   } else {
     //Moon Orbit
-    if (moonPivot && jsonObj.planets[2].moon.moveOrbi){
+    if (moonPivot && jsonObj.planets[2].moon.moveOrbit){
       moonPivot.rotateY(jsonObj.planets[2].moon.orbit / jsonObj.orbitScale);
+    } else {
+      console.log(moonPivot);
+      console.log(jsonObj.planets[2].moon.moveOrbit);
     }
   }
 }
@@ -932,13 +935,20 @@ function returnToOrigin(){
     //Reset Values
     for (let i=0; i<jsonObj.numPlanets; i++){
       jsonObj.planets[i].beingViewed = false;
-      if (jsonObj.planets[i].moon){
-        jsonObj.planets[i].moon.beingViewed = false;
-      }
 
       if (!jsonObj.pause){
         jsonObj.planets[i].moveOrbit = true;
       }
+
+      if (jsonObj.planets[i].moon){
+        jsonObj.planets[i].moon.beingViewed = false;
+        if (!jsonObj.pause){
+          jsonObj.planets[i].moon.moveOrbit = true;
+          console.log(jsonObj.planets[i].moon.moveOrbit);
+        }
+      }
+
+
 
       if (jsonObj.showPlanetLines){
         orbitLines[i].visible = true;

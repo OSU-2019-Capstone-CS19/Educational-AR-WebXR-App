@@ -35,3 +35,17 @@ workbox.routing.registerRoute(
     ],
   })
 );
+
+workbox.routing.registerRoute(
+  /\.(?:png|jpg|jpeg|svg|gif)$/,
+  new workbox.strategies.CacheFirst({
+    cacheName: 'imageCache',
+    plugins: [
+      new workbox.expiration.Plugin({
+        maxEntries: 50,
+        // Cache for a maximum of 3 weeks.
+        maxAgeSeconds: 21 * 24 * 60 * 60,
+      })
+    ],
+  })
+);

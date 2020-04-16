@@ -27,11 +27,7 @@ self.addEventListener('message', (event) => {
 self.__precacheManifest = [
   {
     "url": "index.html",
-<<<<<<< HEAD
-    "revision": "8a2639ca86953b5c56f705c036dd5327"
-=======
-    "revision": "429b0f21b0cb22cf6fe78df4a0f8a54b"
->>>>>>> 08e3cd7cbb41c4066a15f6cdd35b04fd38e4062d
+    "revision": "6a8b9fe2575a72aecf7c240b6fac73f5"
   },
   {
     "url": "model/planets-glb/neptune/Neptune.glb",
@@ -50,61 +46,28 @@ self.__precacheManifest = [
     "revision": "cff507bc95ad1d6bf1a415cc9c8852b0"
   },
   {
-    "url": "polyfills/dynamic-import.b745cfc9384367cc18b42bbef2bbdcd9.js",
-    "revision": "ed55766050be285197b8f511eacedb62"
+    "url": "polyfills/dynamic-import.991be47e17117abb5eb15f5254ad3869.js",
+    "revision": "08b86a7f56c6f0d65265654299b16d74"
   },
   {
-    "url": "polyfills/webcomponents.d67d6757b8cd44bc35b021ee0b71d197.js",
-    "revision": "e90bc4e3aa3ed407808c7b2726581d33"
+    "url": "polyfills/webcomponents.d406f4685fdfb412c61f23b3ae18f2dc.js",
+    "revision": "b1db7cb76380495a55ff4f65a9648f0e"
   },
   {
-<<<<<<< HEAD
-    "url": "solar-6137d5ae.js",
-    "revision": "5800105cd947e0d49bf085b9d44b50cd"
-  },
-  {
-    "url": "solarSystem.json",
-    "revision": "cd524a4f37fd597796f682bb83021632"
-  },
-  {
-    "url": "src/menuEventHandler.js",
-    "revision": "77099a211d999429a9a73cd672c976ba"
-  },
-  {
-    "url": "src/render.js",
-    "revision": "5cc34e971a5c55f05a06ad5cf00f9e5b"
-  },
-  {
-    "url": "src/sceneEventHandler.js",
-    "revision": "b4c988c47bcdacb562ca422f18a80a99"
-  },
-  {
-    "url": "src/solar.js",
-    "revision": "0118deb81f4ed2fbf54d85a3c0dfbcf3"
-  },
-  {
-    "url": "style.css",
-    "revision": "a8c9c8f9cdb280da77523b371625fbf1"
-  }
-].concat(self.__precacheManifest || []);
-workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
-=======
-    "url": "solar-582388df.js",
-    "revision": "610599fff79975ad996ea5b1506e5341"
+    "url": "solar-58fd4bb0.js",
+    "revision": "ebf02d3c471b1ec3c80e01a22fdf488b"
   },
   {
     "url": "solarSystem.json",
-    "revision": "50a681f7b6064a90720b36b657b0d607"
+    "revision": "d3a746f760fc4d58d74d55d1ec1392ef"
   },
   {
     "url": "src/solar.js",
-    "revision": "ec97fa084ca08f389c345fdf331ee462"
+    "revision": "fdf33080b406c7f8c026bd1579d39342"
   },
   {
     "url": "style.css",
-    "revision": "93a077fe6c5b06a11ae4ba9ffe6f4416"
+    "revision": "9a99a0670ec5d5e58eae935d71db3d8c"
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
-
->>>>>>> 08e3cd7cbb41c4066a15f6cdd35b04fd38e4062d

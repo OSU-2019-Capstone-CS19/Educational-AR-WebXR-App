@@ -13,7 +13,7 @@ function workbox(config) {
       const {count, size} = await build.generateSW(config);
       console.log(count, size);
     }
-  }
+  };
 }
 
 export default {
@@ -24,13 +24,15 @@ export default {
       { files: 'src/*.js', dest: 'dist/src/'},
       { files: 'model/planets-glb/**/*.glb', dest: 'dist/model/planets-glb/'},
       { files: 'model/Sun.glb', dest: 'dist/model/'},
+      { files: 'model/UI-Textures/*.png', dest: 'dist/model/UI-Textures/'},
+      { files: 'model/backgrounds/*.png', dest: 'dist/model/backgrounds/'},
       { files: 'solarSystem.json', dest: 'dist' },
     ], { verbose: false, watch: false }),
     ...config.plugins,
       workbox({
         globDirectory: "dist",
         globPatterns: [
-          '**/*.{js,css,html,glb,json}'
+          '**/*.{js,css,html,png,glb,json}'
         ],
         swDest: "dist/service-worker.js",
       }),

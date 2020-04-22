@@ -19,7 +19,7 @@ let orbitLines = [];
 //UI Elements
 let uiOptions = [];
 let planetOptions = [];
-let anchorAlert;
+let anchorAlert, collisionAlert;;
 let sunObj, sunPivot, moonObj, moonPivot, moonOrigin;
 
 let xrButton = document.getElementById('xr-button');
@@ -125,6 +125,16 @@ function loadUI(){
   anchorAlert.position.y = .25;
   anchorAlert.position.z = -.50;
   camera.add(anchorAlert);
+
+  let collisionGeometry = new THREE.PlaneGeometry(.1,.1, .05);
+  var collisionTexture = new THREE.TextureLoader().load("./model/UI-Textures/Collision_Alert.png");
+
+  let collisionMaterial = new THREE.MeshBasicMaterial({map: collisionTexture});
+  collisionAlert = new THREE.Mesh(collisionGeometry, collisionMaterial);
+  collisionAlert.position.x = 0.0;
+  collisionAlert.position.y = .25;
+  collisionAlert.position.z = 1.0;
+  camera.add(collisionAlert);
 
   for (let i=0; i< jsonObj.ui_size ; i++){
     let uiGeometry = new THREE.PlaneGeometry( .05,.05,.05 );
@@ -978,8 +988,10 @@ function checkInsideObject(object){
   if (objectBox.containsPoint(cameraPos)){
     console.log("Inside");
     //TODO: Notifier will be turned on
+    collisionAlert.position.z = -.5;
   } else {
     //TODO: Notifier will be turned off
+    collisionAlert.position.z = 1.0;
   }
 }
 

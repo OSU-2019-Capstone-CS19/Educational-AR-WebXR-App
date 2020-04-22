@@ -419,7 +419,7 @@ function renderXR(timestamp, xrFrame){
       let hitTestResults = xrFrame.getHitTestResults(xrHitTestSource);
       if (hitTestResults.length > 0){
         console.log("raycast good");
-
+        anchorAlert.position.z = 1.;
         let result = hitTestResults[0].getPose(xrRefSpace);
 
         reticle.visible = true;
@@ -429,6 +429,7 @@ function renderXR(timestamp, xrFrame){
         hitMatrix.fromArray(result.transform.matrix);
         reticle.position.setFromMatrixPosition(hitMatrix);
       } else {
+        anchorAlert.position.z = -.5;
         console.log("keep Looking");
         reticle.visible = false;
       }

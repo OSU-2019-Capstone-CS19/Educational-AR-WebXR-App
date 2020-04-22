@@ -796,7 +796,7 @@ function planetTranslation(num){
           }
           if (jsonObj.planets[i].moon){
             if (jsonObj.planets[i].moon.switchingFrom){
-              switchTranslation(planets[num], jsonObj.planets[num].radius / jsonObj.sizeScale, moonObj, jsonObj.planets[i].moon / jsonObj.sizeScale);
+              switchTranslation(planets[num], jsonObj.planets[num].radius / jsonObj.sizeScale, moonObj, jsonObj.planets[i].moon.radius / jsonObj.sizeScale);
             }
           }
         }
@@ -1041,26 +1041,8 @@ function moonTraslation(){
   }
 }
 
+
 function switchTranslation(target, targetScale, preObj, preObjScale){
-  //Should take in both the previous target and the new target.
-  //Find the appropriate scale adjustment for the solar system
-  //Move everything to their proper position
-
-
-  /*  1) First find the diff of the prevObj size and the desiredScale
-      2) Divide that difference into 100 parts (these would represent how much would change with each timestep)
-      3) Take one of the 100 parts and divide it by the original size of the prevObj (json Value)
-          => this gives us a percentage amount of change each of the 100 parts is impacting on the prevObj
-      4) Apply that percentage to the target object so we know how big it is when this function is called for the first time
-          => Need to test this. Use a for loop to get the proper anwcer and then see if we can just multiply an answer by 100
-
-      5) Now we need to take the new original size of the target obj and find the diff from the desiredScale
-      6) Again we will divide that difference into 100 parts
-      7) Take one of the 100 parts and divide it to the new original size of the target obj
-          => I assume that we use the new original size vs the json size
-      8) Apply that new percentage number to the target Object.
-          => Note: when adding the number just multiply by the new original size of the target obj to get the original 100 part
-  */
 
   let planetNum;
   let preSunSize;
@@ -1099,14 +1081,14 @@ function switchTranslation(target, targetScale, preObj, preObjScale){
 
     //Get the previous size of the moon Note: applied only to Earths moon
     if (jsonObj.planets[i].moon){
-      preMoonSize = jsonObj.planets[i].radius / jsonObj.sizeScale;
+      preMoonSize = jsonObj.planets[i].moon.radius / jsonObj.sizeScale;
     }
 
     for (let j=0; j<100; j++){
       prePlanetSize[i] += (jsonObj.planets[i].radius / jsonObj.sizeScale) * preScalePercent;
 
       if (jsonObj.planets[i].moon){
-        preMoonSize += (jsonObj.planets[i].radius / jsonObj.sizeScale) * preScalePercent;
+        preMoonSize += (jsonObj.planets[i].moon.radius / jsonObj.sizeScale) * preScalePercent;
       }
     }
   }
@@ -1150,12 +1132,10 @@ function switchTranslation(target, targetScale, preObj, preObjScale){
   }
 
   if (planetNum){
-    console.log(planets[planetNum]);
+    // console.log(planets[planetNum].scale.x);
   } else {
-    console.log(moonObj.scale.x);
+    // console.log(moonObj.scale.x);
   }
-
-
 
 
   //Move target towards camera
@@ -1172,7 +1152,7 @@ function switchTranslation(target, targetScale, preObj, preObjScale){
   //Planet
   if (planetNum) {
     planetOrigins[planetNum].getWorldPosition(targetPos);
-    box.setFromObject(planetOrigins[planetNum]);
+    box.setFromObject(planets[planetNum]);
   }
 
   //Moon
@@ -1671,6 +1651,7 @@ function sunSelect(){
           jsonObj.planets[i].moon.switchingFrom = true;
 
           //Reset Values
+          scene.attach(originPoint);
           planetOrigins[i].remove(sunPivot);
           pivots[i].attach(planetOrigins[i]);
           planetOrigins[i].add(moonPivot);
@@ -1732,6 +1713,7 @@ function planetSelect(num){
           jsonObj.planets[i].moon.switchingFrom = true;
 
           //Reset Values
+          scene.attach(originPoint);
           planetOrigins[i].remove(sunPivot);
           pivots[i].attach(planetOrigins[i]);
           planetOrigins[i].add(moonPivot);

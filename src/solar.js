@@ -208,6 +208,7 @@ function loadSun(gltf) {
   sunObj.scale.set( jsonObj.sun.radius/jsonObj.sizeScale/10,
                     jsonObj.sun.radius/jsonObj.sizeScale/10,
                     jsonObj.sun.radius/jsonObj.sizeScale/10);
+  jsonObj.sun.preSunSize = sunObj.scale.x;
   sunObj.rotateZ(jsonObj.sun.rotationAngle);
   sunObj.name = jsonObj.sun.name;
   sunObj.add(sunLight);
@@ -551,9 +552,11 @@ function updateMoon(){
 
 function sunTranslation(){
   if (jsonObj.objTranslation.timeStep > 0){
+
     let distance;
     let originPos = new THREE.Vector3();
     let planetPos = new THREE.Vector3();
+    let moonPos = new THREE.Vector3()
     let cameraPos = new THREE.Vector3();
     let dir = new THREE.Vector3();
 
@@ -561,33 +564,45 @@ function sunTranslation(){
 
     if (!jsonObj.objTranslation.switchObj){
 
-      //Update Planet Position
+      //Get Percentage Scale
+      let desiredScale = 0.0003;
+      let scaledPercent = (desiredScale - (jsonObj.sun.radius / jsonObj.sizeScale) / 10) / 100;
+      scaledPercent /= ((jsonObj.sun.radius / jsonObj.sizeScale) / 10);
+
+      //Update Planet/Moon Position
       for (let i=0; i<jsonObj.numPlanets; i++){
         scene.attach( planetOrigins[i]);
         planetOrigins[i].getWorldPosition(planetPos);
-
-        //Direction
         dir.subVectors(planetPos, originPos).normalize();
-
-        //Distance
-        distance = (jsonObj.planets[i].distanceFromSun / jsonObj.distanceScale) * 2 / jsonObj.objTranslation.timeStep;
+        distance = (jsonObj.planets[i].distanceFromSun / jsonObj.distanceScale) * 30 * scaledPercent;
         planetOrigins[i].position.add(dir.multiplyScalar(distance));
         pivots[i].attach( planetOrigins[i]);
 
-        //Scale SolarSystem
-        planets[i].scale.addScalar((jsonObj.planets[i].radius / jsonObj.sizeScale) * 0.05 / jsonObj.objTranslation.timeStep);
+        //Scale Planet
+        planets[i].scale.addScalar((jsonObj.planets[i].radius / jsonObj.sizeScale) * scaledPercent);
+
+        //Update Moon
+        //NOTE: Only applied to Earths moon
+        if (jsonObj.planets[i].moon){
+          scene.attach(moonOrigin);
+          moonOrigin.getWorldPosition(moonPos);
+          planetOrigins[i].getWorldPosition(planetPos);
+          dir.subVectors(moonPos, planetPos).normalize();
+          distance = (jsonObj.planets[i].moon.distanceFromEarth / jsonObj.distanceScale) * 25 * scaledPercent;
+          moonOrigin.position.add(dir.multiplyScalar(distance));
+          moonPivot.attach(moonOrigin);
+
+          //Scale Moon
+          moonObj.scale.addScalar((jsonObj.planets[i].moon.radius / jsonObj.sizeScale) * scaledPercent);
+        }
       }
 
       //Scale Sun
-      sunObj.scale.addScalar((jsonObj.sun.radius / jsonObj.sizeScale) * 0.05 / jsonObj.objTranslation.timeStep);
+      sunObj.scale.addScalar(((jsonObj.sun.radius / jsonObj.sizeScale) / 10) * scaledPercent);
 
       //Move Sun towards camera
       camera.getWorldPosition(cameraPos);
-
-      //Direction
       dir.subVectors(cameraPos, originPos).normalize();
-
-      //Distance
       let sunBox = new THREE.Box3().setFromObject(sunObj);
       distance = sunBox.distanceToPoint(cameraPos);
       distance -= 0.1; //Camera Buffer
@@ -600,88 +615,23 @@ function sunTranslation(){
 
       for (let i=0; i<jsonObj.numPlanets; i++){
         if (jsonObj.planets[i].switchingFrom){
-          switchTranslation(sunObj, jsonObj.sun.radius / jsonObj.sizeScale, planets[i], jsonObj.planets[i].radius / jsonObj.sizeScale);
+          switchTranslation(sunObj, jsonObj.sun.radius / jsonObj.sizeScale / 10, planets[i], jsonObj.planets[i].radius / jsonObj.sizeScale);
         }
         if (jsonObj.planets[i].moon){
           if (jsonObj.planets[i].moon.switchingFrom){
-            switchTranslation(sunObj, jsonObj.sun.radius / jsonObj.sizeScale, moonObj, jsonObj.planets[i].moon.radius / jsonObj.sizeScale);
+            switchTranslation(sunObj, jsonObj.sun.radius / jsonObj.sizeScale / 10, moonObj, jsonObj.planets[i].moon.radius / jsonObj.sizeScale);
           }
         }
       }
 
-      // let desiredScale = 0.00025;
-      // let desiredScale = 0.0003;
-      // let preScale;
-      // let curScale
-      // let scaleDiff;
-      // let scaledPercent;
-      //
-      // //Get scale of previously viewed obj
-      // for (let i=0; i<jsonObj.numPlanets; i++){
-      //   if (jsonObj.planets[i].switchingFrom){
-      //     preScale = (desiredScale - (jsonObj.planets[i].radius / jsonObj.sizeScale)) / 100 / (jsonObj.planets[i].radius / jsonObj.sizeScale);
-      //     // console.log("preScale");
-      //     // console.log((preScale * (jsonObj.sun.radius / jsonObj.sizeScale) + (jsonObj.sun.radius / jsonObj.sizeScale)) * 100);
-      //
-      //     if (jsonObj.planets[i].moon){
-      //       if (jsonObj.planets[i].moon.switchingFrom){
-      //         preScale = (desiredScale - (jsonObj.planets[i].moon.radius / jsonObj.sizeScale)) / (jsonObj.planets[i].moon.radius / jsonObj.sizeScale);
-      //
-      //       }
-      //     }
-      //   }
-      // }
-
-      //Find scale based upon oldScale
-      // curScale = (preScale * (jsonObj.sun.radius / jsonObj.sizeScale) + (jsonObj.sun.radius / jsonObj.sizeScale)) * 100;
-
-      //Find difference and alter to percent
-      // scaleDiff = desiredScale - curScale;
-      //console.log(scaleDiff); //Will be negitive
-
-      // scaledPercent = (scaleDiff ) / 100;
-      // scaledPercent /= (jsonObj.sun.radius / jsonObj.sizeScale);
-      // console.log(scaledPercent);
-
-      //Update Planet Position
-      // for (let i=0; i<jsonObj.numPlanets; i++){
-      //   scene.attach( planetOrigins[i]);
-      //   planetOrigins[i].getWorldPosition(planetPos);
-      //
-      //   //Direction
-      //   dir.subVectors(planetPos, originPos).normalize();
-      //
-      //   //Distance
-      //   distance = (jsonObj.planets[i].distanceFromSun / jsonObj.distanceScale) * 2 / jsonObj.objTranslation.timeStep;
-      //
-      //
-      // //   planetOrigins[i].position.add(dir.multiplyScalar(distance));
-      //   pivots[i].attach( planetOrigins[i]);
-
-        //Scale SolarSystem
-        //planets[i].scale.addScalar((jsonObj.planets[i].radius / jsonObj.sizeScale) * 0.05 / jsonObj.objTranslation.timeStep);
-      // }
-
-      //Scale Sun
-      // sunObj.scale.addScalar((jsonObj.sun.radius / jsonObj.sizeScale) * scaledPercent);
-
-      //Move Sun towards camera
-      // camera.getWorldPosition(cameraPos);
-      //
-      // //Direction
-      // dir.subVectors(cameraPos, originPos).normalize();
-      //
-      // //Distance
-      // let sunBox = new THREE.Box3().setFromObject(sunObj);
-      // distance = sunBox.distanceToPoint(cameraPos);
-      // distance -= 0.1; //Camera Buffer
-      // originPoint.translateOnAxis(dir, distance / jsonObj.objTranslation.timeStep);
-
       jsonObj.objTranslation.timeStep--;
-
     }
 
   } else {
+
+    console.log(sunObj.scale.x);
+
+    jsonObj.sun.preSunSize = sunObj.scale.x;
 
     if (jsonObj.objTranslation.switchObj){
       jsonObj.objTranslation.switchObj = false;
@@ -769,11 +719,7 @@ function planetTranslation(num){
       //Move Selected Planet Towards Camera
       camera.getWorldPosition(cameraPos);
       planetOrigins[num].getWorldPosition(planetPos);
-
-      //Direction
       dir.subVectors(cameraPos, planetPos).normalize();
-
-      //Distance
       let planetBox = new THREE.Box3().setFromObject(planets[num]);
       distance = planetBox.distanceToPoint(cameraPos);
       distance -= 0.1; //Camera Buffer
@@ -851,19 +797,24 @@ function planetTranslation(num){
       // moonOrigin.position.add(dir.multiplyScalar(distance));
       // moonPivot.attach(moonOrigin);
       // moonObj.scale.addScalar((jsonObj.planets[2].moon.radius / jsonObj.sizeScale) * scaledPercent);
-      //
-      // //TODO: test the size of the sun
-      // if (num < 4){
-      //   sunObj.scale.addScalar((jsonObj.sun.radius / jsonObj.sizeScale) * 3 * scaledPercent);
-      // } else {
-      //   sunObj.scale.addScalar((jsonObj.sun.radius / jsonObj.sizeScale) * scaledPercent);
-      // }
-      //
+
 
       jsonObj.objTranslation.timeStep--;
     }
 
   } else {
+    //Test
+    // for (let i=0; i<jsonObj.numPlanets; i++){
+    //   console.log("Planet Size:");
+    //   console.log(planets[i].scale.x);
+    // }
+    //
+    // console.log("Moon Size:");
+    // console.log(moonObj.scale.x);
+    console.log("Sun Size:");
+    console.log(sunObj.scale.x);
+
+    jsonObj.sun.preSunSize = sunObj.scale.x;
 
     if (jsonObj.objTranslation.switchObj) {
       jsonObj.objTranslation.switchObj = false;
@@ -978,21 +929,15 @@ function moonTraslation(){
         }
       }
 
-      // //Move Selected Moon Towards Camera
-      // camera.getWorldPosition(cameraPos);
-      // moonOrigin.getWorldPosition(moonPos);
-      //
-      // dir.subVectors(cameraPos, moonPos).normalize();
-      // let moonBox = new THREE.Box3().setFromObject(moonObj);
-      // distance = moonBox.distanceToPoint(cameraPos);
-      // distance -= 0.1; //Camera Buffer
-      //
-      // originPoint.translateOnAxis(dir, distance / jsonObj.objTranslation.timeStep);
-
       jsonObj.objTranslation.timeStep--;
     }
 
   } else {
+
+    //Test
+    console.log(sunObj.scale.x);
+
+    jsonObj.sun.preSunSize = sunObj.scale.x;
 
     if (jsonObj.objTranslation.switchObj) {
       jsonObj.objTranslation.switchObj = false;
@@ -1052,9 +997,6 @@ function switchTranslation(target, targetScale, preObj, preObjScale){
   //This is the percentage change for the previous object
   preScalePercent /= preObjScale;
 
-  //Get previous size of the sun
-  preSunSize = jsonObj.sun.radius / jsonObj.sizeScale / 10;
-
   //Get the previous size of all the planets
   for (let i=0; i<jsonObj.numPlanets; i++){
     prePlanetSize[i] = jsonObj.planets[i].radius / jsonObj.sizeScale;
@@ -1069,20 +1011,8 @@ function switchTranslation(target, targetScale, preObj, preObjScale){
 
     if (jsonObj.planets[i].moon){
       preMoonSize += ((jsonObj.planets[i].moon.radius / jsonObj.sizeScale) * preScalePercent) * 100;
+
     }
-
-  }
-
-  //Check if SunObj and whether previous object was close to sun to get accurate scale
-  if (target == sunObj && (preObj==planets[0] || preObj==planets[1] || preObj==planets[2] || preObj==planets[3] || preObj==moonObj)){
-    preSunSize += ((jsonObj.sun.radius / jsonObj.sizeScale) * 3 * preScalePercent) * 100;
-
-    // for (let i=0; i<100; i++){
-    //   preSunSize += (targetScale * 3 * preScalePercent);
-    // }
-
-  } else {
-    preSunSize += ((jsonObj.sun.radius / jsonObj.sizeScale) * preScalePercent) * 100;
   }
 
   //Check what the target is
@@ -1101,7 +1031,6 @@ function switchTranslation(target, targetScale, preObj, preObjScale){
     //This is the percentage change that will be applied to the solar system
     scaledPercent /= preMoonSize;
 
-  //Target = Planet
   } else {
 
     for (let i=0; i<jsonObj.numPlanets; i++){
@@ -1117,7 +1046,30 @@ function switchTranslation(target, targetScale, preObj, preObjScale){
   }
 
   //Scale Sun
-  sunObj.scale.addScalar(preSunSize * scaledPercent);
+  // Find what the sun size should be, based on the original size
+  preSunSize = jsonObj.sun.preSunSize;
+  let originalScale = (desiredScale - targetScale) / 100;
+  originalScale /= targetScale;
+  let originalSun = (jsonObj.sun.radius / jsonObj.sizeScale) /10;
+
+  //Inner Ring
+  if (target == planets[0] || target == planets[1] || target == planets[2] || target == planets[3] || target == planets[4] || target == moonObj){
+    originalSun += ((jsonObj.sun.radius / jsonObj.sizeScale) * 3 * originalScale) * 100;
+
+  //Sun
+  } else if (target == sunObj) {
+    originalSun += (targetScale * originalScale) * 100;
+
+  //Outer Ring
+  } else {
+    originalSun += ((jsonObj.sun.radius / jsonObj.sizeScale) * originalScale) * 100;
+  }
+
+  //Find the difference and apply a 100th of it to the sunObj.scale
+  let sizeDiff = originalSun - preSunSize;
+  sizeDiff /= 100;
+
+  sunObj.scale.addScalar(sizeDiff);
 
   //Scale Planets
   for (let i=0; i<jsonObj.numPlanets; i++){
@@ -1128,15 +1080,6 @@ function switchTranslation(target, targetScale, preObj, preObjScale){
       moonObj.scale.addScalar(preMoonSize * scaledPercent);
     }
   }
-
-  if (planetNum){
-    console.log(planets[planetNum].scale.x);
-  } else if (target == moonObj){
-    console.log(moonObj.scale.x);
-  } else {
-    console.log(sunObj.scale.x);
-  }
-
 
   //Move target towards camera
   let box = new THREE.Box3();

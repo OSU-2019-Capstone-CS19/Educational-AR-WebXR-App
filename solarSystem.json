@@ -14,6 +14,7 @@
      "rotation":0.2327,
      "rotationAngle":0.127,
      "intensity": 1.0,
+     "preSunSize": 0,
      "moveRotate":true,
      "beingViewed":false,
      "switchingFrom": false,

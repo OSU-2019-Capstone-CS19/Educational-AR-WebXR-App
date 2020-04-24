@@ -134,6 +134,7 @@ function loadUI(){
   collisionAlert.position.x = 0.0;
   collisionAlert.position.y = .25;
   collisionAlert.position.z = 1.0;
+  collisionAlert.visible = false;
   camera.add(collisionAlert);
 
   for (let i=0; i< jsonObj.ui_size ; i++){
@@ -372,7 +373,7 @@ async function activateAR(){
 
     xrSession.addEventListener('select', touchSelectEvent);
     xrSession.addEventListener('end', onSessionEnd);
-
+    
     let gl = renderer.getContext();
     await gl.makeXRCompatible();
     let layer = new XRWebGLLayer(xrSession, gl);
@@ -450,6 +451,7 @@ function renderXR(timestamp, xrFrame){
       reticle.visible = false;
       originPoint.visible = true;
     }
+    
 
     animateScene();
   }
@@ -483,6 +485,8 @@ function animateScene(){
   }
   checkInsideObject(sunObj);
   checkInsideObject(moonObj);
+  console.log("test: ", collisionAlert.visible)
+  if(collisionAlert.visible){collisionAlert.position.z = -.5; console.log("collisionAlert visible");}else{collisionAlert.position.z = 1.0;}
 }
 
 
@@ -986,12 +990,16 @@ function checkInsideObject(object){
   camera.getWorldPosition(cameraPos);
 
   if (objectBox.containsPoint(cameraPos)){
-    console.log("Inside");
+    collisionAlert.visible = true;
+    console.log("Inside: ", collisionAlert.visible);
     //TODO: Notifier will be turned on
-    collisionAlert.position.z = -.5;
+    //collisionAlert.position.z = -.5;
+    
+    
   } else {
     //TODO: Notifier will be turned off
-    collisionAlert.position.z = 1.0;
+    //collisionAlert.position.z = 1.0;
+    collisionAlert.visible = false;
   }
 }
 

@@ -157,15 +157,15 @@ function loadUI(){
   }
 
 
-  for(let i=0; i< jsonObj.ui[5].size ; i++){
+  for(let i=0; i< jsonObj.ui[7].size ; i++){
     let uiGeometry = new THREE.PlaneGeometry( .07,.05,.05 );
-    let uiTexture = new THREE.ImageUtils.loadTexture(jsonObj.ui[5].options[i].texture);
+    let uiTexture = new THREE.ImageUtils.loadTexture(jsonObj.ui[7].options[i].texture);
     let uiMaterial = new THREE.MeshBasicMaterial(  {map: uiTexture} );
     planetOptions[i]= new THREE.Mesh(uiGeometry, uiMaterial);
-    planetOptions[i].name = jsonObj.ui[5].options[i].name;
+    planetOptions[i].name = jsonObj.ui[7].options[i].name;
     planetOptions[i].position.x = 1.0;
-    planetOptions[i].position.y += jsonObj.ui[5].options[i].position.y;
-    planetOptions[i].position.z -= jsonObj.ui[5].options[i].position.z;
+    planetOptions[i].position.y += jsonObj.ui[7].options[i].position.y;
+    planetOptions[i].position.z -= jsonObj.ui[7].options[i].position.z;
     camera.add(planetOptions[i]);
   }
 }
@@ -479,13 +479,6 @@ function animateScene(){
     updatePlanets();
     updateMoon();
   }
-
-  /*for (let i=0; i<jsonObj.numPlanets; i++){
-    checkInsideObject(planets[i]);
-  }
-  checkInsideObject(sunObj);
-  checkInsideObject(moonObj);*/
-  //console.log("test: ", collisionAlert.visible)
   checkInsideObject();
   if(collisionAlert.visible){
     collisionAlert.position.z = -.5; 
@@ -988,20 +981,6 @@ function returnToOrigin(){
 }
 
 
-/*function checkInsideObject(object){
-  let objectBox = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
-  let cameraPos = new THREE.Vector3();
-
-  objectBox.setFromObject(object);
-  camera.getWorldPosition(cameraPos);
-
-  if (objectBox.containsPoint(cameraPos)){
-    collisionAlert.visible = true;
-    console.log("Inside: ", collisionAlert.visible);
-  } else {
-      collisionAlert.visible = false;
-  }
-}*/
 function checkInsideObject(){
   //With in here check the planets, moon, and sun
   let inside = false;
@@ -1065,7 +1044,7 @@ function touchSelectEvent() {
 
       let sceneIntersectsArray = [sunObj, moonObj, planets[0], planets[1], planets[2], planets[3], planets[4], planets[5], planets[6], planets[7], planets[8]];
 
-      let menuIntersectsArray = [uiOptions[0], uiOptions[1], uiOptions[2], uiOptions[3], uiOptions[4], uiOptions[5], planetOptions[0], planetOptions[1], planetOptions[2], planetOptions[3], planetOptions[4], planetOptions[5], planetOptions[6], planetOptions[7], planetOptions[8], planetOptions[9], planetOptions[10]];
+      let menuIntersectsArray = [uiOptions[0], uiOptions[1], uiOptions[2], uiOptions[3], uiOptions[4], uiOptions[5], uiOptions[6], uiOptions[7], planetOptions[0], planetOptions[1], planetOptions[2], planetOptions[3], planetOptions[4], planetOptions[5], planetOptions[6], planetOptions[7], planetOptions[8], planetOptions[9], planetOptions[10]];
 
       let intersects = sceneRaycaster.intersectObjects(menuIntersectsArray, true);
 
@@ -1181,7 +1160,7 @@ function toggleUIOptionsVisibilityOff(){
 function togglePlanetsOptionsVisibility(){
   planetOptionsVisible = !planetOptionsVisible;
 
-  for(let i=0; i<jsonObj.ui[5].size; i++){
+  for(let i=0; i<jsonObj.ui[7].size; i++){
     if(planetOptionsVisible){
       planetOptions[i].position.x = 0.05;
     } else {
@@ -1192,7 +1171,7 @@ function togglePlanetsOptionsVisibility(){
 
 function togglePlanetsOptionsVisibilityOff(){
   planetOptionsVisible = false;
-  for(let i=0; i<jsonObj.ui[5].size; i++){
+  for(let i=0; i<jsonObj.ui[7].size; i++){
     planetOptions[i].position.x = 1.0;
   }
 }
@@ -1220,6 +1199,16 @@ function menuEvent(intersects){
         resetSolarSystem();
         toggleUIOptionsVisibility();
         togglePlanetsOptionsVisibilityOff();
+        break;
+      case "Return to Origin":
+        returnToOrigin();
+        toggleUIOptionsVisibilityOff();
+        togglePlanetsOptionsVisibilityOff();
+        break;
+      case "Exit":
+        toggleUIOptionsVisibility();
+        togglePlanetsOptionsVisibilityOff();
+        xrSession.end()
         break;
       case "Sun":
         togglePlanetsOptionsVisibilityOff();

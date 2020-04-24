@@ -217,7 +217,7 @@
          ]
       }
    ],
-   "ui_size": 6,
+   "ui_size": 8,
    "ui": [
       {
         "name":"Drawer",
@@ -266,6 +266,26 @@
         {
           "x": 0.13,
           "y": 0.05,
+          "z": 0.50
+        }
+      },
+      {
+        "name": "Return to Origin",
+        "texture": "./model/UI-textures/return-to-origin.png",
+        "position":
+        {
+          "x": 0.13,
+          "y": 0.0,
+          "z": 0.50
+        }
+      },
+      {
+        "name": "Exit",
+        "texture": "./model/UI-textures/exit.png",
+        "position":
+        {
+          "x": 0.13,
+          "y": -0.05,
           "z": 0.50
         }
       },

@@ -480,13 +480,19 @@ function animateScene(){
     updateMoon();
   }
 
-  for (let i=0; i<jsonObj.numPlanets; i++){
+  /*for (let i=0; i<jsonObj.numPlanets; i++){
     checkInsideObject(planets[i]);
   }
   checkInsideObject(sunObj);
-  checkInsideObject(moonObj);
-  console.log("test: ", collisionAlert.visible)
-  if(collisionAlert.visible){collisionAlert.position.z = -.5; console.log("collisionAlert visible");}else{collisionAlert.position.z = 1.0;}
+  checkInsideObject(moonObj);*/
+  //console.log("test: ", collisionAlert.visible)
+  checkInsideObject();
+  if(collisionAlert.visible){
+    collisionAlert.position.z = -.5; 
+    console.log("collisionAlert visible");
+  }else{
+    collisionAlert.position.z = 1.0;
+  }
 }
 
 
@@ -982,7 +988,7 @@ function returnToOrigin(){
 }
 
 
-function checkInsideObject(object){
+/*function checkInsideObject(object){
   let objectBox = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
   let cameraPos = new THREE.Vector3();
 
@@ -992,15 +998,39 @@ function checkInsideObject(object){
   if (objectBox.containsPoint(cameraPos)){
     collisionAlert.visible = true;
     console.log("Inside: ", collisionAlert.visible);
-    //TODO: Notifier will be turned on
-    //collisionAlert.position.z = -.5;
-    
-    
   } else {
-    //TODO: Notifier will be turned off
-    //collisionAlert.position.z = 1.0;
-    collisionAlert.visible = false;
+      collisionAlert.visible = false;
   }
+}*/
+function checkInsideObject(){
+  //With in here check the planets, moon, and sun
+  let inside = false;
+  let objectBox = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3())
+  let cameraPos = new THREE.Vector3();
+  camera.getWorldPosition(cameraPos);
+
+  //planets
+  for (let i=0; i<jsonObj.numPlanets; i++){
+    objectBox.setFromObject(planets[i]);
+    
+
+    if (objectBox.containsPoint(cameraPos)){
+      inside = true;
+    }
+  }
+  //Moon
+  objectBox.setFromObject(moonObj);
+  if (objectBox.containsPoint(cameraPos)){
+    inside = true;
+  }
+
+   //Sun
+   objectBox.setFromObject(sunObj);
+  if (objectBox.containsPoint(cameraPos)){
+    inside = true;
+  }
+
+  collisionAlert.visible = inside;
 }
 
 

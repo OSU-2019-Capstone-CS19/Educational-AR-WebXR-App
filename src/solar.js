@@ -1181,10 +1181,11 @@ function menuEvent(intersects){
     switch(intersects[0].object.name){
       case "Drawer":
         toggleUIOptionsVisibility();
+        togglePlanetsOptionsVisibilityOff();
         break;
       case "Lines":
         toggleOrbitLines();
-        toggleUIOptionsVisibility();
+        toggleUIOptionsVisibilityOff();
         togglePlanetsOptionsVisibilityOff();
         break;
       case "Planets":
@@ -1192,16 +1193,16 @@ function menuEvent(intersects){
         break;
       case "Light":
         toggleLight();
-        toggleUIOptionsVisibility();
+        toggleUIOptionsVisibilityOff();
         togglePlanetsOptionsVisibilityOff();
         break;
       case "Reset":
         resetSolarSystem();
-        toggleUIOptionsVisibility();
+        toggleUIOptionsVisibilityOff();
         togglePlanetsOptionsVisibilityOff();
         break;
       case "Return to Origin":
-        returnToOrigin();
+        toggleReturnToOrigin();
         toggleUIOptionsVisibilityOff();
         togglePlanetsOptionsVisibilityOff();
         break;

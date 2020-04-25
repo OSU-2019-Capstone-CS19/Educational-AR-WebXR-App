@@ -333,7 +333,7 @@ function checkSupportedState() {
   navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
     let statusBox = document.getElementById('statusbox');
     if (supported) {
-
+      
       xrButton.addEventListener('click', toggleAR);
 
     } else {
@@ -391,7 +391,7 @@ Session End
 *********/
 function onSessionEnd(){
   console.log("SESSION ENDED");
-  // window.location.href = "./Quiz.html";
+  window.location.href = "./Quiz.html";
   arActivated = false;
   xrSession = null;
 }
@@ -1318,9 +1318,6 @@ function sunSelect(){
     jsonObj.objTranslation.timeStep = 100;
     jsonObj.objTranslation.inTransit = true;
 
-    //TEST
-  } else {
-    window.location.href = "./Quiz.html"; //todo, make the quiz page swap smooth.
   }
 }
 

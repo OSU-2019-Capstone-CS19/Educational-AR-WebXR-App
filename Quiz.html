@@ -4,36 +4,71 @@
       <title>Solar System</title>
 
       <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		  <meta charset="utf-8">
+      <meta charset="utf-8">
 
-      <link rel="stylesheet" href="Quiz.css" type="text/css">
+      <link rel="stylesheet" href="Quiz.css">
+      <script src="src/solar.js"></script>
 
-	  </head>
-	  <body>
+    </head>
+    <body>
         <h1 id="title">Solar System Quiz</h1>
-        <button id="returnAR">Return to Solar System</button>
-        <form id="quiz" name="quiz">
-          <div id="question1">
-            <p id="questionPrompt1">Which planet is the one we inhabit?</p>
-            <input type="radio" name="choice" name="question1" value="Earth">Earth<br>
-            <input type="radio" name="choice" name="question1" value="Venus">Venus<br>
-            <input type="radio" name="choice" name="question1" value="Saturn">Saturn<br>
-            <input type="radio" name="choice" name="question1" value="Mars">Mars
-          </div>
-          <div id="question2">
-            <p id="questionPrompt2">Which planet is the biggest in our solar system?</p>
-            <input type="radio" name="choice" name="question1" value="Earth">Jupiter<br>
-            <input type="radio" name="choice" name="question1" value="Venus">Neptune<br>
-            <input type="radio" name="choice" name="question1" value="Saturn">Saturn<br>
-            <input type="radio" name="choice" name="question1" value="Mars">Uranus
-          </div>
-          <br><br>
-          <div>
-            <button id="finishQuiz">Submit Quiz</button>
-          </div>
-        </form>
-        <main-app></main-app>
-        <script type="module" src="src/solar.js"></script>
+        <div id="postSubmit">
+          <p id="correctAnswers"></p>
+        </div>
 
+        <button id="returnAR">Blasting Off Again</button>
+        <button id="close">Head Home</button>
+
+        <form id="quiz" name="quiz">
+            <div>
+              <p>Which planet is the one we inhabit?</p>
+              <div id="choice1">
+                <input type="radio" name="question1" value="Earth">Earth<br>
+                <input type="radio" name="question1" value="Venus">Venus
+              </div>
+              <div id="choice2">
+                <input type="radio" name="question1" value="Saturn">Saturn<br>
+                <input type="radio" name="question1" value="Mars">Mars<br><br>
+              </div>
+            </div>
+
+            <div>
+              <p>Which planet is the biggest in our solar system?</p>
+              <div id="choice1">
+                <input type="radio" id="choice" name="question2" value="Jupiter">Jupiter<br>
+                <input type="radio" id="choice" name="question2" value="Neptune">Neptune
+              </div>
+              <div id="choice2">
+                <input type="radio" id="choice" name="question2" value="Saturn">Saturn<br>
+                <input type="radio" id="choice" name="question2" value="Uranus">Uranus<br><br>
+              </div>
+            </div>
+
+            <div>
+              <p>Which planet is the smallest in our solar system?</p>
+              <div id="choice1">
+                <input type="radio" id="choice" name="question3" value="Venus">Venus<br>
+                <input type="radio" id="choice" name="question3" value="Mercury">Mercury
+              </div>
+              <div id="choice2">
+                <input type="radio" id="choice" name="question3" value="Mars">Mars<br>
+                <input type="radio" id="choice" name="question3" value="Earth">Earth<br><br>
+              </div>
+            </div>
+
+            <div>
+              <p>How many moons does Jupiter have?</p>
+              <div id="choice1">
+                <input type="radio" id="choice" name="question4" value="25">25<br>
+                <input type="radio" id="choice" name="question4" value="67">67
+              </div>
+              <div id="choice2">
+                <input type="radio" id="choice" name="question4" value="100">100<br>
+                <input type="radio" id="choice" name="question4" value="None">None<br><br>
+              </div>
+            </div>
+
+            <input id="finishQuiz" type="button" value="Submit">
+        </form>
      </body>
   </html>

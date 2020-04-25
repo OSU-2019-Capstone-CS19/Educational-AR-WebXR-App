@@ -391,6 +391,7 @@ Session End
 *********/
 function onSessionEnd(){
   console.log("SESSION ENDED");
+  // window.location.href = "./Quiz.html";
   arActivated = false;
   xrSession = null;
 }
@@ -544,9 +545,6 @@ function updateMoon(){
     //Moon Orbit
     if (moonPivot && jsonObj.planets[2].moon.moveOrbit){
       moonPivot.rotateY(jsonObj.planets[2].moon.orbit / jsonObj.orbitScale);
-    } else {
-      console.log(moonPivot);
-      console.log(jsonObj.planets[2].moon.moveOrbit);
     }
   }
 }
@@ -1320,6 +1318,9 @@ function sunSelect(){
     jsonObj.objTranslation.timeStep = 100;
     jsonObj.objTranslation.inTransit = true;
 
+    //TEST
+  } else {
+    window.location.href = "./Quiz.html"; //todo, make the quiz page swap smooth.
   }
 }
 

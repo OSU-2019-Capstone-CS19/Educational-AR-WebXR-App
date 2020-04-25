@@ -3,8 +3,7 @@ body {
   margin: 0px;
   width: 100%;
   height: 100%;
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
   color: white;
   text-align: center;
 }
@@ -15,14 +14,14 @@ body {
 
 #quiz {
 	margin-left: auto;
-	margin-right: auto; 
+	margin-right: auto;
 	background-color: #000;
 	color: #ffdd00;
 	border: 2px solid #ffdd00;
 	width: 65%;
 	text-align: center;
 	padding: 10px;
-	
+
 }
 
 #finishQuiz {
@@ -59,7 +58,7 @@ body {
 
 #choice1 {
 	margin-left: 15%;
-	
+
 	float: left;
 }
 

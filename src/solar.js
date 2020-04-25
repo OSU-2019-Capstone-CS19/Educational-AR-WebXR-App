@@ -1618,34 +1618,4 @@ function resetSolarSystem(){
   showSolarSystem = false;
 }
 
-//Checking the quiz submission.
-function quizCheck() {
-  console.log("HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-  let question1 = document.quiz.question1.value;
-  let question2 = document.quiz.question2.value;
-  let question3 = document.quiz.question3.value;
-  let question4 = document.quiz.question4.value;
-  let correct = 0;
-
-  if (question1 == "Earth") {
-    correct++;
-  }
-
-  if (question2 == "Jupiter") {
-    correct++;
-  }
-
-  if (question3 == "Mercury") {
-    correct++;
-  }
-
-  if (question4 == "67") {
-    correct++;
-  }
-
-  document.getElementById("postSubmit").style.visibility = "visible";
-  document.getElementById("correctAnswers").innerHTML = "There were " + correct + " correct answers.";
-  console.log(correct);
-}
-
 init();

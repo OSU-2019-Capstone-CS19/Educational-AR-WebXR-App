@@ -7,7 +7,7 @@
       <meta charset="utf-8">
 
       <link rel="stylesheet" href="Quiz.css">
-      <script type="module" src="src/solar.js"></script>
+      <script src="src/Quiz.js"></script>
 
     </head>
     <body>
@@ -15,8 +15,6 @@
         <div id="postSubmit">
           <p id="correctAnswers"></p>
         </div>
-
-        <button id="xr-button">Blasting Off Again</button>
 
         <form id="quiz" name="quiz">
             <div>
@@ -67,7 +65,7 @@
               </div>
             </div>
 
-            <input id="finishQuiz" type="button" value="Submit" onsubmit="quizCheck()">
+            <input id="finishQuiz" type="button" value="Submit" onClick="quizCheck();">
         </form>
      </body>
   </html>

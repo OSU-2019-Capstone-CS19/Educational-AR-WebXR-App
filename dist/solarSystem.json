@@ -14,8 +14,10 @@
      "rotation":0.2327,
      "rotationAngle":0.127,
      "intensity": 1.0,
+     "preSunSize": 0,
      "moveRotate":true,
      "beingViewed":false,
+     "switchingFrom": false,
      "facts":[
                "The Sun accounts for 99.86% of the mass in the solar system.",
                "The Sun is almost a perfect sphere.",
@@ -47,6 +49,7 @@
          "moveRotate": true,
          "moveOrbit": true,
          "beingViewed":false,
+         "switchingFrom": false,
          "facts":[
                "Mercury is the smallest planet.",
                "A day on the surface of Mercury lasts 176 Earth days.",
@@ -65,6 +68,7 @@
          "moveRotate": true,
          "moveOrbit": true,
          "beingViewed":false,
+         "switchingFrom": false,
          "facts":[
                "Venus is the second brightest natural object in the sky.",
                "Venus rotates in the opposite direction to other planets.",
@@ -83,6 +87,7 @@
          "moveRotate": true,
          "moveOrbit": true,
          "beingViewed":false,
+         "switchingFrom": false,
          "facts":[
                "This is the planet we live on.",
                "Earth is the only planet not named after a god.",
@@ -101,6 +106,7 @@
             "moveRotate": true,
             "moveOrbit": true,
             "beingViewed":false,
+            "switchingFrom": false,
             "facts":[
                "The Moon.",
                "Full of craters.",
@@ -120,6 +126,7 @@
          "moveRotate": true,
          "moveOrbit": true,
          "beingViewed":false,
+         "switchingFrom": false,
          "facts":[
                "Mars is home to the tallest mountain in the solar system.",
                "Mars has the largest dust storms in the solar system.",
@@ -138,6 +145,7 @@
          "moveRotate": true,
          "moveOrbit": true,
          "beingViewed":false,
+         "switchingFrom": false,
          "facts":[
                "Jupiter has 67 moons.",
                "The largest of Jupiter’s moons, Ganymede is the largest moon in the solar system.",
@@ -156,6 +164,7 @@
          "moveRotate": true,
          "moveOrbit": true,
          "beingViewed":false,
+         "switchingFrom": false,
          "facts":[
                "Saturn has oval-shaped storms similar to Jupiter’s.",
                "Saturn has more moons than any other planet.",
@@ -174,6 +183,7 @@
          "moveRotate": true,
          "moveOrbit": true,
          "beingViewed":false,
+         "switchingFrom": false,
          "facts":[
                "Uranus hits the coldest temperatures of any planet.",
                "Uranus is the coldest planet in the solar system.",
@@ -192,6 +202,7 @@
          "moveRotate": true,
          "moveOrbit": true,
          "beingViewed":false,
+         "switchingFrom": false,
          "facts":[
                "Neptune has an average surface temperature of -214°C.",
                "Neptune has a storm similar to the Great Red Spot on Jupiter.",
@@ -210,6 +221,7 @@
          "moveRotate": true,
          "moveOrbit": true,
          "beingViewed":false,
+         "switchingFrom": false,
          "facts":[
                "Pluto was reclassified from a planet to a dwarf planet in 2006.",
                "Pluto is one third water.",

@@ -27,7 +27,7 @@ self.addEventListener('message', (event) => {
 self.__precacheManifest = [
   {
     "url": "index.html",
-    "revision": "6a8b9fe2575a72aecf7c240b6fac73f5"
+    "revision": "2199948df48ec635f6f84bcd54ca70d3"
   },
   {
     "url": "polyfills/custom-elements-es5-adapter.84b300ee818dce8b351c7cc7c100bcf7.js",
@@ -42,16 +42,20 @@ self.__precacheManifest = [
     "revision": "b1db7cb76380495a55ff4f65a9648f0e"
   },
   {
-    "url": "solar-58fd4bb0.js",
-    "revision": "ebf02d3c471b1ec3c80e01a22fdf488b"
+    "url": "solar-61e68ea2.js",
+    "revision": "83c8382188ac7750885c5e8fa00b73b2"
+  },
+  {
+    "url": "src/Quiz.js",
+    "revision": "06a3ffb9b8407c621ce9397fabf25afc"
   },
   {
     "url": "src/solar.js",
-    "revision": "fdf33080b406c7f8c026bd1579d39342"
+    "revision": "8be12fa90be66d5790e98697dcf162b1"
   },
   {
     "url": "style.css",
-    "revision": "9a99a0670ec5d5e58eae935d71db3d8c"
+    "revision": "77f5152b616326d985bdad18f9d87812"
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});

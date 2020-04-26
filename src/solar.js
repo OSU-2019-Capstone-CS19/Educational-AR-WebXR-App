@@ -1174,8 +1174,6 @@ function returnToOrigin(){
         }
       }
 
-
-
       if (jsonObj.showPlanetLines){
         orbitLines[i].visible = true;
       }

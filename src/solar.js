@@ -157,6 +157,59 @@ function loadUI(){
     planetOptions[i].position.z -= jsonObj.ui[5].options[i].position.z;
     camera.add(planetOptions[i]);
   }
+
+  //Setup Textbox
+
+  //TODO: We will create the Textbox obj here.
+  //textbox will need to be hidden at start(visible = false)
+  //Make plane material to start
+
+  /*TODO:
+    What we will have to do is in some other function we will need to be able to get to the material of the textbox. We should be able to update the materal.map to a new canvas that we create to suport the object clicked on.
+    Dispose of the previous material (dont think we need to call ctx.canvas.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); then)
+    example: https://jsfiddle.net/f2Lommf5/4991/
+    Probably make the new canvas and set the new materal map when the random fact for the obj is determined
+    Well make the textbox visible when they are actualy viewing the object.
+
+  */
+  const ctx = document.createElement('canvas').getContext('2d');
+
+  ctx.canvas.style.width = 200 + "px";
+  ctx.canvas.style.height = 200 + "px";
+
+  let scale = window.devicePixelRatio;
+
+  if (!scale){
+    scale = 1;
+  }
+
+  ctx.canvas.height = 200 * scale;
+  ctx.canvas.width = 200 * scale;
+
+  ctx.scale(scale, scale);
+
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0, 0, 200, 150);
+
+  ctx.fillStyle = "#000000";
+  ctx.font = '30px Arial';
+  // ctx.textbaseline = 'middle';
+  ctx.textAlign = "left";
+  ctx.fillText("Hello World", 0, 20);
+
+  const texture = new THREE.CanvasTexture(ctx.canvas);
+  const material = new THREE.MeshBasicMaterial({
+    map: texture,
+  });
+
+  let uiGeometry = new THREE.PlaneGeometry( .061, .05);
+  let textBox = new THREE.Mesh(uiGeometry, material);
+  textBox.position.y -= 0.055;
+  textBox.position.z -= 0.1;
+  camera.add(textBox);
+
+  //ctx.canvas.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
 }
 
 
@@ -1852,7 +1905,6 @@ function resetSolarSystem(){
         }
       }
 
-      //TODO: need to fix/test this
       if (jsonObj.planets[i].moon){
         if (jsonObj.planets[i].moon.beingViewed){
           scene.attach(originPoint);

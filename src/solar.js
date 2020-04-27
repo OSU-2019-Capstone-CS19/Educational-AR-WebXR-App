@@ -19,7 +19,8 @@ let orbitLines = [];
 //UI Elements
 let uiOptions = [];
 let planetOptions = [];
-let anchorAlert, collisionAlert;;
+let uiPlanetIndex;
+let anchorAlert, collisionAlert;
 let sunObj, sunPivot, moonObj, moonPivot, moonOrigin;
 
 let xrButton = document.getElementById('xr-button');
@@ -31,6 +32,7 @@ let reticle;
 let gl = null;
 let planetOptionsVisible = false;
 let uiOptionsVisible = false;
+let atOrigin = true;
 
 let xrHitTestSource = null
 
@@ -115,7 +117,7 @@ function init() {
 Load UI
 **********/
 function loadUI(){
-
+  uiPlanetIndex = jsonObj.planet_index;
   let alertGeometry = new THREE.PlaneGeometry(.15,.15, .05);
   var alertTexture = new THREE.TextureLoader().load("./model/UI-Textures/Anchor.png");
 
@@ -157,15 +159,15 @@ function loadUI(){
   }
 
 
-  for(let i=0; i< jsonObj.ui[7].size ; i++){
+  for(let i=0; i< jsonObj.ui[uiPlanetIndex].size ; i++){
     let uiGeometry = new THREE.PlaneGeometry( .07,.05,.05 );
-    let uiTexture = new THREE.ImageUtils.loadTexture(jsonObj.ui[7].options[i].texture);
+    let uiTexture = new THREE.ImageUtils.loadTexture(jsonObj.ui[uiPlanetIndex].options[i].texture);
     let uiMaterial = new THREE.MeshBasicMaterial(  {map: uiTexture} );
     planetOptions[i]= new THREE.Mesh(uiGeometry, uiMaterial);
-    planetOptions[i].name = jsonObj.ui[7].options[i].name;
+    planetOptions[i].name = jsonObj.ui[uiPlanetIndex].options[i].name;
     planetOptions[i].position.x = 1.0;
-    planetOptions[i].position.y += jsonObj.ui[7].options[i].position.y;
-    planetOptions[i].position.z -= jsonObj.ui[7].options[i].position.z;
+    planetOptions[i].position.y += jsonObj.ui[uiPlanetIndex].options[i].position.y;
+    planetOptions[i].position.z -= jsonObj.ui[uiPlanetIndex].options[i].position.z;
     camera.add(planetOptions[i]);
   }
 }
@@ -843,6 +845,7 @@ function returnToOrigin(){
     let originPos = new THREE.Vector3();
     let planetPos = new THREE.Vector3();
     let moonPos = new THREE.Vector3();
+    atOrigin = true;
 
     originPoint.getWorldPosition(originPos);
 
@@ -1140,10 +1143,10 @@ function toggleUIOptionsVisibility(){
   uiOptionsVisible = !uiOptionsVisible;
 
   for(let i=1; i<jsonObj.ui_size; i++){
-    if(uiOptionsVisible){
+    if(uiOptionsVisible && i!=6){
       uiOptions[i].position.x = jsonObj.ui[i].position.x;
     } else {
-      if (i!=2)
+      if (i!=2 && i!=6)
       uiOptions[i].position.x = 1.0;
     }
   }
@@ -1153,14 +1156,16 @@ function toggleUIOptionsVisibilityOff(){
 
   uiOptionsVisible = false;
   for(let i=1; i<jsonObj.ui_size; i++){
-    uiOptions[i].position.x = 1.0;
+    if(i!=2 && i!=6)
+      uiOptions[i].position.x = 1.0;
+    //uiOptions[i].position.y = jsonObj[i].position.y;
   }
 }
 
 function togglePlanetsOptionsVisibility(){
   planetOptionsVisible = !planetOptionsVisible;
 
-  for(let i=0; i<jsonObj.ui[7].size; i++){
+  for(let i=0; i<jsonObj.ui[uiPlanetIndex].size; i++){
     if(planetOptionsVisible){
       planetOptions[i].position.x = 0.05;
     } else {
@@ -1171,7 +1176,7 @@ function togglePlanetsOptionsVisibility(){
 
 function togglePlanetsOptionsVisibilityOff(){
   planetOptionsVisible = false;
-  for(let i=0; i<jsonObj.ui[7].size; i++){
+  for(let i=0; i<jsonObj.ui[uiPlanetIndex].size; i++){
     planetOptions[i].position.x = 1.0;
   }
 }
@@ -1197,9 +1202,10 @@ function menuEvent(intersects){
         togglePlanetsOptionsVisibilityOff();
         break;
       case "Reset":
-        resetSolarSystem();
         toggleUIOptionsVisibilityOff();
         togglePlanetsOptionsVisibilityOff();
+        resetSolarSystem();
+        
         break;
       case "Return to Origin":
         toggleReturnToOrigin();
@@ -1213,26 +1219,26 @@ function menuEvent(intersects){
         break;
       case "Sun":
         togglePlanetsOptionsVisibilityOff();
-
+        toggleUIOptionsVisibilityOff();
         sunSelect();
 
         break;
       case "Mercury":
         togglePlanetsOptionsVisibilityOff();
-
+        toggleUIOptionsVisibilityOff();
         planetSelect(0);
         break;
 
       case "Venus":
 
         togglePlanetsOptionsVisibilityOff();
-
+        toggleUIOptionsVisibilityOff();
         planetSelect(1);
         break;
 
       case "Earth":
         togglePlanetsOptionsVisibilityOff();
-
+        toggleUIOptionsVisibilityOff();
         planetSelect(2);
 
         if (jsonObj.planets[2].beingViewed){
@@ -1244,43 +1250,43 @@ function menuEvent(intersects){
 
       case "Moon":
         togglePlanetsOptionsVisibilityOff();
-
+        toggleUIOptionsVisibilityOff();
         moonSelect();
         break;
 
       case "Mars":
         togglePlanetsOptionsVisibilityOff();
-
+        toggleUIOptionsVisibilityOff();
         planetSelect(3);
         break;
 
       case "Jupiter":
         togglePlanetsOptionsVisibilityOff();
-
+        toggleUIOptionsVisibilityOff();
         planetSelect(4);
         break;
 
       case "Saturn":
         togglePlanetsOptionsVisibilityOff();
-
+        toggleUIOptionsVisibilityOff();
         planetSelect(5);
         break;
 
       case "Uranus":
         togglePlanetsOptionsVisibilityOff();
-
+        toggleUIOptionsVisibilityOff();
         planetSelect(6);
         break;
 
       case "Neptune":
         togglePlanetsOptionsVisibilityOff();
-
+        toggleUIOptionsVisibilityOff();
         planetSelect(7);
         break;
 
       case "Pluto":
         togglePlanetsOptionsVisibilityOff();
-
+        toggleUIOptionsVisibilityOff();
         planetSelect(8);
         break;
       case "Pause-Play":
@@ -1360,7 +1366,7 @@ function sunSelect(){
 
     jsonObj.objTranslation.timeStep = 100;
     jsonObj.objTranslation.inTransit = true;
-
+    uiOptions[6].position.x = jsonObj.ui[6].position.x;
   }
 }
 
@@ -1370,7 +1376,7 @@ function planetSelect(num){
   //Pick random fact
   let ranNum = Math.floor(Math.random() * 3);
   console.log(jsonObj.planets[num].facts[ranNum]);
-
+  atOrigin = false;
   if (!jsonObj.planets[num].beingViewed){
 
     if (jsonObj.sun.beingViewed){
@@ -1406,6 +1412,7 @@ function planetSelect(num){
 
     jsonObj.objTranslation.timeStep = 100;
     jsonObj.objTranslation.inTransit = true;
+    uiOptions[6].position.x = jsonObj.ui[6].position.x;
 
   } else {
     toggleReturnToOrigin();
@@ -1456,7 +1463,7 @@ function moonSelect(){
 
     jsonObj.objTranslation.timeStep = 100;
     jsonObj.objTranslation.inTransit = true;
-
+    uiOptions[6].position.x = jsonObj.ui[6].position.x;
   //TEST
   } else {
     toggleReturnToOrigin();
@@ -1580,6 +1587,7 @@ function toggleReturnToOrigin(){
 
   jsonObj.objTranslation.inTransit = true;
   jsonObj.originReturn = true;
+  uiOptions[6].position.x = 1.0;
 }
 
 

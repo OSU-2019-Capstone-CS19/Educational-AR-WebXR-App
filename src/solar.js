@@ -192,10 +192,19 @@ function loadUI(){
   ctx.fillRect(0, 0, 200, 150);
 
   ctx.fillStyle = "#000000";
-  ctx.font = '30px Arial';
-  // ctx.textbaseline = 'middle';
+  ctx.font = '18px Bold Arial';
   ctx.textAlign = "left";
-  ctx.fillText("Hello World", 0, 20);
+
+  ctx.fillText("Name", 7, 20);
+
+  ctx.font = '10px Arial'
+  ctx.fillText("Mass: 1.898 × 10^27 kg", 7, 40);
+  ctx.fillText("Radius: 43,441 mi", 7, 60);
+  ctx.fillText("Orbital Period: 12 Years", 7, 80);
+  ctx.fillText("Length of Day: 9h 56m", 7, 100);
+
+  //TODO: Will need to wrap the text
+  ctx.fillText("Fun Fact: Jupiter’s Great Red Spot is an enormous storm that has been raging for over 300 years", 7, 120);
 
   const texture = new THREE.CanvasTexture(ctx.canvas);
   const material = new THREE.MeshBasicMaterial({
@@ -207,8 +216,6 @@ function loadUI(){
   textBox.position.y -= 0.055;
   textBox.position.z -= 0.1;
   camera.add(textBox);
-
-  //ctx.canvas.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
 }
 

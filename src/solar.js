@@ -20,6 +20,7 @@ let orbitLines = [];
 let uiOptions = [];
 let planetOptions = [];
 let anchorAlert;
+let textbox;
 let sunObj, sunPivot, moonObj, moonPivot, moonOrigin;
 
 let xrButton = document.getElementById('xr-button');
@@ -172,47 +173,14 @@ function loadUI(){
     Well make the textbox visible when they are actualy viewing the object.
 
   */
-  const ctx = document.createElement('canvas').getContext('2d');
-
-  ctx.canvas.style.width = 200 + "px";
-  ctx.canvas.style.height = 200 + "px";
-
-  let scale = window.devicePixelRatio;
-
-  if (!scale){
-    scale = 1;
-  }
-
-  ctx.canvas.height = 200 * scale;
-  ctx.canvas.width = 200 * scale;
-
-  ctx.scale(scale, scale);
-
-  ctx.fillStyle = 'white';
-  ctx.fillRect(0, 0, 200, 150);
-
-  ctx.fillStyle = "#000000";
-  ctx.font = '18px Bold Arial';
-  ctx.textAlign = "left";
-
-  ctx.fillText("Name", 7, 20);
-
-  ctx.font = '10px Arial'
-  ctx.fillText("Mass: 1.898 × 10^27 kg", 7, 40);
-  ctx.fillText("Radius: 43,441 mi", 7, 60);
-  ctx.fillText("Orbital Period: 12 Years", 7, 80);
-  ctx.fillText("Length of Day: 9h 56m", 7, 100);
-
-  //TODO: Will need to wrap the text
-  ctx.fillText("Fun Fact: Jupiter’s Great Red Spot is an enormous storm that has been raging for over 300 years", 7, 120);
-
-  const texture = new THREE.CanvasTexture(ctx.canvas);
-  const material = new THREE.MeshBasicMaterial({
+  let ctx = document.createElement('canvas').getContext('2d');
+  let texture = new THREE.CanvasTexture(ctx.canvas);
+  let boxMaterial = new THREE.MeshBasicMaterial({
     map: texture,
   });
 
-  let uiGeometry = new THREE.PlaneGeometry( .061, .05);
-  let textBox = new THREE.Mesh(uiGeometry, material);
+  let boxGeometry = new THREE.PlaneGeometry( .061, .05);
+  textBox = new THREE.Mesh(boxGeometry, boxMaterial);
   textBox.position.y -= 0.055;
   textBox.position.z -= 0.1;
   camera.add(textBox);
@@ -1426,6 +1394,86 @@ function togglePlanetsOptionsVisibilityOff(){
   }
 }
 
+
+function updateCanvasTexture(obj, fact){
+  //Create new canvas
+  let ctx = document.createElement('canvas').getContext('2d');
+
+  ctx.canvas.style.width = 200 + "px";
+  ctx.canvas.style.height = 200 + "px";
+
+  let scale = window.devicePixelRatio;
+
+  if (!scale){
+    scale = 1;
+  }
+
+  ctx.canvas.height = 200 * scale;
+  ctx.canvas.width = 200 * scale;
+
+  ctx.scale(scale, scale);
+
+  //Background
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0, 0, 200, 150);
+
+  ctx.fillStyle = "#000000";
+  ctx.font = '18px Bold Arial';
+  ctx.textAlign = "left";
+
+  //Title
+  ctx.fillText("Name", 7, 20); //obj.name
+  console.log(obj.name);
+
+  //Information
+  ctx.font = '10px Arial';
+  if (obj == sunObj){
+
+    // ctx.fillText("Mass: 1.898 × 10^27 kg", 7, 40); //jsonObj.sun.mass
+    // ctx.fillText("Radius: 43,441 km", 7, 60); //jsonObj.sun.radius + km
+    // ctx.fillText("Surface Temperature: 12 Years", 7, 80); //jsonObj.sun.surfaceTemperature fahrenheit
+    // ctx.fillText("Core Temperature: 9h 56m", 7, 100); //jsonObj.sun.coreTemperature + fahrenheit
+    console.log(jsonObj.sun);
+
+  } else if (obj != moonObj){
+
+    // ctx.fillText("Mass: 1.898 × 10^27 kg", 7, 40); //jsonObj.planets[2].moon.mass
+    // ctx.fillText("Radius: 43,441 mi", 7, 60); //jsonObj.planets[2].moon.radius + km
+    // ctx.fillText("Orbital Period Around Earth: 12 Years", 7, 80); //jsonObj.planets[2].moon.orbitPeriod + days
+    // ctx.fillText("Distance from Earth: ", 7, 100); //jsonObj.planets[2].moon.distanceFromEarth
+    console.log(jsonObj.planets[2].moon);
+
+  } else {
+    for (let i=0; i<jsonObj.numPlanets; i++){
+      if (obj == planets[i]){
+
+        // ctx.fillText("Mass: 1.898 × 10^27 kg", 7, 40); //jsonObj.planets[i].mass
+        // ctx.fillText("Radius: 43,441 mi", 7, 60); //jsonObj.planets[i].radius + km
+        // ctx.fillText("Orbital Period: 12 Years", 7, 80); jsonObj.planets[i].orbitPeriod
+        // ctx.fillText("Distance from Sun: 9h 56m", 7, 100); //jsonObj.planets[i].distanceFromSun + km
+        console.log(jsonObj.planets[i]);
+      }
+    }
+  }
+
+  //TODO: Will need to wrap the text
+  //wrapText()
+  ctx.fillText("Fun Fact: Jupiter’s Great Red Spot is an enormous storm that has been raging for over 300 years", 7, 120); //fact goes here
+  console.log(fact);
+
+  let texture = new THREE.CanvasTexture(ctx.canvas);
+  //TODO update material
+  //textBox.material.map = texture ???
+  // const material = new THREE.MeshBasicMaterial({
+  //   map: texture,
+  // });
+}
+
+function wrapText(){
+
+}
+
+
 function menuEvent(intersects){
   if (intersects[0].object.name){
     switch(intersects[0].object.name){
@@ -1563,6 +1611,9 @@ function sunSelect(){
   let ranNum = Math.floor(Math.random() * 3);
   console.log(jsonObj.sun.facts[ranNum]);
 
+  //Todo: need to test when clicked multiple times
+  updateCanvasTexture(sunObj, jsonObj.sun.facts[ranNum]);
+
   if (!jsonObj.sun.beingViewed){
 
     for (let i=0; i<jsonObj.numPlanets; i++){
@@ -1619,6 +1670,9 @@ function planetSelect(num){
   //Pick random fact
   let ranNum = Math.floor(Math.random() * 3);
   console.log(jsonObj.planets[num].facts[ranNum]);
+
+  //Todo: need to test when clicked multiple times
+  updateCanvasTexture(planets[num], jsonObj.planets[num].facts[ranNum]);
 
   if (!jsonObj.planets[num].beingViewed){
 
@@ -1683,6 +1737,9 @@ function moonSelect(){
   //Pick random fact
   let ranNum = Math.floor(Math.random() * 3);
   console.log(jsonObj.planets[2].moon.facts[ranNum]);
+
+  //Todo: need to test when clicked multiple times
+  updateCanvasTexture(moonObj, jsonObj.planets[2].moon.facts[ranNum]);
 
   if (!jsonObj.planets[2].moon.beingViewed){
 

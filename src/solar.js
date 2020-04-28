@@ -173,6 +173,9 @@ function loadUI(){
   textBox.position.z -= 0.1;
   camera.add(textBox);
 
+  textBox.name = "textBox";
+  textBox.visible = false;
+
 }
 
 
@@ -652,6 +655,9 @@ function sunTranslation(){
       jsonObj.objTranslation.switchObj = false;
     }
 
+    //Pop up the textBox
+    textBox.visible = true;
+
     //Reset Values
     if (!jsonObj.pause){
       for (let i=0; i<jsonObj.numPlanets; i++){
@@ -772,6 +778,9 @@ function planetTranslation(num){
       jsonObj.objTranslation.switchObj = false;
     }
 
+    //Pop up the textBox
+    textBox.visible = true;
+
     scene.attach(planetOrigins[num]);
     planetOrigins[num].add(sunPivot);
     sunPivot.position.set(0, 0, 0);
@@ -891,6 +900,9 @@ function moonTraslation(){
     if (jsonObj.objTranslation.switchObj) {
       jsonObj.objTranslation.switchObj = false;
     }
+
+    //Pop up the textBox
+    textBox.visible = true;
 
     //Earth pivots around the moon
     scene.attach(moonOrigin);
@@ -1251,7 +1263,7 @@ function touchSelectEvent() {
 
       let sceneIntersectsArray = [sunObj, moonObj, planets[0], planets[1], planets[2], planets[3], planets[4], planets[5], planets[6], planets[7], planets[8]];
 
-      let menuIntersectsArray = [uiOptions[0], uiOptions[1], uiOptions[2], uiOptions[3], uiOptions[4], uiOptions[5], planetOptions[0], planetOptions[1], planetOptions[2], planetOptions[3], planetOptions[4], planetOptions[5], planetOptions[6], planetOptions[7], planetOptions[8], planetOptions[9], planetOptions[10]];
+      let menuIntersectsArray = [uiOptions[0], uiOptions[1], uiOptions[2], uiOptions[3], uiOptions[4], uiOptions[5], planetOptions[0], planetOptions[1], planetOptions[2], planetOptions[3], planetOptions[4], planetOptions[5], planetOptions[6], planetOptions[7], planetOptions[8], planetOptions[9], planetOptions[10], textBox];
 
       let intersects = sceneRaycaster.intersectObjects(menuIntersectsArray, true);
 
@@ -1384,6 +1396,7 @@ function togglePlanetsOptionsVisibilityOff(){
 
 
 function updateCanvasTexture(obj, fact){
+
   //Create new canvas
   let ctx = document.createElement('canvas').getContext('2d');
 
@@ -1402,15 +1415,23 @@ function updateCanvasTexture(obj, fact){
   ctx.scale(scale, scale);
 
   //Background
-  ctx.fillStyle = 'white';
+  ctx.fillStyle = '#34d2eb';
   ctx.fillRect(0, 0, 200, 150);
 
   ctx.fillStyle = "#000000";
-  ctx.font = '18px Bold Arial';
-  ctx.textAlign = "left";
 
   //Title
-  ctx.fillText(obj.name, 7, 20);
+  ctx.font = '18px Bold Arial';
+  ctx.textAlign = "center";
+  ctx.fillText(obj.name, 100, 20);
+
+  ctx.strokeStyle = "#000000";
+  ctx.beginPath();
+  ctx.moveTo(0, 25);
+  ctx.lineTo(200, 25);
+  ctx.stroke();
+
+  ctx.textAlign = "left";
 
   //Information
   ctx.font = '10px Arial';
@@ -1447,6 +1468,7 @@ function updateCanvasTexture(obj, fact){
   textBox.material.needsUpdate = true;
 }
 
+
 //Code credit to: https://www.html5canvastutorials.com/tutorials/html5-canvas-wrap-text-tutorial/
 function wrapText(context, text, x, y, maxWidth, lineHeight){
   let words = text.split(' ');
@@ -1468,30 +1490,46 @@ function wrapText(context, text, x, y, maxWidth, lineHeight){
 }
 
 
+function minimizeTextBox(minimize) {
+  if (minimize){
+    textBox.position.y = -0.085;
+  } else {
+    textBox.position.y = -0.055;
+  }
+}
+
+
 function menuEvent(intersects){
   if (intersects[0].object.name){
     switch(intersects[0].object.name){
+
       case "Drawer":
         toggleUIOptionsVisibility();
         break;
+
       case "Lines":
         toggleOrbitLines();
         toggleUIOptionsVisibility();
         togglePlanetsOptionsVisibilityOff();
         break;
+
       case "Planets":
+        minimizeTextBox(true);
         togglePlanetsOptionsVisibility();
         break;
+
       case "Light":
         toggleLight();
         toggleUIOptionsVisibility();
         togglePlanetsOptionsVisibilityOff();
         break;
+
       case "Reset":
         resetSolarSystem();
         toggleUIOptionsVisibility();
         togglePlanetsOptionsVisibilityOff();
         break;
+
       case "Sun":
         togglePlanetsOptionsVisibilityOff();
 
@@ -1564,8 +1602,18 @@ function menuEvent(intersects){
 
         planetSelect(8);
         break;
+
       case "Pause-Play":
         togglePause();
+        break;
+
+      case "textBox":
+        //Check if minimized
+        if (textBox.position.y == -0.085){
+          minimizeTextBox(false);
+        } else {
+          minimizeTextBox(true);
+        }
         break;
 
       default:
@@ -1603,12 +1651,14 @@ function createReticle(){
 function sunSelect(){
   //Pick random fact
   let ranNum = Math.floor(Math.random() * 3);
-  console.log(jsonObj.sun.facts[ranNum]);
 
-  //Todo: need to test when clicked multiple times
   updateCanvasTexture(sunObj, jsonObj.sun.facts[ranNum]);
 
   if (!jsonObj.sun.beingViewed){
+
+    //Hide textBox for transition
+    textBox.visible = false;
+    minimizeTextBox(false);
 
     for (let i=0; i<jsonObj.numPlanets; i++){
 
@@ -1663,12 +1713,14 @@ function planetSelect(num){
 
   //Pick random fact
   let ranNum = Math.floor(Math.random() * 3);
-  console.log(jsonObj.planets[num].facts[ranNum]);
 
-  //Todo: need to test when clicked multiple times
   updateCanvasTexture(planets[num], jsonObj.planets[num].facts[ranNum]);
 
   if (!jsonObj.planets[num].beingViewed){
+
+    //Hide textBox for transition
+    textBox.visible = false;
+    minimizeTextBox(false);
 
     if (jsonObj.sun.beingViewed){
       jsonObj.objTranslation.switchObj = true;
@@ -1720,8 +1772,6 @@ function planetSelect(num){
     jsonObj.objTranslation.timeStep = 100;
     jsonObj.objTranslation.inTransit = true;
 
-  } else {
-    toggleReturnToOrigin();
   }
 }
 
@@ -1730,12 +1780,14 @@ function moonSelect(){
 
   //Pick random fact
   let ranNum = Math.floor(Math.random() * 3);
-  console.log(jsonObj.planets[2].moon.facts[ranNum]);
 
-  //Todo: need to test when clicked multiple times
   updateCanvasTexture(moonObj, jsonObj.planets[2].moon.facts[ranNum]);
 
   if (!jsonObj.planets[2].moon.beingViewed){
+
+    //Hide textBox for transition
+    textBox.visible = false;
+    minimizeTextBox(false);
 
     if (jsonObj.sun.beingViewed){
       jsonObj.objTranslation.switchObj = true;
@@ -1901,6 +1953,8 @@ function toggleReturnToOrigin(){
     }
   }
 
+  //Hide textBox for transition
+  textBox.visible = false;
   jsonObj.objTranslation.inTransit = true;
   jsonObj.originReturn = true;
 }
@@ -1945,6 +1999,9 @@ function togglePause(){
 }
 
 function resetSolarSystem(){
+
+  textBox.visible = false;
+
   if (jsonObj.sun.beingViewed){
     scene.attach(originPoint);
     for (let i=jsonObj.objTranslation.timeStep; i>-1; i--){

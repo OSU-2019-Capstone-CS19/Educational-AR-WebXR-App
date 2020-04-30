@@ -22,6 +22,8 @@ export default {
     copy([
       { files: 'style.css', dest: 'dist' },
       { files: 'src/*.js', dest: 'dist/src/'},
+      { files: 'Quiz.html', dest: 'dist/'},
+      { files: 'Quiz.css', dest: 'dist/'},
       { files: 'model/planets-glb/**/*.glb', dest: 'dist/model/planets-glb/'},
       { files: 'model/Sun.glb', dest: 'dist/model/'},
       { files: 'model/UI-Textures/*.png', dest: 'dist/model/UI-Textures/'},

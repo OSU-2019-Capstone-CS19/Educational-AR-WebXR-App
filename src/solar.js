@@ -1415,7 +1415,7 @@ function updateCanvasTexture(obj, fact){
   ctx.scale(scale, scale);
 
   //Background
-  ctx.fillStyle = '#34d2eb';
+  ctx.fillStyle = '#FF6600';
   ctx.fillRect(0, 0, 200, 150);
 
   ctx.fillStyle = "#000000";
@@ -1633,7 +1633,7 @@ function createReticle(){
   reticle = new THREE.Object3D();
 
   let ringGeometry = new THREE.RingGeometry(0.07, 0.09, 24, 1);
-  let ringMaterial = new THREE.MeshBasicMaterial({ color: 0x34d2eb });
+  let ringMaterial = new THREE.MeshBasicMaterial({ color: 0xFF6600 });
   ringGeometry.applyMatrix(new THREE.Matrix4().makeRotationX(THREE.Math.degToRad(-90)));
   let circle = new THREE.Mesh(ringGeometry, ringMaterial);
   circle.position.y = 0.03;

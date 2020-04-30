@@ -233,7 +233,7 @@
    "ui": [
       {
         "name":"Drawer",
-        "texture": "./model/UI-textures/drawer-icon.png",
+        "texture": "./model/UI-Textures/drawer-icon.png",
         "position":
           {
             "x": 0.13,
@@ -243,7 +243,7 @@
       },
       {
         "name": "Lines",
-        "texture": "./model/UI-textures/Lines.png",
+        "texture": "./model/UI-Textures/Lines.png",
         "position":
         {
           "x": 0.13,
@@ -253,7 +253,7 @@
       },
       {
         "name": "Pause-Play",
-        "texture": "./model/UI-textures/pause-play.png",
+        "texture": "./model/UI-Textures/pause-play.png",
         "position":
           {
             "x": -0.13,
@@ -263,7 +263,7 @@
       },
       {
         "name": "Light",
-        "texture": "./model/UI-textures/Light.png",
+        "texture": "./model/UI-Textures/Light.png",
         "position":
         {
           "x": 0.13,
@@ -273,7 +273,7 @@
       },
       {
         "name": "Reset",
-        "texture": "./model/UI-textures/Reset.png",
+        "texture": "./model/UI-Textures/Reset.png",
         "position":
         {
           "x": 0.13,
@@ -284,7 +284,7 @@
       {
         "name":"Planets",
         "size": 11,
-        "texture": "./model/UI-textures/Planets.png",
+        "texture": "./model/UI-Textures/Planets.png",
         "position":
         {
           "x": 0.13,
@@ -294,7 +294,7 @@
         "options":[
           {
             "name": "Mercury",
-            "texture": "./model/UI-textures/Mercury.png",
+            "texture": "./model/UI-Textures/Mercury.png",
             "position":
             {
               "x": 0.05,
@@ -304,7 +304,7 @@
           },
           {
             "name": "Venus",
-            "texture": "./model/UI-textures/Venus.png",
+            "texture": "./model/UI-Textures/Venus.png",
             "position":
             {
               "x": 0.05,
@@ -314,7 +314,7 @@
           },
           {
             "name": "Earth",
-            "texture": "./model/UI-textures/Earth.png",
+            "texture": "./model/UI-Textures/Earth.png",
             "position":
             {
               "x": 0.05,
@@ -324,7 +324,7 @@
           },
           {
             "name": "Mars",
-            "texture": "./model/UI-textures/Mars.png",
+            "texture": "./model/UI-Textures/Mars.png",
             "position":
             {
               "x": 0.05,
@@ -334,7 +334,7 @@
           },
           {
             "name": "Jupiter",
-            "texture": "./model/UI-textures/Jupiter.png",
+            "texture": "./model/UI-Textures/Jupiter.png",
             "position":
             {
               "x": 0.05,
@@ -344,7 +344,7 @@
           },
           {
             "name": "Saturn",
-            "texture": "./model/UI-textures/Saturn.png",
+            "texture": "./model/UI-Textures/Saturn.png",
             "position":
             {
               "x": 0.05,
@@ -354,7 +354,7 @@
           },
           {
             "name": "Uranus",
-            "texture": "./model/UI-textures/Uranus.png",
+            "texture": "./model/UI-Textures/Uranus.png",
             "position":
             {
               "x": 0.05,
@@ -364,7 +364,7 @@
           },
           {
             "name": "Neptune",
-            "texture": "./model/UI-textures/Neptune.png",
+            "texture": "./model/UI-Textures/Neptune.png",
             "position":
             {
               "x": 0.05,
@@ -374,7 +374,7 @@
           },
           {
             "name": "Pluto",
-            "texture": "./model/UI-textures/Pluto.png",
+            "texture": "./model/UI-Textures/Pluto.png",
             "position":
             {
               "x": 0.05,
@@ -384,7 +384,7 @@
           },
           {
             "name": "Sun",
-            "texture": "./model/UI-textures/Sun.png",
+            "texture": "./model/UI-Textures/Sun.png",
             "position":
             {
               "x": 0.05,
@@ -394,7 +394,7 @@
           },
           {
             "name": "Moon",
-            "texture": "./model/UI-textures/Moon.png",
+            "texture": "./model/UI-Textures/Moon.png",
             "position":
             {
               "x": 0.05,

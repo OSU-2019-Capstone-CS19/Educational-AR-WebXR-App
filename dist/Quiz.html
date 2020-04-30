@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <title>Solar System</title>
+
+      <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+      <meta charset="utf-8">
+
+      <link rel="stylesheet" href="Quiz.css">
+      <script src="src/Quiz.js"></script>
+
+    </head>
+    <body>
+        <h1 id="title">Solar System Quiz</h1>
+        <div id="postSubmit">
+          <p id="correctAnswers"></p>
+        </div>
+
+        <form id="quiz" name="quiz">
+            <div>
+              <p id="question1"></p>
+              <div id="choice1">
+                <input type="radio" id="option1" name="question1" value="">
+                  <label for="option1" id="option1Text">
+                  </label><br>
+                <input type="radio" id="option2" name="question1" value="">
+                  <label for="option2" id="option2Text">
+                  </label>
+              </div>
+              <div id="choice2">
+                <input type="radio" id="option3" name="question1" value="">
+                  <label for="option3" id="option3Text">
+                  </label><br>
+                <input type="radio" id="option4" name="question1" value="">
+                  <label for="option4" id="option4Text">
+                  </label><br><br>
+              </div>
+            </div>
+
+            <div>
+              <p id="question2"></p>
+              <div id="choice1">
+                <input type="radio" id="option5" name="question2" value="">
+                  <label for="option5" id="option5Text">
+                  </label><br>
+                <input type="radio" id="option6" name="question2" value="">
+                  <label for="option6" id="option6Text">
+                  </label>
+              </div>
+              <div id="choice2">
+                <input type="radio" id="option7" name="question2" value="">
+                  <label for="option7" id="option7Text">
+                  </label><br>
+                <input type="radio" id="option8" name="question2" value="">
+                  <label for="option8" id="option8Text">
+                  </label><br><br>
+              </div>
+            </div>
+
+            <div>
+              <p id="question3"></p>
+              <div id="choice1">
+                <input type="radio" id="option9" name="question3" value="">
+                  <label for="option9" id="option9Text">
+                  </label><br>
+                <input type="radio" id="option10" name="question3" value="">
+                  <label for="option10" id="option10Text">
+                  </label>
+              </div>
+              <div id="choice2">
+                <input type="radio" id="option11" name="question3" value="">
+                  <label for="option11" id="option11Text">
+                  </label><br>
+                <input type="radio" id="option12" name="question3" value="">
+                  <label for="option12" id="option12Text">
+                  </label><br><br>
+              </div>
+            </div>
+
+            <div>
+              <p id="question4"></p>
+              <div id="choice1">
+                <input type="radio" id="option13" name="question4" value="">
+                  <label for="option13" id="option13Text">
+                  </label><br>
+                <input type="radio" id="option14" name="question4" value="">
+                  <label for="option14" id="option14Text">
+                  </label>
+              </div>
+              <div id="choice2">
+                <input type="radio" id="option15" name="question4" value="">
+                  <label for="option15" id="option15Text">
+                  </label><br>
+                <input type="radio" id="option16" name="question4" value="">
+                  <label for="option16" id="option16Text">
+                  </label><br><br>
+              </div>
+            </div>
+
+            <input id="finishQuiz" type="button" value="Submit" onClick="quizCheck();">
+        </form>
+     </body>
+  </html>

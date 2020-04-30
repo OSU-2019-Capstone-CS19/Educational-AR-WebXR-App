@@ -4,6 +4,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 //Service Worker
 if ("serviceWorker" in navigator) {
+  // const wb = new Workbox('service-worker.js');
   const wb = new Workbox('service-worker.js');
   wb.register();
 }

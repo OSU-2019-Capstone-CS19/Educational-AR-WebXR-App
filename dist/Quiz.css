@@ -1,0 +1,57 @@
+body {
+  background-image: url("./model/backgrounds/StarryBackground.png");
+  background-size: inherit;
+  margin: 0px;
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+  color: white;
+  text-align: center;
+}
+#title {
+	color: #dddd00;
+	font-size: 50px;
+}
+
+#quiz {
+	margin-left: auto;
+	margin-right: auto;
+	background-color: #000;
+	color: #ffdd00;
+	border: 2px solid #ffdd00;
+	width: 65%;
+	text-align: center;
+	padding: 10px;
+
+}
+
+#finishQuiz {
+	background-color: #00ccff;
+	border-color: #00aaff;
+	margin-left: auto;
+	margin-right: auto;
+	font-size: 15px;
+	font-weight: bold;
+	border-radius: 5%;
+	border-width: 5px;
+	width: 100px;
+	height: 50px;
+}
+
+#choice1 {
+	margin-left: 15%;
+	float: left;
+}
+
+#choice2 {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#postSubmit {
+	
+	position: relative;
+	font-weight: bold;
+	color: #00ccff;
+	font-size: 20px;
+}

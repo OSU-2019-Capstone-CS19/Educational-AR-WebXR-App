@@ -1854,9 +1854,6 @@ function moonSelect(){
     jsonObj.objTranslation.timeStep = 100;
     jsonObj.objTranslation.inTransit = true;
 
-  //TEST
-  } else {
-    toggleReturnToOrigin();
   }
 }
 
@@ -1953,7 +1950,7 @@ function toggleOrbitLines(){
   }
 }
 
-
+//TODO: nessisary?
 function toggleReturnToOrigin(){
   //Reset Hierarchy
   scene.attach(originPoint);

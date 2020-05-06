@@ -13,11 +13,11 @@ const questions = [{
 										options: ['Venus', 'Mercury', 'Mars', 'Earth'],
 										answer: "Mercury"
 									},
-									{
-										question: "How long has the sun existed for?",
-										options: ['3.4 Million Years', '1 Billion Years', '4.6 Billion Years', '10.6 Billion Years'],
-										answer: "4.6 Billion Years"
-									},
+									// {
+									// 	question: "How long has the sun existed for?",
+									// 	options: ['3.4 Million Years', '1 Billion Years', '4.6 Billion Years', '10.6 Billion Years'],
+									// 	answer: "4.6 Billion Years"
+									// },
 									{
 										question: "How many Earth days does it take Murcury to rotate the Sun? (1 Year)",
 										options: ['365 days', '88 days', '300 days', '225 days'],
@@ -38,21 +38,21 @@ const questions = [{
 										options: ['Lava', 'Salt', 'Rock', 'Water'],
 										answer: "Water"
 									},
-									{
-										question: "Who was the first person to set foot on the moon?",
-										options: ['Ryan Reynolds', 'Neil Armstrong', 'Katherine Johnson', 'Albert Eistein'],
-										answer: "Neil Armstrong"
-									},
+									// {
+									// 	question: "Who was the first person to set foot on the moon?",
+									// 	options: ['Ryan Reynolds', 'Neil Armstrong', 'Katherine Johnson', 'Albert Eistein'],
+									// 	answer: "Neil Armstrong"
+									// },
 									{
 										question: "Which planet does Mount Olympus, the tallest moutain in the solar system, reside?.",
 										options: ['Pluto', 'Mercury', 'Mars', 'Earth'],
 										answer: "Mars"
 									},
-									{
-										question: "What is the giant storm on Jupiter called?",
-										options: ['The Hot Spot', 'The Great Storm', 'The Red Dot', 'The Great Red Spot'],
-										answer: "The Great Red Spot"
-									},
+									// {
+									// 	question: "What is the giant storm on Jupiter called?",
+									// 	options: ['The Hot Spot', 'The Great Storm', 'The Red Dot', 'The Great Red Spot'],
+									// 	answer: "The Great Red Spot"
+									// },
 									{
 										question: "Which planet has the most moons?",
 										options: ['Neptune', 'Saturn', 'Mars', 'Jupiter'],

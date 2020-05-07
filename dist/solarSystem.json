@@ -299,7 +299,7 @@
       },
       {
         "name": "Pause",
-        "texture": "./model/UI-textures/pause.png",
+        "texture": "./model/UI-Textures/pause.png",
         "position":
           {
             "x": -0.13,
@@ -329,18 +329,18 @@
       },
       {
         "name": "Exit",
-        "texture": "./model/UI-textures/exit.png",
+        "texture": "./model/UI-Textures/exit.png",
         "position":
         {
           "x": 0.13,
           "y": 0.0,
           "z": 0.50
         }
-        
+
       },
       {
         "name": "Return to Origin",
-        "texture": "./model/UI-textures/return-to-origin.png",
+        "texture": "./model/UI-Textures/return-to-origin.png",
         "position":
         {
           "x": 0.13,
@@ -350,7 +350,7 @@
       },
       {
         "name": "Play",
-        "texture": "./model/UI-textures/play.png",
+        "texture": "./model/UI-Textures/play.png",
         "position":
           {
             "x": -0.13,

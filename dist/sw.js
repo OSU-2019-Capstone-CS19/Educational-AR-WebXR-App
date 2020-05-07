@@ -27,7 +27,7 @@ self.addEventListener('message', (event) => {
 self.__precacheManifest = [
   {
     "url": "index.html",
-    "revision": "27e6c4bc0a283d855d3b6ceb0ea38513"
+    "revision": "d09fed36cba216e57f200bddf17a80c9"
   },
   {
     "url": "model/planets-glb/neptune/Neptune.glb",
@@ -47,7 +47,11 @@ self.__precacheManifest = [
   },
   {
     "url": "model/UI-Textures/Cam-Light.png",
-    "revision": "ac374b0d18c25792268cd3ae5b232e9d"
+    "revision": "7fba839e0b50e51d0e561a5ac1c0ca0b"
+  },
+  {
+    "url": "model/UI-Textures/Collision_Alert.png",
+    "revision": "25420205419811469efe93208386b734"
   },
   {
     "url": "model/UI-Textures/drawer-icon.png",
@@ -55,67 +59,83 @@ self.__precacheManifest = [
   },
   {
     "url": "model/UI-Textures/Earth.png",
-    "revision": "c040c7564275db44fbd04c0652594aa1"
+    "revision": "9a298602fb941bf38aa8618da5f07e4f"
+  },
+  {
+    "url": "model/UI-Textures/exit.png",
+    "revision": "d07ca2aa78c4e208a0dda42041b0c6f2"
   },
   {
     "url": "model/UI-Textures/Jupiter.png",
-    "revision": "1292c4c4b72e01f93abaf8ce14685586"
+    "revision": "ff83fc06033148aa0d362698505dd0fa"
   },
   {
     "url": "model/UI-Textures/Light.png",
-    "revision": "1406d142d37652e10406f1b95c0ad2d8"
+    "revision": "e3c1c87573a8db3553481c0fa4f5e555"
   },
   {
     "url": "model/UI-Textures/Lines.png",
-    "revision": "727adaabd7f1979c1c05dc3526b46d68"
+    "revision": "9c09c34c90cd52f5d0dfac959bda7895"
   },
   {
     "url": "model/UI-Textures/Mars.png",
-    "revision": "d3832b283eb77673a3831bdd1bb5c6ea"
+    "revision": "c88cc845ec571b88f7cfcae7b52126db"
   },
   {
     "url": "model/UI-Textures/Mercury.png",
-    "revision": "27ab3335ad063082d278b350dace425f"
+    "revision": "a88d9189b78dd5ceb5dab55a8d91bef4"
   },
   {
     "url": "model/UI-Textures/Moon.png",
-    "revision": "9b575a9e6551901c531a0d9e650e838f"
+    "revision": "266a7623094381aaa23278dd8bf14834"
   },
   {
     "url": "model/UI-Textures/Neptune.png",
-    "revision": "06af665e5d658c8d6e664d0d3bbd7d27"
+    "revision": "fc7697d2e11705b8a79c5685d4c4eac4"
   },
   {
     "url": "model/UI-Textures/pause-play.png",
     "revision": "001f6c821eee711e2b4b8315272d8977"
   },
   {
+    "url": "model/UI-Textures/pause.png",
+    "revision": "d4204595235cfea2c803d31fb043072b"
+  },
+  {
     "url": "model/UI-Textures/Planets.png",
-    "revision": "09cc4362dfe53fb8138ca8bba18a57bb"
+    "revision": "b7046470583fce4828c313a471667582"
+  },
+  {
+    "url": "model/UI-Textures/play.png",
+    "revision": "473a621419e3fb5e49a078374c7ed7c5"
   },
   {
     "url": "model/UI-Textures/Pluto.png",
-    "revision": "641031985f3cb734855c6cc2ae372d16"
+    "revision": "a8d3641529e6bb7f80eb09e8b9ebf538"
   },
   {
     "url": "model/UI-Textures/Reset.png",
-    "revision": "591b37c0af23662ef6fc3a1ca45b66a3"
+    "revision": "12d060fbbebef0271e31db13ac5d5130"
+  },
+  {
+    "url": "model/UI-Textures/return-to-origin.png",
+    "revision": "5a4e85e68cb68b42fa6704c961fb7e84"
   },
   {
     "url": "model/UI-Textures/Saturn.png",
-    "revision": "c84134fd049487ec76ba137428ec63d8"
+    "revision": "0f32c91c16550e9b5f38210ccbc9b541"
   },
   {
     "url": "model/UI-Textures/Sun.png",
-    "revision": "3212ec6e215f0d4b3fdf1bed42c13d43"
+    "revision": "3d7ba44a0077b5e0081a6d1e0649f784"
   },
   {
     "url": "model/UI-Textures/Uranus.png",
-    "revision": "87bf8a945d827e342e90d63ba1be4100"
+    "revision": "fbe8b5a34ac411abcc59e7f557a9d8a4"
   },
   {
     "url": "model/UI-Textures/Venus.png",
-    "revision": "629707f26f0c99e8f95940a6057dbe04"
+    "revision": "f902d82fd0203530e1f1892d3ea7e749"
   },
   {
     "url": "polyfills/custom-elements-es5-adapter.84b300ee818dce8b351c7cc7c100bcf7.js",
@@ -131,27 +151,27 @@ self.__precacheManifest = [
   },
   {
     "url": "Quiz.css",
-    "revision": "2b5da929cc5f4529aa0ed864b91df82f"
+    "revision": "84675c90b7ac1952b6f44ca56da9446b"
   },
   {
     "url": "Quiz.html",
-    "revision": "d476314d320027126a7a84909b740f48"
+    "revision": "53d05c8edf33ca409ae26e5c1d4e179f"
   },
   {
-    "url": "solar-6b205d73.js",
-    "revision": "5e56e45880da1139d3343a119c6f1759"
+    "url": "solar-f3918bcb.js",
+    "revision": "1ca3f3010318b6398cd5e0eb8bac8347"
   },
   {
     "url": "solarSystem.json",
-    "revision": "c55a3ab4b4452794fe5672431c2068dc"
+    "revision": "cf55eb4611d7236718c5c1cb5c218d35"
   },
   {
     "url": "src/Quiz.js",
-    "revision": "06a3ffb9b8407c621ce9397fabf25afc"
+    "revision": "4f58180f3c2271f711493f922b0634f8"
   },
   {
     "url": "src/solar.js",
-    "revision": "00fea63606943dc18a7e144a28a1761d"
+    "revision": "91493b8c0ea6946d12d14fcd7627ad93"
   },
   {
     "url": "style.css",

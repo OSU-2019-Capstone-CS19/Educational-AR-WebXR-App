@@ -12,7 +12,7 @@
      "file": "./model/Sun.glb",
      "mass": "1.9884×10^30 kg",
      "radius":695510,
-     "rotation":0.2327,
+     "rotation":-0.2327,
      "rotationAngle":0.127,
      "surfaceTemperature": 10000,
      "coreTemperature": 27000000,
@@ -24,7 +24,9 @@
      "facts":[
                "The Sun accounts for 99.86% of the mass in the solar system.",
                "The Sun has existed for 4.6 billion years.",
-               "The Sun rotates in the opposite direction to Earth."
+               "The Sun rotates in the opposite direction to Earth.",
+               "The Sun is classified as a yellow dwarf star.",
+               "Over a million Earth's could fit inside the Sun."
          ],
      "standard":"Welcome to the Solar System."
    },
@@ -58,7 +60,9 @@
          "facts":[
                "Mercury is the smallest planet.",
                "A day on the surface of Mercury lasts 176 Earth days.",
-               "Mercury orbits so quickly around the Sun that early civilizations believed it was actually two different stars."
+               "A year on Mercury is only 88 Earth days",
+               "Mercury orbits so quickly around the Sun that early civilizations believed it was actually two different stars.",
+               "The surface temperature on Mercury ranges from 800.6°F during the day to -279.4°F at night."
          ]
       },
       {
@@ -70,7 +74,7 @@
          "orbit":0.0279,
          "orbitInclination":0.059,
          "orbitPeriod": "225 days",
-         "rotation":0.0259,
+         "rotation":-0.0259,
          "rotationAngle":3.089,
          "moveRotate": true,
          "moveOrbit": true,
@@ -79,7 +83,9 @@
          "facts":[
                "Venus is the second brightest natural object in the sky.",
                "Venus rotates in the opposite direction to other planets.",
-               "Venus orbits the sun in an ellipse, but its orbit is the closest to being a circle out of all the planets in the Solar System."
+               "One day on Venus is longer then a year on Earth.",
+               "Venus is the hottest planet in the solar system",
+               "Venus has a surface temperature of 863.6°F"
          ]
       },
       {
@@ -99,8 +105,10 @@
          "switchingFrom": false,
          "facts":[
                "This is the planet we live on.",
-               "Earth is the only planet not named after a god.",
-               "The Earth is the densest planet in the Solar System."
+               "Earth was once believed to be the center of the universe",
+               "The Earth is the densest planet in the Solar System.",
+               "70% of Earth's surface is covered in water.",
+               "Earth has an ozone layer which protects it from harmful solar radiation"
          ],
          "moon":{
             "name":"Moon",
@@ -119,9 +127,11 @@
             "beingViewed":false,
             "switchingFrom": false,
             "facts":[
-               "The Moon.",
-               "Full of craters.",
-               "Rotatoes Earth."
+               "The Moon orbits the Earth every 27.3 days.",
+               "The Moon's surface is full of craters.",
+               "The Moon only has about one fith (17%) the gravity as Earth does.",
+               "USA's NASA Apollo 11 mission in 1969 was the first manned Moon landing",
+               "The first person to set foot on the Moon was Neil Armstrong"
             ]
          }
       },
@@ -141,9 +151,11 @@
          "beingViewed":false,
          "switchingFrom": false,
          "facts":[
-               "Mars is home to the tallest mountain in the solar system.",
+               "Mount Olympus is the tallest mountain on any of the planets in the solar system (21km high).",
                "Mars has the largest dust storms in the solar system.",
-               "Mars does not have a magnetic field."
+               "Mars does not have a magnetic field.",
+               "Mars has 2 moons, Phobos and Deimos.",
+               "Mars has seasons like Earth, but they last twice as long."
          ]
       },
       {
@@ -164,7 +176,9 @@
          "facts":[
                "Jupiter has 67 moons.",
                "The largest of Jupiter’s moons, Ganymede is the largest moon in the solar system.",
-               "Jupiter’s Great Red Spot is an enormous storm that has been raging for over 300 years."
+               "Jupiter’s Great Red Spot is an enormous storm that has been raging for over 300 years.",
+               "Jupiter's Great Red Spot is an enormous storm that could fit 3 Earth's",
+               "One day on Jupiter lasts only 9 hours and 55 minutes."
          ]
       },
       {
@@ -183,9 +197,11 @@
          "beingViewed":false,
          "switchingFrom": false,
          "facts":[
-               "Saturn has oval-shaped storms similar to Jupiter’s.",
-               "Saturn has more moons than any other planet.",
-               "Saturn is known as a gas giant, but scientists believe it has a solid rocky core."
+               "Saturn has oval-shaped storms similar to storms on Jupiter.",
+               "Saturn has 150 moons.",
+               "Saturn is known as a gas giant, but scientists believe it has a solid rocky core.",
+               "Saturn has the fastest winds in the solar system. Speeds up to 1800 km/hr.",
+               "Saturn's rings are made of ice, dust and rocks."
          ]
       },
       {
@@ -204,9 +220,11 @@
          "beingViewed":false,
          "switchingFrom": false,
          "facts":[
-               "Uranus hits the coldest temperatures of any planet.",
-               "Uranus is the coldest planet in the solar system.",
-               "The mass of Uranus is about 14.5 times the mass of Earth."
+               "Uranus is the coldest planet in the solar system. Temperatures drop to -371.2°F.",
+               "Uranus has 27 moons.",
+               "Uranus has a 98 degree tilt.",
+               "Uranus has 13 rings.",
+               "The surface on Uranus is made of ice and gas."
          ]
       },
       {
@@ -225,9 +243,11 @@
          "beingViewed":false,
          "switchingFrom": false,
          "facts":[
-               "Neptune has an average surface temperature of -214°C.",
+               "One day on Neptune is about 16 hours.",
+               "Neptune has 14 moons.",
                "Neptune has a storm similar to the Great Red Spot on Jupiter.",
-               "Neptune is the smallest gas giant."
+               "Neptune is the smallest gas giant.",
+               "Neptune contains very faint rings."
          ]
       },
       {
@@ -247,12 +267,15 @@
          "switchingFrom": false,
          "facts":[
                "Pluto was reclassified from a planet to a dwarf planet in 2006.",
-               "Pluto is one third water.",
-               "Pluto sometimes has an atmosphere."
+               "Pluto is smaller then our moon.",
+               "Pluto has 5 moons.",
+               "Pluto contains 3 times as much water as Earth.",
+               "Pluto has an eccentric and inclined orbit."
          ]
       }
    ],
-   "ui_size": 6,
+   "ui_size": 9,
+   "planet_index": 8,
    "ui": [
       {
         "name":"Drawer",
@@ -275,8 +298,8 @@
         }
       },
       {
-        "name": "Pause-Play",
-        "texture": "./model/UI-Textures/pause-play.png",
+        "name": "Pause",
+        "texture": "./model/UI-textures/pause.png",
         "position":
           {
             "x": -0.13,
@@ -303,6 +326,37 @@
           "y": 0.05,
           "z": 0.50
         }
+      },
+      {
+        "name": "Exit",
+        "texture": "./model/UI-textures/exit.png",
+        "position":
+        {
+          "x": 0.13,
+          "y": 0.0,
+          "z": 0.50
+        }
+        
+      },
+      {
+        "name": "Return to Origin",
+        "texture": "./model/UI-textures/return-to-origin.png",
+        "position":
+        {
+          "x": 0.13,
+          "y": -0.05,
+          "z": 0.50
+        }
+      },
+      {
+        "name": "Play",
+        "texture": "./model/UI-textures/play.png",
+        "position":
+          {
+            "x": -0.13,
+            "y": 0.25,
+            "z": 0.5
+          }
       },
       {
         "name":"Planets",

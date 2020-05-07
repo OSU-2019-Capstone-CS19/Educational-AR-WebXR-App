@@ -14,8 +14,6 @@ body {
 }
 
 #homebutton {
-	position: relative;
-	top: -10px;
 	background-color: #ffaa00;
 	border-color: #ff8800;
 	margin-left: auto;
@@ -37,7 +35,6 @@ body {
 	width: 65%;
 	text-align: center;
 	padding: 10px;
-
 }
 
 #finishQuiz {

@@ -181,3 +181,7 @@ function quizCheck() {
 	document.getElementById("postSubmit").style.visibility = "visible";
 	document.getElementById("correctAnswers").innerHTML = "There were " + correct + " correct answers.";
 }
+
+function returnHome(){
+	window.location.href = "./index.html";
+}

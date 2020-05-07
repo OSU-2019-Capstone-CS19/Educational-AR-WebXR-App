@@ -396,7 +396,7 @@ async function activateAR(){
 
     xrSession.addEventListener('select', touchSelectEvent);
     xrSession.addEventListener('end', onSessionEnd);
-    
+
     let gl = renderer.getContext();
     await gl.makeXRCompatible();
     let layer = new XRWebGLLayer(xrSession, gl);
@@ -496,7 +496,7 @@ function renderXR(timestamp, xrFrame){
       reticle.visible = false;
       originPoint.visible = true;
     }
-    
+
 
     animateScene();
   }
@@ -526,8 +526,8 @@ function animateScene(){
   }
   checkInsideObject();
   if(collisionAlert.visible){
-    collisionAlert.position.z = -.5; 
-    console.log("collisionAlert visible");
+    collisionAlert.position.z = -.5;
+
   }else{
     collisionAlert.position.z = 1.0;
   }
@@ -1265,7 +1265,7 @@ function checkInsideObject(){
   //planets
   for (let i=0; i<jsonObj.numPlanets; i++){
     objectBox.setFromObject(planets[i]);
-    
+
 
     if (objectBox.containsPoint(cameraPos)){
       inside = true;
@@ -1602,7 +1602,7 @@ function menuEvent(intersects){
         toggleUIOptionsVisibilityOff();
         togglePlanetsOptionsVisibilityOff();
         resetSolarSystem();
-        
+
         break;
       case "Return to Origin":
         toggleReturnToOrigin();
@@ -1687,11 +1687,11 @@ function menuEvent(intersects){
         toggleUIOptionsVisibilityOff();
         planetSelect(8);
         break;
-        
+
       case "Pause":
         togglePause();
         break;
-      
+
       case "Play":
         togglePause();
         break;
@@ -1803,7 +1803,7 @@ function planetSelect(num){
 
   //Pick random fact
   let ranNum = Math.floor(Math.random() * 5);
-  
+
   atOrigin = false;
 
   updateCanvasTexture(planets[num], jsonObj.planets[num].facts[ranNum]);

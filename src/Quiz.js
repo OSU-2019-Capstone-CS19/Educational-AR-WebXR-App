@@ -44,7 +44,7 @@ const questions = [{
 									// 	answer: "Neil Armstrong"
 									// },
 									{
-										question: "Which planet does Mount Olympus, the tallest moutain in the solar system, reside?.",
+										question: "Which planet does Mount Olympus, the tallest moutain in the solar system, reside?",
 										options: ['Pluto', 'Mercury', 'Mars', 'Earth'],
 										answer: "Mars"
 									},

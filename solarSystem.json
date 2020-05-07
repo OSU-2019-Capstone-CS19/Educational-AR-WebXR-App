@@ -286,8 +286,8 @@
         "texture": "./model/UI-textures/return-to-origin.png",
         "position":
         {
-          "x": -0.13,
-          "y": -0.25,
+          "x": 0.13,
+          "y": -0.05,
           "z": 0.50
         }
       },

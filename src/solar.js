@@ -1150,13 +1150,15 @@ function toggleUIOptionsVisibility(){
       uiOptions[i].position.x = 1.0;
     }
   }
+
+  uiOptions[6].position.x = (uiOptionsVisible && !atOrigin) ? jsonObj.ui[6].position.x : 1.0;
 }
 
 function toggleUIOptionsVisibilityOff(){
 
   uiOptionsVisible = false;
   for(let i=1; i<jsonObj.ui_size; i++){
-    if(i!=2 && i!=6)
+    if(i!=2 /*&& i!=6*/)
       uiOptions[i].position.x = 1.0;
     //uiOptions[i].position.y = jsonObj[i].position.y;
   }
@@ -1179,6 +1181,19 @@ function togglePlanetsOptionsVisibilityOff(){
   for(let i=0; i<jsonObj.ui[uiPlanetIndex].size; i++){
     planetOptions[i].position.x = 1.0;
   }
+}
+
+function checkPlanetBeingViewed(){
+  let viewingPlanet = false;
+
+  viewingPlanet = (jsonObj.sun.beingViewed || jsonObj.planets[2].moon.beingViewed)
+
+  for(i=0; i<size(planets); i++){
+    if(jsonObj.planets[i].beingViewed)
+      viewingPlanet = true;
+  }
+
+  return viewingPlanet;
 }
 
 function menuEvent(intersects){
@@ -1366,7 +1381,8 @@ function sunSelect(){
 
     jsonObj.objTranslation.timeStep = 100;
     jsonObj.objTranslation.inTransit = true;
-    uiOptions[6].position.x = jsonObj.ui[6].position.x;
+    //uiOptions[6].position.x = jsonObj.ui[6].position.x;
+    atOrigin = false
   }
 }
 
@@ -1412,7 +1428,8 @@ function planetSelect(num){
 
     jsonObj.objTranslation.timeStep = 100;
     jsonObj.objTranslation.inTransit = true;
-    uiOptions[6].position.x = jsonObj.ui[6].position.x;
+    //uiOptions[6].position.x = jsonObj.ui[6].position.x;
+    atOrigin = false;
 
   } else {
     toggleReturnToOrigin();
@@ -1463,7 +1480,8 @@ function moonSelect(){
 
     jsonObj.objTranslation.timeStep = 100;
     jsonObj.objTranslation.inTransit = true;
-    uiOptions[6].position.x = jsonObj.ui[6].position.x;
+    atOrigin = false;
+    //uiOptions[6].position.x = jsonObj.ui[6].position.x;
   //TEST
   } else {
     toggleReturnToOrigin();
@@ -1587,7 +1605,8 @@ function toggleReturnToOrigin(){
 
   jsonObj.objTranslation.inTransit = true;
   jsonObj.originReturn = true;
-  uiOptions[6].position.x = 1.0;
+  atOrigin = true;
+  //uiOptions[6].position.x = 1.0;
 }
 
 

@@ -10,15 +10,20 @@
    "sun": {
      "name": "Sun",
      "file": "./model/Sun.glb",
+     "mass": "1.9884×10^30 kg",
      "radius":695510,
      "rotation":0.2327,
      "rotationAngle":0.127,
+     "surfaceTemperature": 10000,
+     "coreTemperature": 27000000,
      "intensity": 1.0,
+     "preSunSize": 0,
      "moveRotate":true,
      "beingViewed":false,
+     "switchingFrom": false,
      "facts":[
                "The Sun accounts for 99.86% of the mass in the solar system.",
-               "The Sun is almost a perfect sphere.",
+               "The Sun has existed for 4.6 billion years.",
                "The Sun rotates in the opposite direction to Earth."
          ],
      "standard":"Welcome to the Solar System."
@@ -38,15 +43,18 @@
       {
          "name":"Mercury",
          "file":"./model/planets-glb/mercury/Mercury.glb",
+         "mass": "3.285 × 10^23 kg",
          "radius":2439.7,
          "distanceFromSun":69633000,
          "orbit":0.0714,
          "orbitInclination":0.1223476,
+         "orbitPeriod": "88 days",
          "rotation":0.1065,
          "rotationAngle":0.03,
          "moveRotate": true,
          "moveOrbit": true,
          "beingViewed":false,
+         "switchingFrom": false,
          "facts":[
                "Mercury is the smallest planet.",
                "A day on the surface of Mercury lasts 176 Earth days.",
@@ -55,16 +63,19 @@
       },
       {
          "name":"Venus",
+         "mass": "4.867 × 10^24 kg",
          "file":"./model/planets-glb/venus/Venus.glb",
          "radius":6051.8,
          "distanceFromSun":108730000,
          "orbit":0.0279,
          "orbitInclination":0.059,
+         "orbitPeriod": "225 days",
          "rotation":0.0259,
          "rotationAngle":3.089,
          "moveRotate": true,
          "moveOrbit": true,
          "beingViewed":false,
+         "switchingFrom": false,
          "facts":[
                "Venus is the second brightest natural object in the sky.",
                "Venus rotates in the opposite direction to other planets.",
@@ -74,15 +85,18 @@
       {
          "name":"Earth",
          "file":"./model/planets-glb/earth/Earth.glb",
+         "mass": "5.972 × 10^24 kg",
          "radius":6371,
          "distanceFromSun":147120000,
          "orbit":0.0172,
          "orbitInclination":0,
+         "orbitPeriod": "1 year",
          "rotation":6.28,
          "rotationAngle":0.41,
          "moveRotate": true,
          "moveOrbit": true,
          "beingViewed":false,
+         "switchingFrom": false,
          "facts":[
                "This is the planet we live on.",
                "Earth is the only planet not named after a god.",
@@ -91,16 +105,19 @@
          "moon":{
             "name":"Moon",
             "file":"./model/planets-glb/Moon.glb",
+            "mass": "7.342×10^22 Kg",
             "radius":1737.12,
             "distanceFromEarth":384399,
             "distanceFromSun":0,
             "orbit":0.01721,
             "orbitInclination": 0.087,
+            "orbitPeriod": "27 days",
             "rotation":0.2327,
             "rotationAngle":0.026,
             "moveRotate": true,
             "moveOrbit": true,
             "beingViewed":false,
+            "switchingFrom": false,
             "facts":[
                "The Moon.",
                "Full of craters.",
@@ -111,15 +128,18 @@
       {
          "name":"Mars",
          "file":"./model/planets-glb/mars/Mars.glb",
+         "mass": "6.39 × 10^23 kg",
          "radius":3389.5,
          "distanceFromSun":240010000,
          "orbit":0.00915,
          "orbitInclination":0.032288,
+         "orbitPeriod": "687 days",
          "rotation":6.1299,
          "rotationAngle":0.436,
          "moveRotate": true,
          "moveOrbit": true,
          "beingViewed":false,
+         "switchingFrom": false,
          "facts":[
                "Mars is home to the tallest mountain in the solar system.",
                "Mars has the largest dust storms in the solar system.",
@@ -129,15 +149,18 @@
       {
          "name":"Jupiter",
          "file":"./model/planets-glb/jupiter/Jupiter.glb",
+         "mass": "1.898 × 10^27 kg",
          "radius":69911,
          "distanceFromSun":782670000,
          "orbit":0.00143,
          "orbitInclination":0.02286,
+         "orbitPeriod": "12 years",
          "rotation":15.232,
          "rotationAngle":0.05,
          "moveRotate": true,
          "moveOrbit": true,
          "beingViewed":false,
+         "switchingFrom": false,
          "facts":[
                "Jupiter has 67 moons.",
                "The largest of Jupiter’s moons, Ganymede is the largest moon in the solar system.",
@@ -147,15 +170,18 @@
       {
          "name":"Saturn",
          "file":"./model/planets-glb/saturn/Saturn.glb",
+         "mass": "5.683 × 10^26 kg",
          "radius":58232,
          "distanceFromSun":1498400000,
          "orbit":0.0005936,
          "orbitInclination":0.04328,
+         "orbitPeriod": "29 years",
          "rotation":14.094,
          "rotationAngle":0.466,
          "moveRotate": true,
          "moveOrbit": true,
          "beingViewed":false,
+         "switchingFrom": false,
          "facts":[
                "Saturn has oval-shaped storms similar to Jupiter’s.",
                "Saturn has more moons than any other planet.",
@@ -165,15 +191,18 @@
       {
          "name":"Uranus",
          "file":"./model/planets-glb/uranus/Uranus.glb",
+         "mass": "8.681 × 10^25 kg",
          "radius":25362,
          "distanceFromSun":2965000000,
          "orbit":0.000205,
          "orbitInclination":0.01347,
+         "orbitPeriod": "84 years",
          "rotation":8.875,
          "rotationAngle":1.71,
          "moveRotate": true,
          "moveOrbit": true,
          "beingViewed":false,
+         "switchingFrom": false,
          "facts":[
                "Uranus hits the coldest temperatures of any planet.",
                "Uranus is the coldest planet in the solar system.",
@@ -183,15 +212,18 @@
       {
          "name":"Neptune",
          "file":"./model/planets-glb/neptune/Neptune.glb",
+         "mass": "1.024 × 10^26 kg",
          "radius":24622,
          "distanceFromSun":4477200000,
          "orbit":0.000104,
          "orbitInclination":0.003089,
+         "orbitPeriod": "165 years",
          "rotation":8.875,
          "rotationAngle":0.524,
          "moveRotate": true,
          "moveOrbit": true,
          "beingViewed":false,
+         "switchingFrom": false,
          "facts":[
                "Neptune has an average surface temperature of -214°C.",
                "Neptune has a storm similar to the Great Red Spot on Jupiter.",
@@ -201,15 +233,18 @@
       {
          "name":"Pluto",
          "file":"./model/planets-glb/pluto/Pluto.glb",
+         "mass": "1.309×10^22 kg",
          "radius":1188.3,
          "distanceFromSun":5906380000,
          "orbit":0.0000694,
          "orbitInclination":0.2967,
+         "orbitPeriod": "248 years",
          "rotation":0.98,
          "rotationAngle":2.09,
          "moveRotate": true,
          "moveOrbit": true,
          "beingViewed":false,
+         "switchingFrom": false,
          "facts":[
                "Pluto was reclassified from a planet to a dwarf planet in 2006.",
                "Pluto is one third water.",
@@ -222,7 +257,7 @@
    "ui": [
       {
         "name":"Drawer",
-        "texture": "./model/UI-textures/drawer-icon.png",
+        "texture": "./model/UI-Textures/drawer-icon.png",
         "position":
           {
             "x": 0.13,
@@ -232,7 +267,7 @@
       },
       {
         "name": "Lines",
-        "texture": "./model/UI-textures/Lines.png",
+        "texture": "./model/UI-Textures/Lines.png",
         "position":
         {
           "x": 0.13,
@@ -252,7 +287,7 @@
       },
       {
         "name": "Light",
-        "texture": "./model/UI-textures/Light.png",
+        "texture": "./model/UI-Textures/Light.png",
         "position":
         {
           "x": 0.13,
@@ -262,7 +297,7 @@
       },
       {
         "name": "Reset",
-        "texture": "./model/UI-textures/Reset.png",
+        "texture": "./model/UI-Textures/Reset.png",
         "position":
         {
           "x": 0.13,
@@ -304,7 +339,7 @@
       {
         "name":"Planets",
         "size": 11,
-        "texture": "./model/UI-textures/Planets.png",
+        "texture": "./model/UI-Textures/Planets.png",
         "position":
         {
           "x": 0.13,
@@ -314,7 +349,7 @@
         "options":[
           {
             "name": "Mercury",
-            "texture": "./model/UI-textures/Mercury.png",
+            "texture": "./model/UI-Textures/Mercury.png",
             "position":
             {
               "x": 0.05,
@@ -324,7 +359,7 @@
           },
           {
             "name": "Venus",
-            "texture": "./model/UI-textures/Venus.png",
+            "texture": "./model/UI-Textures/Venus.png",
             "position":
             {
               "x": 0.05,
@@ -334,7 +369,7 @@
           },
           {
             "name": "Earth",
-            "texture": "./model/UI-textures/Earth.png",
+            "texture": "./model/UI-Textures/Earth.png",
             "position":
             {
               "x": 0.05,
@@ -344,7 +379,7 @@
           },
           {
             "name": "Mars",
-            "texture": "./model/UI-textures/Mars.png",
+            "texture": "./model/UI-Textures/Mars.png",
             "position":
             {
               "x": 0.05,
@@ -354,7 +389,7 @@
           },
           {
             "name": "Jupiter",
-            "texture": "./model/UI-textures/Jupiter.png",
+            "texture": "./model/UI-Textures/Jupiter.png",
             "position":
             {
               "x": 0.05,
@@ -364,7 +399,7 @@
           },
           {
             "name": "Saturn",
-            "texture": "./model/UI-textures/Saturn.png",
+            "texture": "./model/UI-Textures/Saturn.png",
             "position":
             {
               "x": 0.05,
@@ -374,7 +409,7 @@
           },
           {
             "name": "Uranus",
-            "texture": "./model/UI-textures/Uranus.png",
+            "texture": "./model/UI-Textures/Uranus.png",
             "position":
             {
               "x": 0.05,
@@ -384,7 +419,7 @@
           },
           {
             "name": "Neptune",
-            "texture": "./model/UI-textures/Neptune.png",
+            "texture": "./model/UI-Textures/Neptune.png",
             "position":
             {
               "x": 0.05,
@@ -394,7 +429,7 @@
           },
           {
             "name": "Pluto",
-            "texture": "./model/UI-textures/Pluto.png",
+            "texture": "./model/UI-Textures/Pluto.png",
             "position":
             {
               "x": 0.05,
@@ -404,7 +439,7 @@
           },
           {
             "name": "Sun",
-            "texture": "./model/UI-textures/Sun.png",
+            "texture": "./model/UI-Textures/Sun.png",
             "position":
             {
               "x": 0.05,
@@ -414,7 +449,7 @@
           },
           {
             "name": "Moon",
-            "texture": "./model/UI-textures/Moon.png",
+            "texture": "./model/UI-Textures/Moon.png",
             "position":
             {
               "x": 0.05,

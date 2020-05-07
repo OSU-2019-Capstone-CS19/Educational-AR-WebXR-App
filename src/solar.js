@@ -457,12 +457,33 @@ function renderXR(timestamp, xrFrame){
         anchorAlert.position.z = 1.;
         let result = hitTestResults[0].getPose(xrRefSpace);
 
+        let hitMatrix = new THREE.Matrix4();
+        hitMatrix.fromArray(result.transform.matrix);
+
+        reticle.position.setFromMatrixPosition(hitMatrix);
+
+        //Get world position
+        let reticlePos = new THREE.Vector3();
+        let cameraPos = new THREE.Vector3();
+        reticle.getWorldPosition(reticlePos);
+        camera.getWorldPosition(cameraPos);
+
+        let dir = new THREE.Vector3();
+        dir.subVectors(cameraPos, reticlePos).normalize();
+        let dist = reticlePos.distanceTo(cameraPos);
+
+        //Limit distance to a range (0.5 - 0.8)
+        if (dist > 0.8){
+          dist -= 0.8;
+          reticle.translateOnAxis(dir, dist);
+        } else if (dist < 0.5){
+          dist -= 0.5;
+          reticle.translateOnAxis(dir, dist);
+        }
+
         reticle.visible = true;
         originPoint.visible = false;
 
-        let hitMatrix = new THREE.Matrix4();
-        hitMatrix.fromArray(result.transform.matrix);
-        reticle.position.setFromMatrixPosition(hitMatrix);
       } else {
         anchorAlert.position.z = -.5;
         console.log("keep Looking");
@@ -1718,7 +1739,7 @@ function createReticle(){
 
 function sunSelect(){
   //Pick random fact
-  let ranNum = Math.floor(Math.random() * 3);
+  let ranNum = Math.floor(Math.random() * 5);
 
   updateCanvasTexture(sunObj, jsonObj.sun.facts[ranNum]);
 
@@ -1781,7 +1802,8 @@ function sunSelect(){
 function planetSelect(num){
 
   //Pick random fact
-  let ranNum = Math.floor(Math.random() * 3);
+  let ranNum = Math.floor(Math.random() * 5);
+  
   atOrigin = false;
 
   updateCanvasTexture(planets[num], jsonObj.planets[num].facts[ranNum]);
@@ -1851,7 +1873,7 @@ function planetSelect(num){
 function moonSelect(){
 
   //Pick random fact
-  let ranNum = Math.floor(Math.random() * 3);
+  let ranNum = Math.floor(Math.random() * 5);
 
   updateCanvasTexture(moonObj, jsonObj.planets[2].moon.facts[ranNum]);
 
@@ -1903,11 +1925,8 @@ function moonSelect(){
 
     jsonObj.objTranslation.timeStep = 100;
     jsonObj.objTranslation.inTransit = true;
+
     atOrigin = false;
-    //uiOptions[6].position.x = jsonObj.ui[6].position.x;
-  //TEST
-  } else {
-    toggleReturnToOrigin();
   }
 }
 
@@ -2004,7 +2023,7 @@ function toggleOrbitLines(){
   }
 }
 
-
+//TODO: nessisary?
 function toggleReturnToOrigin(){
   //Reset Hierarchy
   scene.attach(originPoint);

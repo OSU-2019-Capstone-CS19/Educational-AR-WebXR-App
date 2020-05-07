@@ -1047,7 +1047,7 @@ function touchSelectEvent() {
 
       let sceneIntersectsArray = [sunObj, moonObj, planets[0], planets[1], planets[2], planets[3], planets[4], planets[5], planets[6], planets[7], planets[8]];
 
-      let menuIntersectsArray = [uiOptions[0], uiOptions[1], uiOptions[2], uiOptions[3], uiOptions[4], uiOptions[5], uiOptions[6], uiOptions[7], planetOptions[0], planetOptions[1], planetOptions[2], planetOptions[3], planetOptions[4], planetOptions[5], planetOptions[6], planetOptions[7], planetOptions[8], planetOptions[9], planetOptions[10]];
+      let menuIntersectsArray = [uiOptions[0], uiOptions[1], uiOptions[2], uiOptions[3], uiOptions[4], uiOptions[5], uiOptions[6], uiOptions[7], uiOptions[8], planetOptions[0], planetOptions[1], planetOptions[2], planetOptions[3], planetOptions[4], planetOptions[5], planetOptions[6], planetOptions[7], planetOptions[8], planetOptions[9], planetOptions[10]];
 
       let intersects = sceneRaycaster.intersectObjects(menuIntersectsArray, true);
 
@@ -1143,10 +1143,10 @@ function toggleUIOptionsVisibility(){
   uiOptionsVisible = !uiOptionsVisible;
 
   for(let i=1; i<jsonObj.ui_size; i++){
-    if(uiOptionsVisible && i!=6){
+    if(uiOptionsVisible && i!=6 && i!=7){
       uiOptions[i].position.x = jsonObj.ui[i].position.x;
     } else {
-      if (i!=2 && i!=6)
+      if (i!=2 && i!=6 && i!=7)
       uiOptions[i].position.x = 1.0;
     }
   }
@@ -1158,7 +1158,7 @@ function toggleUIOptionsVisibilityOff(){
 
   uiOptionsVisible = false;
   for(let i=1; i<jsonObj.ui_size; i++){
-    if(i!=2 /*&& i!=6*/)
+    if(i!=2 && i!=7/*&& i!=6*/)
       uiOptions[i].position.x = 1.0;
     //uiOptions[i].position.y = jsonObj[i].position.y;
   }
@@ -1304,7 +1304,10 @@ function menuEvent(intersects){
         toggleUIOptionsVisibilityOff();
         planetSelect(8);
         break;
-      case "Pause-Play":
+      case "Pause":
+        togglePause();
+        break;
+      case "Play":
         togglePause();
         break;
 
@@ -1625,6 +1628,8 @@ function togglePause(){
         jsonObj.planets[i].moon.moveOrbit = false;
       }
     }
+    uiOptions[2].position.x = 1.0;
+    uiOptions[7].position.x =jsonObj.ui[7].position.x;
   } else {
     //UnPause
     jsonObj.pause = false;
@@ -1645,6 +1650,8 @@ function togglePause(){
         }
       }
     }
+    uiOptions[7].position.x = 1.0;
+    uiOptions[2].position.x =jsonObj.ui[2].position.x;
   }
 }
 

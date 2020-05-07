@@ -274,7 +274,8 @@
          ]
       }
    ],
-   "ui_size": 6,
+   "ui_size": 9,
+   "planet_index": 8,
    "ui": [
       {
         "name":"Drawer",
@@ -297,8 +298,8 @@
         }
       },
       {
-        "name": "Pause-Play",
-        "texture": "./model/UI-Textures/pause-play.png",
+        "name": "Pause",
+        "texture": "./model/UI-textures/pause.png",
         "position":
           {
             "x": -0.13,
@@ -325,6 +326,37 @@
           "y": 0.05,
           "z": 0.50
         }
+      },
+      {
+        "name": "Exit",
+        "texture": "./model/UI-textures/exit.png",
+        "position":
+        {
+          "x": 0.13,
+          "y": 0.0,
+          "z": 0.50
+        }
+        
+      },
+      {
+        "name": "Return to Origin",
+        "texture": "./model/UI-textures/return-to-origin.png",
+        "position":
+        {
+          "x": 0.13,
+          "y": -0.05,
+          "z": 0.50
+        }
+      },
+      {
+        "name": "Play",
+        "texture": "./model/UI-textures/play.png",
+        "position":
+          {
+            "x": -0.13,
+            "y": 0.25,
+            "z": 0.5
+          }
       },
       {
         "name":"Planets",

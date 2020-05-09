@@ -17,6 +17,7 @@ let planetOrigins = [];
 let pivots = [];
 let orbitLines = [];
 let sunObj, sunPivot, moonObj, moonPivot, moonOrigin;
+let continentObj = new THREE.Object3D();
 
 //UI Elements
 let uiOptions = [];
@@ -1522,6 +1523,15 @@ function updateCanvasTexture(obj, fact){
     ctx.fillText("Orbital Period Around Earth: " + jsonObj.planets[2].moon.orbitPeriod, 7, 80);
     ctx.fillText("Distance from Earth: " + jsonObj.planets[2].moon.distanceFromEarth + " km", 7, 100);
 
+  } else if (obj == continentObj){
+      for (let i=0; i<7; i++){
+        if (obj.name == "Continent: " + jsonObj.continents[i].name){
+          ctx.fillText("Area: " + jsonObj.continents[i].area, 7, 40);
+          ctx.fillText("Population: " + jsonObj.continents[i].population, 7, 60);
+          ctx.fillText("Number of Countries: " + jsonObj.continents[i].countries, 7, 80);
+        }
+      }
+
   } else {
     for (let i=0; i<jsonObj.numPlanets; i++){
       if (obj == planets[i]){
@@ -1971,27 +1981,49 @@ function checkEarthBoundingBoxs(point){
   asiaBox2.setFromPoints(jsonObj.continents[4].boundingBox[1]);
 
   if (antarcticaBox.containsPoint(point)){
-    console.log("Antarctica");
+    continentObj.name = "Continent: Antarctica";
+    updateCanvasTexture(continentObj, jsonObj.continents[6].fact);
+
   } else if (australiaBox.containsPoint(point)){
-    console.log("Australia");
+    continentObj.name = "Continent: Australia";
+    updateCanvasTexture(continentObj, jsonObj.continents[5].fact);
+
   } else if (europeBox.containsPoint(point)){
-    console.log("Europe");
+    continentObj.name = "Continent: Europe";
+    updateCanvasTexture(continentObj, jsonObj.continents[2].fact);
+
   } else if (africaBox1.containsPoint(point)){
-    console.log("Africa");
+    continentObj.name = "Continent: Africa";
+    updateCanvasTexture(continentObj, jsonObj.continents[3].fact);
+
   } else if (africaBox2.containsPoint(point)){
-    console.log("Africa");
+    continentObj.name = "Continent: Africa";
+    updateCanvasTexture(continentObj, jsonObj.continents[3].fact);
+
   } else if (southAmericaBox1.containsPoint(point)){
-    console.log("South America");
+    continentObj.name = "Continent: South America";
+    updateCanvasTexture(continentObj, jsonObj.continents[1].fact);
+
   } else if (southAmericaBox2.containsPoint(point)){
-    console.log("South America");
+    continentObj.name = "Continent: South America";
+    updateCanvasTexture(continentObj, jsonObj.continents[1].fact);
+
   } else if (northAmericaBox1.containsPoint(point)){
-    console.log("North America");
+    continentObj.name = "Continent: North America";
+    updateCanvasTexture(continentObj, jsonObj.continents[0].fact);
+
   } else if (northAmericaBox2.containsPoint(point)){
-    console.log("North America");
+    continentObj.name = "Continent: North America";
+    updateCanvasTexture(continentObj, jsonObj.continents[0].fact);
+
   } else if (asiaBox1.containsPoint(point)){
-    console.log("Asia");
+    continentObj.name = "Continent: Asia";
+    updateCanvasTexture(continentObj, jsonObj.continents[4].fact);
+
   } else if (asiaBox2.containsPoint(point)){
-    console.log("Asia");
+    continentObj.name = "Continent: Asia";
+    updateCanvasTexture(continentObj, jsonObj.continents[4].fact);
+
   } else {
     console.log("False");
   }

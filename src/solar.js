@@ -646,7 +646,7 @@ function sunTranslation(){
           moonOrigin.getWorldPosition(moonPos);
           planetOrigins[i].getWorldPosition(planetPos);
           dir.subVectors(moonPos, planetPos).normalize();
-          distance = (jsonObj.planets[i].moon.distanceFromEarth / jsonObj.distanceScale) * 10;
+          distance = (jsonObj.planets[i].moon.distanceFromEarth / jsonObj.distanceScale) * 30;
           moonOrigin.position.add(dir.multiplyScalar(distance));
           moonPivot.attach(moonOrigin);
 
@@ -763,12 +763,12 @@ function planetTranslation(num){
       moonOrigin.getWorldPosition(moonPos);
       planetOrigins[2].getWorldPosition(planetPos);
       dir.subVectors(moonPos, planetPos).normalize();
-      distance = (jsonObj.planets[2].moon.distanceFromEarth / jsonObj.distanceScale) * 10;
+      distance = (jsonObj.planets[2].moon.distanceFromEarth / jsonObj.distanceScale) * 30;
       moonOrigin.position.add(dir.multiplyScalar(distance));
       moonPivot.attach(moonOrigin);
       moonObj.scale.addScalar((jsonObj.planets[2].moon.radius / jsonObj.sizeScale) * scaledPercent);
 
-      sunObj.scale.addScalar((jsonObj.sun.radius / jsonObj.sizeScale) * scaledPercent);
+      sunObj.scale.addScalar((jsonObj.sun.radius / jsonObj.sizeScale) / 10 * scaledPercent);
 
       //Move Selected Planet Towards Camera
       camera.getWorldPosition(cameraPos);
@@ -785,7 +785,7 @@ function planetTranslation(num){
     } else {
 
       if (jsonObj.sun.switchingFrom){
-        switchTranslation(planets[num], jsonObj.planets[num].radius / jsonObj.sizeScale, sunObj, jsonObj.sun.radius / jsonObj.sizeScale);
+        switchTranslation(planets[num], jsonObj.planets[num].radius / jsonObj.sizeScale, sunObj, jsonObj.sun.radius / jsonObj.sizeScale / 10);
 
       } else {
         for (let i=0; i<jsonObj.numPlanets; i++){
@@ -867,7 +867,7 @@ function moonTraslation(){
       planetOrigins[2].getWorldPosition(planetPos);
 
       dir.subVectors(originPos, planetPos).normalize();
-      distance = (jsonObj.planets[2].distanceFromSun / jsonObj.distanceScale) * 10;
+      distance = (jsonObj.planets[2].distanceFromSun / jsonObj.distanceScale) * 30;
       originPoint.translateOnAxis(dir, distance);
 
       //Update Planet Position Away From The Origin
@@ -883,14 +883,15 @@ function moonTraslation(){
         // //Scale SolarSystem
         planets[i].scale.addScalar((jsonObj.planets[i].radius / jsonObj.sizeScale) * scaledPercent);
       }
-      sunObj.scale.addScalar((jsonObj.sun.radius / jsonObj.sizeScale) * 3 * scaledPercent);
+
+      sunObj.scale.addScalar((jsonObj.sun.radius / jsonObj.sizeScale) / 10 * scaledPercent);
 
       //Update Earths Moon
       scene.attach(moonOrigin);
       moonOrigin.getWorldPosition(moonPos);
       planetOrigins[2].getWorldPosition(planetPos);
       dir.subVectors(moonPos, planetPos).normalize();
-      distance = (jsonObj.planets[2].moon.distanceFromEarth / jsonObj.distanceScale) * 10;
+      distance = (jsonObj.planets[2].moon.distanceFromEarth / jsonObj.distanceScale) * 30;
       moonOrigin.position.add(dir.multiplyScalar(distance));
       moonPivot.attach(moonOrigin);
 
@@ -913,7 +914,7 @@ function moonTraslation(){
     } else {
 
       if (jsonObj.sun.switchingFrom){
-        switchTranslation(moonObj, jsonObj.planets[2].moon.radius / jsonObj.sizeScale, sunObj, jsonObj.sun.radius / jsonObj.sizeScale);
+        switchTranslation(moonObj, jsonObj.planets[2].moon.radius / jsonObj.sizeScale, sunObj, jsonObj.sun.radius / jsonObj.sizeScale / 10);
 
       } else {
         for (let i=0; i<jsonObj.numPlanets; i++){
@@ -1051,7 +1052,7 @@ function switchTranslation(target, targetScale, preObj, preObjScale){
 
   //Planets and Earths moon
   } else {
-    originalSun += ((jsonObj.sun.radius / jsonObj.sizeScale) * originalScale) * 100;
+    originalSun += ((jsonObj.sun.radius / jsonObj.sizeScale /10) * originalScale) * 100;
   }
 
   //Find the difference and apply a 100th of it to the sunObj.scale
@@ -1095,15 +1096,11 @@ function switchTranslation(target, targetScale, preObj, preObjScale){
     box.setFromObject(moonObj);
   }
 
-  //TEST
-  //need to determin how far each object is from the camera
-
 
   dir.subVectors(cameraPos, targetPos).normalize();
   distance = box.distanceToPoint(cameraPos);
   console.log(distance);
-  console.log(box);
-  // if (distance )
+
   distance -= 0.1; //Camera Buffer
   originPoint.translateOnAxis(dir, distance / jsonObj.objTranslation.timeStep);
 }
@@ -1269,7 +1266,7 @@ function checkInsideObject(){
       inside = true;
 
       //TEST
-      // console.log("planet " + i);
+      console.log("planet " + i);
 
     }
   }
@@ -1279,7 +1276,7 @@ function checkInsideObject(){
     inside = true;
 
     //TEST
-    // console.log("moon");
+    console.log("moon");
 
   }
 
@@ -1289,7 +1286,7 @@ function checkInsideObject(){
     inside = true;
 
     //TEST
-    // console.log("sun");
+    console.log("sun");
 
   }
 

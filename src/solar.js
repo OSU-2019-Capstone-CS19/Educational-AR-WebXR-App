@@ -992,6 +992,10 @@ function switchTranslation(target, targetScale, preObj, preObjScale){
   //This is the percentage change for the previous object
   preScalePercent /= preObjScale;
 
+  //TODO need to get the preSunSize of the sun
+  preSunSize = jsonObj.sun.radius / jsonObj.sizeScale / 10;
+  preSunSize += ((jsonObj.sun.radius / jsonObj.sizeScale / 10) * preScalePercent) * 100;
+
   //Get the previous scale of all the planets
   for (let i=0; i<jsonObj.numPlanets; i++){
     prePlanetSize[i] = jsonObj.planets[i].radius / jsonObj.sizeScale;
@@ -1048,21 +1052,23 @@ function switchTranslation(target, targetScale, preObj, preObjScale){
 
   //Sun
   if (target == sunObj) {
-    originalSun += (targetScale * originalScale) * 100;
-
-  //Planets and Earths moon
-  } else {
-    originalSun += ((jsonObj.sun.radius / jsonObj.sizeScale /10) * originalScale) * 100;
+    sunObj.scale.addScalar(preSunSize * scaledPercent);
   }
+  //   originalSun += (targetScale * originalScale) * 100;
+  //
+  // //Planets and Earths moon
+  // } else {
+  //   originalSun += ((jsonObj.sun.radius / jsonObj.sizeScale /10) * originalScale) * 100;
+  // }
+  //
+  // //Find the difference and apply a 100th of it to the sunObj.scale
+  // let sizeDiff = originalSun - preSunSize;
+  // sizeDiff /= 100;
+  //
+  // sunObj.scale.addScalar(sizeDiff);
 
-  //Find the difference and apply a 100th of it to the sunObj.scale
-  let sizeDiff = originalSun - preSunSize;
-  sizeDiff /= 100;
 
-  sunObj.scale.addScalar(sizeDiff);
-
-
-  //Scale/Distance Planets
+  //Scale Planets
   for (let i=0; i<jsonObj.numPlanets; i++){
     planets[i].scale.addScalar(prePlanetSize[i] * scaledPercent);
 
@@ -1085,7 +1091,6 @@ function switchTranslation(target, targetScale, preObj, preObjScale){
   //Planet
   if (planetNum || target == planets[0]) {
     planetOrigins[planetNum].getWorldPosition(targetPos);
-    console.log(planetNum);
     box.setFromObject(planets[planetNum]);
   }
 
@@ -1100,8 +1105,10 @@ function switchTranslation(target, targetScale, preObj, preObjScale){
   dir.subVectors(cameraPos, targetPos).normalize();
   distance = box.distanceToPoint(cameraPos);
   console.log(distance);
-
   distance -= 0.1; //Camera Buffer
+
+  //TODO: check that obj is within a range away from the camera
+
   originPoint.translateOnAxis(dir, distance / jsonObj.objTranslation.timeStep);
 }
 
@@ -1199,12 +1206,12 @@ function returnToOrigin(){
       distance = moonPos.distanceTo(planetPos) - (jsonObj.planets[2].moon.distanceFromEarth / jsonObj.distanceScale);
       distance /= jsonObj.objTranslation.timeStep;
       moonOrigin.position.sub(dir.multiplyScalar(distance));
+      moonPivot.attach(moonOrigin);
     }
 
     //Scale
     reduceScale = (moonObj.scale.x - jsonObj.planets[2].moon.radius/jsonObj.sizeScale) / jsonObj.objTranslation.timeStep;
     moonObj.scale.subScalar(reduceScale);
-    moonPivot.attach(moonOrigin);
 
     //Origin
     //Direction

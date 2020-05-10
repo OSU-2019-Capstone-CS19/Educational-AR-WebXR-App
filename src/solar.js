@@ -1082,10 +1082,12 @@ function switchTranslation(target, targetScale, preObj, preObjScale){
   }
 
   //Planet
-  if (planetNum) {
+  if (planetNum || target == planets[0]) {
     planetOrigins[planetNum].getWorldPosition(targetPos);
+    console.log(planetNum);
     box.setFromObject(planets[planetNum]);
   }
+
 
   //Moon
   if (target == moonObj){
@@ -1093,8 +1095,15 @@ function switchTranslation(target, targetScale, preObj, preObjScale){
     box.setFromObject(moonObj);
   }
 
+  //TEST
+  //need to determin how far each object is from the camera
+
+
   dir.subVectors(cameraPos, targetPos).normalize();
   distance = box.distanceToPoint(cameraPos);
+  console.log(distance);
+  console.log(box);
+  // if (distance )
   distance -= 0.1; //Camera Buffer
   originPoint.translateOnAxis(dir, distance / jsonObj.objTranslation.timeStep);
 }
@@ -1260,8 +1269,8 @@ function checkInsideObject(){
       inside = true;
 
       //TEST
-      console.log("planet " + i);
-      console.log(planets[i].position);
+      // console.log("planet " + i);
+
     }
   }
   //Moon
@@ -1270,8 +1279,8 @@ function checkInsideObject(){
     inside = true;
 
     //TEST
-    console.log("moon");
-    console.log(moonObj.position);
+    // console.log("moon");
+
   }
 
    //Sun
@@ -1280,8 +1289,8 @@ function checkInsideObject(){
     inside = true;
 
     //TEST
-    console.log("sun");
-    console.log(sunObj.position);
+    // console.log("sun");
+
   }
 
   collisionAlert.visible = inside;

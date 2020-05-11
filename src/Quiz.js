@@ -19,7 +19,7 @@ const questions = [{
 									// 	answer: "4.6 Billion Years"
 									// },
 									{
-										question: "How many Earth days does it take Murcury to rotate the Sun? (1 Year)",
+										question: "How many Earth days does it take Murcury to rotate the Sun?",
 										options: ['365 days', '88 days', '300 days', '225 days'],
 										answer: "88 days"
 									},

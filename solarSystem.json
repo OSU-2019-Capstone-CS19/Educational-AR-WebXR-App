@@ -478,6 +478,10 @@
    "continents": [
       {
         "name": "North America",
+        "area": "24,709,000 sq km",
+        "population": "579 Million",
+        "countries": "23",
+        "fact": "North America has the worlds largest island, Greenland.",
         "boundingBox": [
                           [
                             {
@@ -527,6 +531,10 @@
       },
       {
         "name": "South America",
+        "area": "17,840,000 sq km",
+        "population": "422.5 Million",
+        "countries": "12",
+        "fact": "South America has the tallest waterfall in the world at 3,212 feet.",
         "boundingBox": [
                           [
                             {
@@ -576,6 +584,10 @@
       },
       {
         "name": "Europe",
+        "area": "10,180,000 sq km",
+        "population": "741.4 Million",
+        "countries": "50",
+        "fact": "The smallest town in the world can be found in Europe, with 21 inhabitants.",
         "boundingBox": [
                           {
                               "x": 99.75,
@@ -601,6 +613,10 @@
       },
       {
         "name": "Africa",
+        "area": "30,370,000 sq km",
+        "population": "1.2 Billion",
+        "countries": "54",
+        "fact": "Africa contains the most continents of the planet.",
         "boundingBox": [
                           [
                             {
@@ -650,6 +666,10 @@
       },
       {
         "name": "Asia",
+        "area": "44,579,000 sq km",
+        "population": "4.463 Billion",
+        "countries": "49",
+        "fact": "Over 2300 languages are used within the boarders of Asia.",
         "boundingBox": [
                           [
                             {
@@ -699,6 +719,10 @@
       },
       {
         "name": "Australia",
+        "area": "7,692,024 sq km",
+        "population": "24.99 Million",
+        "countries": "1",
+        "fact": "90% of the people in Australia live on the coast.",
         "boundingBox": [
                           {
                               "x": -436.9,
@@ -724,6 +748,10 @@
       },
       {
         "name": "Antarctica",
+        "area": "14,200,000 sq km",
+        "population": "1,106",
+        "countries": "0",
+        "fact": "90% of Earth's ice is located at Antarctica.",
         "centerPoint": {
                           "x": 0,
                           "y": -500,

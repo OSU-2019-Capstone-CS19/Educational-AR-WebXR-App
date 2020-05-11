@@ -1294,7 +1294,7 @@ function touchSelectEvent() {
 
       let sceneIntersectsArray = [sunObj, moonObj, planets[0], planets[1], planets[2], planets[3], planets[4], planets[5], planets[6], planets[7], planets[8]];
 
-      let menuIntersectsArray = [uiOptions[0], uiOptions[1], uiOptions[2], uiOptions[3], uiOptions[4], uiOptions[5], uiOptions[6], uiOptions[7], uiOptions[8], planetOptions[0], planetOptions[1], planetOptions[2], planetOptions[3], planetOptions[4], planetOptions[5], planetOptions[6], planetOptions[7], planetOptions[8], planetOptions[9], planetOptions[10], textBox];
+      let menuIntersectsArray = [uiOptions[0], uiOptions[1], uiOptions[2], uiOptions[3], uiOptions[4], uiOptions[5], uiOptions[6], uiOptions[7], uiOptions[8], uiOptions[9], uiOptions[10], planetOptions[0], planetOptions[1], planetOptions[2], planetOptions[3], planetOptions[4], planetOptions[5], planetOptions[6], planetOptions[7], planetOptions[8], planetOptions[9], planetOptions[10], textBox];
 
       let intersects = sceneRaycaster.intersectObjects(menuIntersectsArray, true);
 
@@ -1331,7 +1331,6 @@ function sceneEvent(intersects){
 
       case "Sun":
         sunSelect();
-
         break;
 
       case "Mercury":
@@ -1547,6 +1546,7 @@ function menuEvent(intersects){
     switch(intersects[0].object.name){
 
       case "Drawer":
+        minimizeTextBox(true);
         toggleUIOptionsVisibility();
         togglePlanetsOptionsVisibilityOff();
         break;
@@ -1568,17 +1568,30 @@ function menuEvent(intersects){
         togglePlanetsOptionsVisibilityOff();
         break;
 
+      case "OrbitSpeed":
+        console.log("orbit");
+        toggleUIOptionsVisibilityOff();
+        togglePlanetsOptionsVisibilityOff();
+        break;
+
+      case "RotationSpeed":
+        console.log("rotate");
+        toggleUIOptionsVisibilityOff();
+        togglePlanetsOptionsVisibilityOff();
+        break;
+
       case "Reset":
         toggleUIOptionsVisibilityOff();
         togglePlanetsOptionsVisibilityOff();
         resetSolarSystem();
-
         break;
+
       case "Return to Origin":
         toggleReturnToOrigin();
         toggleUIOptionsVisibilityOff();
         togglePlanetsOptionsVisibilityOff();
         break;
+
       case "Exit":
         toggleUIOptionsVisibility();
         togglePlanetsOptionsVisibilityOff();
@@ -1589,8 +1602,8 @@ function menuEvent(intersects){
         togglePlanetsOptionsVisibilityOff();
         toggleUIOptionsVisibilityOff();
         sunSelect();
-
         break;
+
       case "Mercury":
         togglePlanetsOptionsVisibilityOff();
         toggleUIOptionsVisibilityOff();
@@ -1598,7 +1611,6 @@ function menuEvent(intersects){
         break;
 
       case "Venus":
-
         togglePlanetsOptionsVisibilityOff();
         toggleUIOptionsVisibilityOff();
         planetSelect(1);

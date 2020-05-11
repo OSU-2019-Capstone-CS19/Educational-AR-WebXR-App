@@ -537,19 +537,6 @@ function updateSun(){
     sunObj.rotateY(jsonObj.sun.rotation / jsonObj.rotationScale);
   }
 
-  if (sunLight.visible && !jsonObj.objTranslation.inTransit){
-    for (let i=0; i<jsonObj.numPlanets; i++){
-      if (jsonObj.planets[i].beingViewed && !jsonObj.pause){
-        sunPivot.rotateY(jsonObj.planets[i].orbit / jsonObj.orbitScale);
-
-      } else if (jsonObj.planets[i].moon){
-        if (jsonObj.planets[i].moon.beingViewed && !jsonObj.pause){
-          sunPivot.rotateY(jsonObj.planets[2].moon.orbit / jsonObj.orbitScale);
-        }
-      }
-    }
-  }
-
   if (jsonObj.sun.beingViewed && jsonObj.objTranslation.inTransit){
     sunTranslation();
   }
@@ -1671,7 +1658,7 @@ function menuEvent(intersects){
 
       case "textBox":
         //Check if minimized
-        if (textBox.position.y == -0.085){
+        if (textBox.position.y == -0.0855){
           minimizeTextBox(false);
         } else {
           minimizeTextBox(true);
@@ -1769,6 +1756,9 @@ function sunSelect(){
     jsonObj.objTranslation.timeStep = 100;
     jsonObj.objTranslation.inTransit = true;
     atOrigin = false
+
+  } else {
+    minimizeTextBox(false);
   }
 }
 
@@ -1839,8 +1829,8 @@ function planetSelect(num){
     jsonObj.objTranslation.inTransit = true;
     atOrigin = false;
 
-    // console.log("planetSelect");
-    // console.log(scene.children);
+  } else {
+    minimizeTextBox(false);
   }
 }
 
@@ -1902,6 +1892,9 @@ function moonSelect(){
     jsonObj.objTranslation.inTransit = true;
 
     atOrigin = false;
+
+  } else {
+    minimizeTextBox(false);
   }
 }
 

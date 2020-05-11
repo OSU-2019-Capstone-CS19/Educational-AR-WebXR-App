@@ -16,8 +16,6 @@
      "rotationAngle":0.127,
      "surfaceTemperature": 10000,
      "coreTemperature": 27000000,
-     "intensity": 1.0,
-     "preSunSize": 0,
      "moveRotate":true,
      "beingViewed":false,
      "switchingFrom": false,
@@ -29,12 +27,6 @@
                "Over a million Earth's could fit inside the Sun."
          ],
      "standard":"Welcome to the Solar System."
-   },
-   "astronaut": {
-      "file": "./model/astronaut/scene.gltf",
-      "angle": 0,
-      "rotate": "false",
-      "visible": "true"
    },
    "objTranslation": {
      "switchObj": false,
@@ -293,7 +285,7 @@
         "position":
         {
           "x": 0.13,
-          "y": 0.20,
+          "y": 0.1975,
           "z": 0.50
         }
       },
@@ -313,7 +305,7 @@
         "position":
         {
           "x": 0.13,
-          "y": 0.10,
+          "y": 0.0925,
           "z": 0.50
         }
       },
@@ -323,7 +315,7 @@
         "position":
         {
           "x": 0.13,
-          "y": 0.05,
+          "y": 0.04,
           "z": 0.50
         }
       },
@@ -333,7 +325,7 @@
         "position":
         {
           "x": 0.13,
-          "y": 0.0,
+          "y": -0.0125,
           "z": 0.50
         }
 
@@ -344,7 +336,7 @@
         "position":
         {
           "x": 0.13,
-          "y": -0.05,
+          "y": -0.065,
           "z": 0.50
         }
       },
@@ -365,7 +357,7 @@
         "position":
         {
           "x": 0.13,
-          "y": 0.15,
+          "y": 0.145,
           "z": 0.5
         },
         "options":[
@@ -385,7 +377,7 @@
             "position":
             {
               "x": 0.05,
-              "y": 0.20,
+              "y": 0.1975,
               "z": 0.5
             }
           },
@@ -395,7 +387,7 @@
             "position":
             {
               "x": 0.05,
-              "y": 0.15,
+              "y": 0.145,
               "z": 0.5
             }
           },
@@ -405,7 +397,7 @@
             "position":
             {
               "x": 0.05,
-              "y": 0.10,
+              "y": 0.0925,
               "z": 0.5
             }
           },
@@ -415,7 +407,7 @@
             "position":
             {
               "x": 0.05,
-              "y": 0.05,
+              "y": 0.04,
               "z": 0.5
             }
           },
@@ -425,7 +417,7 @@
             "position":
             {
               "x": 0.05,
-              "y": 0.0,
+              "y": -0.0125,
               "z": 0.5
             }
           },
@@ -435,7 +427,7 @@
             "position":
             {
               "x": 0.05,
-              "y": -0.05,
+              "y": -0.065,
               "z": 0.5
             }
           },
@@ -445,7 +437,7 @@
             "position":
             {
               "x": 0.05,
-              "y": -0.1,
+              "y": -0.1175,
               "z": 0.5
             }
           },
@@ -455,7 +447,7 @@
             "position":
             {
               "x": 0.05,
-              "y": -0.15,
+              "y": -0.17,
               "z": 0.5
             }
           },
@@ -465,7 +457,7 @@
             "position":
             {
               "x": 0.05,
-              "y": -0.20,
+              "y": -0.2225,
               "z": 0.5
             }
           },
@@ -475,7 +467,7 @@
             "position":
             {
               "x": 0.05,
-              "y": -0.25,
+              "y": -0.275,
               "z": 0.5
             }
           }

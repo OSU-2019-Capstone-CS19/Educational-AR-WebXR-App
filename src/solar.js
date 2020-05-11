@@ -237,17 +237,13 @@ function loadSun(gltf) {
   sunObj = gltf.scene;
 
   //SunObj is scalled a 10th more due to its size
-
   sunObj.scale.set( jsonObj.sun.radius/jsonObj.sizeScale/10,
                     jsonObj.sun.radius/jsonObj.sizeScale/10,
                     jsonObj.sun.radius/jsonObj.sizeScale/10);
-  jsonObj.sun.preSunSize = sunObj.scale.x;
   sunObj.rotateZ(jsonObj.sun.rotationAngle);
   sunObj.name = jsonObj.sun.name;
   sunObj.add(sunLight);
   scene.add(sunPivot);
-
-  sunPivot.name = "sunPivot"; //TODO not needed
 };
 
 //Load Planet Models
@@ -328,7 +324,6 @@ function loadPlanet(gltf) {
   if (jsonObj.planets[num].moon){
 
     planetOrigins[num].add(moonPivot);
-    //moonPivot.add(moonObj);
     moonPivot.add(moonOrigin);
 
     moonObj.scale.set(jsonObj.planets[2].moon.radius/jsonObj.sizeScale,
@@ -689,8 +684,6 @@ function sunTranslation(){
 
   } else {
 
-    jsonObj.sun.preSunSize = sunObj.scale.x;
-
     if (jsonObj.objTranslation.switchObj){
       jsonObj.objTranslation.switchObj = false;
     }
@@ -813,9 +806,6 @@ function planetTranslation(num){
 
   } else {
 
-    //TODO: nessisary
-    jsonObj.sun.preSunSize = sunObj.scale.x;
-
     if (jsonObj.objTranslation.switchObj) {
       jsonObj.objTranslation.switchObj = false;
     }
@@ -853,9 +843,6 @@ function planetTranslation(num){
 
     jsonObj.objTranslation.inTransit = false;
     jsonObj.objTranslation.timeStep = 100;
-
-    console.log("planet Translation");
-    console.log(scene.children);
   }
 }
 
@@ -945,8 +932,6 @@ function moonTraslation(){
 
   } else {
 
-    jsonObj.sun.preSunSize = sunObj.scale.x;
-
     if (jsonObj.objTranslation.switchObj) {
       jsonObj.objTranslation.switchObj = false;
     }
@@ -1014,7 +999,7 @@ function switchTranslation(target, targetScale, preObj, preObjScale){
   //This is the percentage change for the previous object
   preScalePercent /= preObjScale;
 
-  //TODO need to get the preSunSize of the sun
+  //Get the preSunSize of the sun
   preSunSize = jsonObj.sun.radius / jsonObj.sizeScale / 10;
   preSunSize += ((jsonObj.sun.radius / jsonObj.sizeScale / 10) * preScalePercent) * 100;
 
@@ -1065,13 +1050,6 @@ function switchTranslation(target, targetScale, preObj, preObjScale){
     }
   }
 
-  //Scale Sun
-  // Find what the sun size should be, based on the original size
-  preSunSize = jsonObj.sun.preSunSize;
-  let originalScale = (desiredScale - targetScale) / 100;
-  originalScale /= targetScale;
-  let originalSun = (jsonObj.sun.radius / jsonObj.sizeScale) /10;
-
   //Sun
   if (target == sunObj) {
     sunObj.scale.addScalar(preSunSize * scaledPercent);
@@ -1113,12 +1091,8 @@ function switchTranslation(target, targetScale, preObj, preObjScale){
 
   dir.subVectors(cameraPos, targetPos).normalize();
   distance = box.distanceToPoint(cameraPos);
-
-  console.log("switchTranslation");
-  console.log(scene.children);
-
-    distance -= 0.1; //Camera Buffer
-    originPoint.translateOnAxis(dir, distance / jsonObj.objTranslation.timeStep);
+  distance -= 0.1; //Camera Buffer
+  originPoint.translateOnAxis(dir, distance / jsonObj.objTranslation.timeStep);
 }
 
 
@@ -1444,7 +1418,6 @@ function toggleUIOptionsVisibilityOff(){
   for(let i=1; i<jsonObj.ui_size; i++){
     if(i!=2 && i!=7/*&& i!=6*/)
       uiOptions[i].position.x = 1.0;
-    //uiOptions[i].position.y = jsonObj[i].position.y;
   }
 }
 
@@ -1565,7 +1538,7 @@ function wrapText(context, text, x, y, maxWidth, lineHeight){
 
 function minimizeTextBox(minimize) {
   if (minimize){
-    textBox.position.y = -0.085;
+    textBox.position.y = -0.0855;
   } else {
     textBox.position.y = -0.055;
   }
@@ -1802,9 +1775,6 @@ function sunSelect(){
 
 function planetSelect(num){
 
-  // console.log("planetSelect");
-  // console.log(scene.children);
-
   //Pick random fact
   let ranNum = Math.floor(Math.random() * 5);
 
@@ -1833,10 +1803,6 @@ function planetSelect(num){
         scene.attach(originPoint);
         planetOrigins[i].remove(sunPivot); //could attach to scene
         pivots[i].attach(planetOrigins[i]);
-
-
-        console.log("planetSelect");
-        console.log(scene.children);
       }
 
       if (jsonObj.planets[i].moon){
@@ -2032,7 +1998,7 @@ function toggleOrbitLines(){
   }
 }
 
-//TODO: nessisary?
+
 function toggleReturnToOrigin(){
   //Reset Hierarchy
   scene.attach(originPoint);
@@ -2059,7 +2025,6 @@ function toggleReturnToOrigin(){
   jsonObj.objTranslation.inTransit = true;
   jsonObj.originReturn = true;
   atOrigin = true;
-  //uiOptions[6].position.x = 1.0;
 }
 
 

@@ -1569,15 +1569,42 @@ function menuEvent(intersects){
         break;
 
       case "OrbitSpeed":
-        console.log("orbit");
-        toggleUIOptionsVisibilityOff();
-        togglePlanetsOptionsVisibilityOff();
+        switch (jsonObj.orbitScale) {
+          //Fast Speed
+          case 0.1:
+            jsonObj.orbitScale = 7;
+            break;
+
+          //Normal Speed
+          case 1:
+            jsonObj.orbitScale = 0.1;
+            break;
+
+          //Slow Speed
+          case 7:
+            jsonObj.orbitScale = 1;
+            break;
+        }
         break;
 
       case "RotationSpeed":
-        console.log("rotate");
-        toggleUIOptionsVisibilityOff();
-        togglePlanetsOptionsVisibilityOff();
+        switch (jsonObj.rotationScale){
+          //Fast Speed
+          case 1:
+            jsonObj.rotationScale = 100;
+            break;
+
+          //Normal Speed
+          case 10:
+            jsonObj.rotationScale = 1;
+            break;
+
+          //Slow Speed
+          case 100:
+            jsonObj.rotationScale = 10;
+            break;
+        }
+        console.log(jsonObj.rotationScale);
         break;
 
       case "Reset":

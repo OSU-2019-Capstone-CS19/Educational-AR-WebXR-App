@@ -1637,7 +1637,6 @@ function menuEvent(intersects){
             jsonObj.rotationScale = 10;
             break;
         }
-        console.log(jsonObj.rotationScale);
         break;
 
       case "Reset":

@@ -297,11 +297,21 @@ function loadPlanet(gltf) {
   planets[num].rotateZ(jsonObj.planets[num].rotationAngle);
   planets[num].name = jsonObj.planets[num].name;
 
-  //Planet Origin
-  planetOrigins[num] = new THREE.Object3D();
+  //Planet Origin / Hitbox
+
+  let geometry = new THREE.SphereGeometry( 0.04 );
+  let material = new THREE.MeshBasicMaterial( {color: 0x00ff00, opacity: 0, transparent: true} );
+
+  if (num > 3){
+    geometry = new THREE.SphereGeometry( 0.1 );
+    material = new THREE.MeshBasicMaterial( {color: 0xff0000, opacity: 0, transparent: true});
+  }
+
+  planetOrigins[num] = new THREE.Mesh( geometry, material );
   planetOrigins[num].position.set(pivots[num].position.x + jsonObj.planets[num].distanceFromSun/jsonObj.distanceScale,
                             pivots[num].position.y,
                             pivots[num].position.z);
+
   planetOrigins[num].name = "planetOrigin";
 
   //Add planet to pivot
@@ -1292,9 +1302,9 @@ function touchSelectEvent() {
       let sceneRaycaster = new THREE.Raycaster();
       sceneRaycaster.set(rayOrigin, rayDirection);
 
-      let sceneIntersectsArray = [sunObj, moonObj, planets[0], planets[1], planets[2], planets[3], planets[4], planets[5], planets[6], planets[7], planets[8]];
+      let sceneIntersectsArray = [sunObj, moonObj, planets[0], planets[1], planets[2], planets[3], planets[4], planets[5], planets[6], planets[7], planets[8], planetOrigins[0], planetOrigins[1], planetOrigins[2], planetOrigins[3], planetOrigins[4], planetOrigins[5], planetOrigins[6], planetOrigins[7], planetOrigins[8]];
 
-      let menuIntersectsArray = [uiOptions[0], uiOptions[1], uiOptions[2], uiOptions[3], uiOptions[4], uiOptions[5], uiOptions[6], uiOptions[7], uiOptions[8], planetOptions[0], planetOptions[1], planetOptions[2], planetOptions[3], planetOptions[4], planetOptions[5], planetOptions[6], planetOptions[7], planetOptions[8], planetOptions[9], planetOptions[10], textBox];
+      let menuIntersectsArray = [uiOptions[0], uiOptions[1], uiOptions[2], uiOptions[3], uiOptions[4], uiOptions[5], uiOptions[6], uiOptions[7], uiOptions[8], uiOptions[9], uiOptions[10], planetOptions[0], planetOptions[1], planetOptions[2], planetOptions[3], planetOptions[4], planetOptions[5], planetOptions[6], planetOptions[7], planetOptions[8], planetOptions[9], planetOptions[10], textBox];
 
       let intersects = sceneRaycaster.intersectObjects(menuIntersectsArray, true);
 
@@ -1304,7 +1314,29 @@ function touchSelectEvent() {
       } else {
         let intersects = sceneRaycaster.intersectObjects(sceneIntersectsArray, true);
         if (intersects.length > 0){
-          sceneEvent(intersects);
+
+          // console.log(intersects[0]);
+
+          //Check for sun
+          if (intersects[0].object.parent.name == "Sun"){
+            sceneEvent(intersects, "Sun");
+
+            //Check for moon
+          } else if (intersects[0].object.parent.name == "Moon"){
+            sceneEvent(intersects, "Moon");
+
+          //Check for planets
+          } else {
+
+            for (let i=0; i<jsonObj.numPlanets; i++){
+              if (intersects[0].object.children[0] == planets[i]){
+                sceneEvent(intersects, planets[i].name);
+
+              } else if (intersects[0].object.parent == planets[i]){
+                sceneEvent(intersects, planets[i].name);
+              }
+            }
+          }
         }
       }
     }
@@ -1325,13 +1357,13 @@ function touchSelectEvent() {
   }
 }
 
-function sceneEvent(intersects){
-  if (intersects[0].object.parent.name && !jsonObj.objTranslation.inTransit){
-    switch(intersects[0].object.parent.name){
+function sceneEvent(intersects, obj){
+  // if (intersects[0].object.parent.name && !jsonObj.objTranslation.inTransit){
+  if (!jsonObj.objTranslation.inTransit){
+    switch(obj){
 
       case "Sun":
         sunSelect();
-
         break;
 
       case "Mercury":
@@ -1547,6 +1579,7 @@ function menuEvent(intersects){
     switch(intersects[0].object.name){
 
       case "Drawer":
+        minimizeTextBox(true);
         toggleUIOptionsVisibility();
         togglePlanetsOptionsVisibilityOff();
         break;
@@ -1568,17 +1601,56 @@ function menuEvent(intersects){
         togglePlanetsOptionsVisibilityOff();
         break;
 
+      case "OrbitSpeed":
+        switch (jsonObj.orbitScale) {
+          //Fast Speed
+          case 0.1:
+            jsonObj.orbitScale = 7;
+            break;
+
+          //Normal Speed
+          case 1:
+            jsonObj.orbitScale = 0.1;
+            break;
+
+          //Slow Speed
+          case 7:
+            jsonObj.orbitScale = 1;
+            break;
+        }
+        break;
+
+      case "RotationSpeed":
+        switch (jsonObj.rotationScale){
+          //Fast Speed
+          case 1:
+            jsonObj.rotationScale = 100;
+            break;
+
+          //Normal Speed
+          case 10:
+            jsonObj.rotationScale = 1;
+            break;
+
+          //Slow Speed
+          case 100:
+            jsonObj.rotationScale = 10;
+            break;
+        }
+        break;
+
       case "Reset":
         toggleUIOptionsVisibilityOff();
         togglePlanetsOptionsVisibilityOff();
         resetSolarSystem();
-
         break;
+
       case "Return to Origin":
         toggleReturnToOrigin();
         toggleUIOptionsVisibilityOff();
         togglePlanetsOptionsVisibilityOff();
         break;
+
       case "Exit":
         toggleUIOptionsVisibility();
         togglePlanetsOptionsVisibilityOff();
@@ -1589,8 +1661,8 @@ function menuEvent(intersects){
         togglePlanetsOptionsVisibilityOff();
         toggleUIOptionsVisibilityOff();
         sunSelect();
-
         break;
+
       case "Mercury":
         togglePlanetsOptionsVisibilityOff();
         toggleUIOptionsVisibilityOff();
@@ -1598,7 +1670,6 @@ function menuEvent(intersects){
         break;
 
       case "Venus":
-
         togglePlanetsOptionsVisibilityOff();
         toggleUIOptionsVisibilityOff();
         planetSelect(1);

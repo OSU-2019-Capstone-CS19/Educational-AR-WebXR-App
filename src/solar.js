@@ -297,11 +297,36 @@ function loadPlanet(gltf) {
   planets[num].rotateZ(jsonObj.planets[num].rotationAngle);
   planets[num].name = jsonObj.planets[num].name;
 
-  //Planet Origin
-  planetOrigins[num] = new THREE.Object3D();
+  //Planet Origin / Hitbox
+
+  let geometry = new THREE.SphereGeometry( 0.04 );
+  let material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+
+  if (num > 3){
+    geometry = new THREE.SphereGeometry( 0.1 );
+    material = new THREE.MeshBasicMaterial( {color: 0xff0000});
+  }
+
+  //planetOrigins[num] = new THREE.Object3D();
+  planetOrigins[num] = new THREE.Mesh( geometry, material );
   planetOrigins[num].position.set(pivots[num].position.x + jsonObj.planets[num].distanceFromSun/jsonObj.distanceScale,
                             pivots[num].position.y,
                             pivots[num].position.z);
+
+  //TEST
+  // if (num == 0){
+    // planetOrigins[num].scale.set((jsonObj.planets[num].radius/jsonObj.sizeScale),
+    //                         (jsonObj.planets[num].radius/jsonObj.sizeScale),
+    //                         (jsonObj.planets[num].radius/jsonObj.sizeScale));
+
+    // let geometry = new THREE.BoxGeometry( 1, 1, 1 );
+
+
+    // let cube = new THREE.Mesh( geometry, material );
+    // planetOrigins[num].add( cube );
+  //}
+
+
   planetOrigins[num].name = "planetOrigin";
 
   //Add planet to pivot
@@ -1292,7 +1317,7 @@ function touchSelectEvent() {
       let sceneRaycaster = new THREE.Raycaster();
       sceneRaycaster.set(rayOrigin, rayDirection);
 
-      let sceneIntersectsArray = [sunObj, moonObj, planets[0], planets[1], planets[2], planets[3], planets[4], planets[5], planets[6], planets[7], planets[8]];
+      let sceneIntersectsArray = [sunObj, moonObj, planets[0], planets[1], planets[2], planets[3], planets[4], planets[5], planets[6], planets[7], planets[8], planetOrigins[0], planetOrigins[1], planetOrigins[2], planetOrigins[3], planetOrigins[4], planetOrigins[5], planetOrigins[6], planetOrigins[7], planetOrigins[8]];
 
       let menuIntersectsArray = [uiOptions[0], uiOptions[1], uiOptions[2], uiOptions[3], uiOptions[4], uiOptions[5], uiOptions[6], uiOptions[7], uiOptions[8], planetOptions[0], planetOptions[1], planetOptions[2], planetOptions[3], planetOptions[4], planetOptions[5], planetOptions[6], planetOptions[7], planetOptions[8], planetOptions[9], planetOptions[10], textBox];
 
@@ -1304,7 +1329,29 @@ function touchSelectEvent() {
       } else {
         let intersects = sceneRaycaster.intersectObjects(sceneIntersectsArray, true);
         if (intersects.length > 0){
-          sceneEvent(intersects);
+
+          // console.log(intersects[0]);
+
+          //Check for sun
+          if (intersects[0].object.parent.name == "Sun"){
+            sceneEvent(intersects, "Sun");
+
+            //Check for moon
+          } else if (intersects[0].object.parent.name == "Moon"){
+            sceneEvent(intersects, "Moon");
+
+          //Check for planets
+          } else {
+
+            for (let i=0; i<jsonObj.numPlanets; i++){
+              if (intersects[0].object.children[0] == planets[i]){
+                sceneEvent(intersects, planets[i].name);
+
+              } else if (intersects[0].object.parent == planets[i]){
+                sceneEvent(intersects, planets[i].name);
+              }
+            }
+          }
         }
       }
     }
@@ -1325,9 +1372,10 @@ function touchSelectEvent() {
   }
 }
 
-function sceneEvent(intersects){
-  if (intersects[0].object.parent.name && !jsonObj.objTranslation.inTransit){
-    switch(intersects[0].object.parent.name){
+function sceneEvent(intersects, obj){
+  // if (intersects[0].object.parent.name && !jsonObj.objTranslation.inTransit){
+  if (!jsonObj.objTranslation.inTransit){
+    switch(obj){
 
       case "Sun":
         sunSelect();

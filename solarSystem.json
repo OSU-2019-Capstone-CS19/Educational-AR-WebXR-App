@@ -266,8 +266,8 @@
          ]
       }
    ],
-   "ui_size": 9,
-   "planet_index": 8,
+   "ui_size": 11,
+   "planet_index": 10,
    "ui": [
       {
         "name":"Drawer",
@@ -315,7 +315,7 @@
         "position":
         {
           "x": 0.13,
-          "y": 0.04,
+          "y": -0.065,
           "z": 0.50
         }
       },
@@ -325,7 +325,7 @@
         "position":
         {
           "x": 0.13,
-          "y": -0.0125,
+          "y": -0.1175,
           "z": 0.50
         }
 
@@ -336,7 +336,7 @@
         "position":
         {
           "x": 0.13,
-          "y": -0.065,
+          "y": -0.17,
           "z": 0.50
         }
       },
@@ -349,6 +349,26 @@
             "y": 0.25,
             "z": 0.5
           }
+      },
+      {
+        "name": "OrbitSpeed",
+        "texture": "./model/UI-Textures/Orbit-Speed.png",
+        "position":
+        {
+          "x": 0.13,
+          "y": 0.04,
+          "z": 0.50
+        }
+      },
+      {
+        "name": "RotationSpeed",
+        "texture": "./model/UI-Textures/Rotate-Speed.png",
+        "position":
+        {
+          "x": 0.13,
+          "y": -0.0125,
+          "z": 0.50
+        }
       },
       {
         "name":"Planets",

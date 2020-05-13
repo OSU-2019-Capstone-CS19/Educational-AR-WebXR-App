@@ -300,32 +300,17 @@ function loadPlanet(gltf) {
   //Planet Origin / Hitbox
 
   let geometry = new THREE.SphereGeometry( 0.04 );
-  let material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+  let material = new THREE.MeshBasicMaterial( {color: 0x00ff00, opacity: 0, transparent: true} );
 
   if (num > 3){
     geometry = new THREE.SphereGeometry( 0.1 );
-    material = new THREE.MeshBasicMaterial( {color: 0xff0000});
+    material = new THREE.MeshBasicMaterial( {color: 0xff0000, opacity: 0, transparent: true});
   }
 
-  //planetOrigins[num] = new THREE.Object3D();
   planetOrigins[num] = new THREE.Mesh( geometry, material );
   planetOrigins[num].position.set(pivots[num].position.x + jsonObj.planets[num].distanceFromSun/jsonObj.distanceScale,
                             pivots[num].position.y,
                             pivots[num].position.z);
-
-  //TEST
-  // if (num == 0){
-    // planetOrigins[num].scale.set((jsonObj.planets[num].radius/jsonObj.sizeScale),
-    //                         (jsonObj.planets[num].radius/jsonObj.sizeScale),
-    //                         (jsonObj.planets[num].radius/jsonObj.sizeScale));
-
-    // let geometry = new THREE.BoxGeometry( 1, 1, 1 );
-
-
-    // let cube = new THREE.Mesh( geometry, material );
-    // planetOrigins[num].add( cube );
-  //}
-
 
   planetOrigins[num].name = "planetOrigin";
 

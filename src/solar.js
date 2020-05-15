@@ -1,14 +1,24 @@
+/*****************************************************************
+  Solar.js
+******************************************************************/
+
 import {Workbox} from 'workbox-window';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
-//Service Worker
+
+/*****************************************************************
+  Service Worker
+******************************************************************/
 if ("serviceWorker" in navigator) {
-  // const wb = new Workbox('service-worker.js');
   const wb = new Workbox('sw.js');
   wb.register();
 }
 
+
+/*****************************************************************
+  Varibles
+******************************************************************/
 //Scene Variables
 let originPoint;
 let placementPos = new THREE.Vector3();
@@ -25,7 +35,11 @@ let planetOptions = [];
 let uiPlanetIndex;
 let anchorAlert, collisionAlert;
 let textBox;
+let planetOptionsVisible = false;
+let uiOptionsVisible = false;
+let atOrigin = true;
 
+//AR Variable
 let xrButton = document.getElementById('xr-button');
 let xrSession = null;
 let xrRefSpace = null;
@@ -33,18 +47,14 @@ let showSolarSystem = false;
 let arActivated = false;
 let reticle;
 let gl = null;
-let planetOptionsVisible = false;
-let uiOptionsVisible = false;
-let atOrigin = true;
-
 let xrHitTestSource = null
 
 
-/**********
-JSON file
-***********
+/*****************************************************************
+  JSON File
+******************************************************************
 => This file contains all relevent information concerning all the objects in the scene
-**********/
+******************************************************************/
 let jsonObj;
 let request = new XMLHttpRequest();
 
@@ -53,18 +63,18 @@ request.send(null);
 jsonObj = JSON.parse(request.responseText);
 
 
-/**********
-Renderer
-**********/
+/*****************************************************************
+  Renderer
+******************************************************************/
 let renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.autoClear = false;
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 
-/**********
-Scene
-**********/
+/*****************************************************************
+  Scene
+******************************************************************/
 let scene = new THREE.Scene();
 scene.background = null;
 
@@ -75,17 +85,17 @@ moonPivot = new THREE.Object3D();
 moonOrigin = new THREE.Object3D();
 
 
-/**********
-Camera
-**********/
+/*****************************************************************
+  Camera
+******************************************************************/
 let camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 0.001, 10000000);
 camera.matrixAutoUpdate = false;
 scene.add(camera);
 
 
-/**********
-Lights
-**********/
+/*****************************************************************
+  Lights
+******************************************************************/
 let sunLight = new THREE.PointLight( 0xfffee8, 1, 0, 0);
 sunLight.position.set( 0, 0, 0);
 sunLight.visible = false;
@@ -95,15 +105,20 @@ cameraLight.visible = true;
 camera.add(cameraLight);
 
 
-/**********
-INIT
-**********/
+/*****************************************************************
+  Initialize
+******************************************************************/
 function init() {
 
   if (navigator.xr) {
 
+    //Check XR Support
     checkSupportedState();
+
+    //Load Solar Obj Models
     loadModels();
+
+    //Load UI Objs
     loadUI();
 
     originPoint = new THREE.Object3D();
@@ -111,97 +126,60 @@ function init() {
 
   } else {
     alert("AR no go");
-
   }
 }
 
 
-/**********
-Load UI
-**********/
-function loadUI(){
-  uiPlanetIndex = jsonObj.planet_index;
-  let alertGeometry = new THREE.PlaneGeometry(.15,.15, .05);
-  var alertTexture = new THREE.TextureLoader().load("./model/UI-Textures/Anchor.png");
+/*****************************************************************
+  Check AR Support
+******************************************************************
+=> Uses WebXR API to determin if AR can be ran on device
+=> EventListener on screen to begin session
+******************************************************************/
+function checkSupportedState() {
+  navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
+    let statusBox = document.getElementById('statusbox');
+    if (supported) {
 
-  let alertMaterial = new THREE.MeshBasicMaterial({map: alertTexture});
-  anchorAlert = new THREE.Mesh(alertGeometry, alertMaterial);
-  anchorAlert.position.x = 0.0;
-  anchorAlert.position.y = .25;
-  anchorAlert.position.z = -.50;
-  camera.add(anchorAlert);
+      xrButton.addEventListener('click', toggleAR);
 
-  let collisionGeometry = new THREE.PlaneGeometry(.1,.1, .05);
-  var collisionTexture = new THREE.TextureLoader().load("./model/UI-Textures/Collision_Alert.png");
-
-  let collisionMaterial = new THREE.MeshBasicMaterial({map: collisionTexture});
-  collisionAlert = new THREE.Mesh(collisionGeometry, collisionMaterial);
-  collisionAlert.position.x = 0.0;
-  collisionAlert.position.y = .25;
-  collisionAlert.position.z = 1.0;
-  collisionAlert.visible = false;
-  camera.add(collisionAlert);
-
-  for (let i=0; i< jsonObj.ui_size ; i++){
-    let uiGeometry = new THREE.PlaneGeometry( .05,.05,.05 );
-    var uiTexture = new THREE.TextureLoader().load( jsonObj.ui[i].texture );
-    //let uiTexture = new THREE.ImageUtils.loadTexture(jsonObj.ui[i].texture);
-    let uiMaterial = new THREE.MeshBasicMaterial( {map: uiTexture} );     //UI box
-    uiOptions[i] = new THREE.Mesh( uiGeometry, uiMaterial );
-    uiOptions[i].name = jsonObj.ui[i].name;
-    if (i == 0){
-      uiOptions[i].position.x = jsonObj.ui[i].position.x;
-    } else if (i==2){
-      uiOptions[i].position.x = jsonObj.ui[i].position.x;
     } else {
-      uiOptions[i].position.x = 1.0;
+      statusBox.innerHTML = 'Houston we have a problem, your device is not compatible';
+      xrButton.style.backgroundColor = '#cc0000';
+      xrButton.innerHTML = 'Error';
     }
-    uiOptions[i].position.y += jsonObj.ui[i].position.y;
-    uiOptions[i].position.z -= jsonObj.ui[i].position.z;
-    camera.add(uiOptions[i]);
-  }
-
-
-  for(let i=0; i< jsonObj.ui[uiPlanetIndex].size ; i++){
-    let uiGeometry = new THREE.PlaneGeometry( .07,.05,.05 );
-    let uiTexture = new THREE.ImageUtils.loadTexture(jsonObj.ui[uiPlanetIndex].options[i].texture);
-    let uiMaterial = new THREE.MeshBasicMaterial(  {map: uiTexture} );
-    planetOptions[i]= new THREE.Mesh(uiGeometry, uiMaterial);
-    planetOptions[i].name = jsonObj.ui[uiPlanetIndex].options[i].name;
-    planetOptions[i].position.x = 1.0;
-    planetOptions[i].position.y += jsonObj.ui[uiPlanetIndex].options[i].position.y;
-    planetOptions[i].position.z -= jsonObj.ui[uiPlanetIndex].options[i].position.z;
-    camera.add(planetOptions[i]);
-  }
-
-  //Setup Textbox
-  let ctx = document.createElement('canvas').getContext('2d');
-  let texture = new THREE.CanvasTexture(ctx.canvas);
-  let boxMaterial = new THREE.MeshBasicMaterial({
-    map: texture,
   });
-
-  let boxGeometry = new THREE.PlaneGeometry( .061, .05);
-
-  textBox = new THREE.Mesh(boxGeometry, boxMaterial);
-  textBox.position.y -= 0.055;
-  textBox.position.z -= 0.1;
-  camera.add(textBox);
-
-  textBox.name = "textBox";
-  textBox.visible = false;
-
 }
 
 
-/**********
-Load Models
-**********/
+/*****************************************************************
+  Toggle AR
+******************************************************************
+=> Turn AR session on / off
+******************************************************************/
+async function toggleAR(){
+  if (arActivated){
+    console.log("AR is already activated");
+    return;
+  }
+  return activateAR();
+}
+
+
+/*****************************************************************
+  Load Solar Objs
+******************************************************************
+=> Load all GLTF files to the appropriate Objs
+=> Place in proper position along X-axis
+=> Apply Scaling based on JSON
+=> Creates Hitbox for all Planets
+=> Creates Orbit Lines
+******************************************************************/
 function loadModels() {
 
   let loader = new GLTFLoader();
 
-  //Sun
+  //Sun Loader
   loader.load(
     jsonObj.sun.file,
     gltf => loadSun( gltf ),
@@ -209,8 +187,7 @@ function loadModels() {
     error => onError(error)
   );
 
-  //Planets
-  //NOTE: Loads planets in the wrong order
+  //Planets Loader
   for (let i=0; i < jsonObj.numPlanets; i++){
     loader.load(
       jsonObj.planets[i].file,
@@ -220,7 +197,7 @@ function loadModels() {
     );
   }
 
-  //Earths Moon
+  //Earth's Moon Loader
   loader.load(
     jsonObj.planets[2].moon.file,
     gltf => loadMoon( gltf ),
@@ -229,11 +206,6 @@ function loadModels() {
   );
 }
 
-/**********
-Load Model Functions
-***********/
-
-//Load Sun Model
 function loadSun(gltf) {
   sunObj = gltf.scene;
 
@@ -247,11 +219,10 @@ function loadSun(gltf) {
   scene.add(sunPivot);
 };
 
-//Load Planet Models
 function loadPlanet(gltf) {
   let num;
 
-  //Order Planets
+  //Places planets in proper order
   switch (gltf.parser.options.path){
     case "./model/planets-glb/mercury/":
       num = 0;
@@ -289,7 +260,7 @@ function loadPlanet(gltf) {
   pivots[num].name = "pivotPoint";
   originPoint.add(pivots[num]);
 
-  //Add Planet based on Json
+  //Add scale based on Json
   planets[num] = gltf.scene
   planets[num].scale.set((jsonObj.planets[num].radius/jsonObj.sizeScale),
                           (jsonObj.planets[num].radius/jsonObj.sizeScale),
@@ -297,8 +268,7 @@ function loadPlanet(gltf) {
   planets[num].rotateZ(jsonObj.planets[num].rotationAngle);
   planets[num].name = jsonObj.planets[num].name;
 
-  //Planet Origin / Hitbox
-
+  //Establish Origin / Hitbox
   let geometry = new THREE.SphereGeometry( 0.04 );
   let material = new THREE.MeshBasicMaterial( {color: 0x00ff00, opacity: 0, transparent: true} );
 
@@ -319,7 +289,7 @@ function loadPlanet(gltf) {
   pivots[num].add(planetOrigins[num]);
   pivots[num].rotateZ(jsonObj.planets[num].orbitInclination);
 
-  //Draw orbit lines based on planet
+  //Orbit Line
   let orbitMaterial = new THREE.LineBasicMaterial({ color:0xffffa1 });
   let orbitCircle = new THREE.CircleGeometry(jsonObj.planets[num].distanceFromSun/jsonObj.distanceScale, 100);
   orbitCircle.vertices.shift();
@@ -368,36 +338,91 @@ function onError(error) {
 }
 
 
-/*********
-Check AR Support
-*********/
-function checkSupportedState() {
-  navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
-    let statusBox = document.getElementById('statusbox');
-    if (supported) {
+/*****************************************************************
+  UI
+******************************************************************
+=> Load and place all UI elements to their proper positions
+=> Create and place Textbox
+******************************************************************/
+function loadUI(){
+  uiPlanetIndex = jsonObj.planet_index;
+  let alertGeometry = new THREE.PlaneGeometry(.15,.15, .05);
+  var alertTexture = new THREE.TextureLoader().load("./model/UI-Textures/Anchor.png");
 
-      xrButton.addEventListener('click', toggleAR);
+  let alertMaterial = new THREE.MeshBasicMaterial({map: alertTexture});
+  anchorAlert = new THREE.Mesh(alertGeometry, alertMaterial);
+  anchorAlert.position.x = 0.0;
+  anchorAlert.position.y = .25;
+  anchorAlert.position.z = -.50;
+  camera.add(anchorAlert);
 
+  let collisionGeometry = new THREE.PlaneGeometry(.1,.1, .05);
+  var collisionTexture = new THREE.TextureLoader().load("./model/UI-Textures/Collision_Alert.png");
+
+  let collisionMaterial = new THREE.MeshBasicMaterial({map: collisionTexture});
+  collisionAlert = new THREE.Mesh(collisionGeometry, collisionMaterial);
+  collisionAlert.position.x = 0.0;
+  collisionAlert.position.y = .25;
+  collisionAlert.position.z = 1.0;
+  collisionAlert.visible = false;
+  camera.add(collisionAlert);
+
+  for (let i=0; i< jsonObj.ui_size ; i++){
+    let uiGeometry = new THREE.PlaneGeometry( .05,.05,.05 );
+    var uiTexture = new THREE.TextureLoader().load( jsonObj.ui[i].texture );
+    //let uiTexture = new THREE.ImageUtils.loadTexture(jsonObj.ui[i].texture);
+    let uiMaterial = new THREE.MeshBasicMaterial( {map: uiTexture} );     //UI box
+    uiOptions[i] = new THREE.Mesh( uiGeometry, uiMaterial );
+    uiOptions[i].name = jsonObj.ui[i].name;
+    if (i == 0){
+      uiOptions[i].position.x = jsonObj.ui[i].position.x;
+    } else if (i==2){
+      uiOptions[i].position.x = jsonObj.ui[i].position.x;
     } else {
-      statusBox.innerHTML = 'Houston we have a problem, your device is not compatible';
-      xrButton.style.backgroundColor = '#cc0000';
-      xrButton.innerHTML = 'Error';
+      uiOptions[i].position.x = 1.0;
     }
-  });
-}
-
-async function toggleAR(){
-  if (arActivated){
-    console.log("AR is already activated");
-    return;
+    uiOptions[i].position.y += jsonObj.ui[i].position.y;
+    uiOptions[i].position.z -= jsonObj.ui[i].position.z;
+    camera.add(uiOptions[i]);
   }
-  return activateAR();
+
+  for(let i=0; i< jsonObj.ui[uiPlanetIndex].size ; i++){
+    let uiGeometry = new THREE.PlaneGeometry( .07,.05,.05 );
+    let uiTexture = new THREE.ImageUtils.loadTexture(jsonObj.ui[uiPlanetIndex].options[i].texture);
+    let uiMaterial = new THREE.MeshBasicMaterial(  {map: uiTexture} );
+    planetOptions[i]= new THREE.Mesh(uiGeometry, uiMaterial);
+    planetOptions[i].name = jsonObj.ui[uiPlanetIndex].options[i].name;
+    planetOptions[i].position.x = 1.0;
+    planetOptions[i].position.y += jsonObj.ui[uiPlanetIndex].options[i].position.y;
+    planetOptions[i].position.z -= jsonObj.ui[uiPlanetIndex].options[i].position.z;
+    camera.add(planetOptions[i]);
+  }
+
+  //Setup Textbox
+  let ctx = document.createElement('canvas').getContext('2d');
+  let texture = new THREE.CanvasTexture(ctx.canvas);
+  let boxMaterial = new THREE.MeshBasicMaterial({
+    map: texture,
+  });
+
+  let boxGeometry = new THREE.PlaneGeometry( .061, .05);
+
+  textBox = new THREE.Mesh(boxGeometry, boxMaterial);
+  textBox.position.y -= 0.055;
+  textBox.position.z -= 0.1;
+  camera.add(textBox);
+
+  textBox.name = "textBox";
+  textBox.visible = false;
 }
 
 
-/**********
-XR Session
-**********/
+/*****************************************************************
+  xrSession
+******************************************************************
+=> Create local session
+=> Establish EventListeners
+******************************************************************/
 async function activateAR(){
   try{
     xrSession = await navigator.xr.requestSession('immersive-ar', {requiredFeatures: ['local', 'hit-test']});
@@ -428,20 +453,26 @@ async function activateAR(){
 }
 
 
-/*********
-Session End
-*********/
+/*****************************************************************
+  End Session
+*****************************************************************/
 function onSessionEnd(){
   console.log("SESSION ENDED");
+
+  //Move user to the quiz
   window.location.href = "./Quiz.html";
+
   arActivated = false;
   xrSession = null;
 }
 
 
-/*********
-Render XR
-*********/
+/*****************************************************************
+  Render Frame
+******************************************************************
+=> Frame by Frame rendering
+=> Show Reticle or Solar System
+******************************************************************/
 function renderXR(timestamp, xrFrame){
 
   if (!xrFrame || !xrSession || !arActivated){
@@ -454,6 +485,7 @@ function renderXR(timestamp, xrFrame){
     return;
   }
 
+  //If solar system has not been placed, show a reticle to place it
   if (!showSolarSystem){
 
     createReticle();
@@ -505,7 +537,6 @@ function renderXR(timestamp, xrFrame){
       originPoint.visible = true;
     }
 
-
     animateScene();
   }
 
@@ -520,10 +551,55 @@ function renderXR(timestamp, xrFrame){
   xrSession.requestAnimationFrame(renderXR);
 }
 
+function renderView(xrView, viewport){
+  renderer.setViewport(viewport.x, viewport.y, viewport.width, viewport.height);
+  const viewMatrix = xrView.transform.inverse.matrix;
 
-/*********
-Animate 3D scene
-*********/
+  //camera
+  camera.projectionMatrix.fromArray(xrView.projectionMatrix);
+  camera.matrix.fromArray(viewMatrix).getInverse(camera.matrix);
+  camera.updateMatrixWorld(true);
+
+  renderer.render(scene, camera)
+}
+
+
+/*****************************************************************
+  Reticle
+******************************************************************/
+function createReticle(){
+  if (reticle){
+    reticle.add(sunObj);
+    sunObj.position.y = 0.2;
+    sunObj.children[0].material.opacity = 0.2;
+    return;
+  }
+
+  reticle = new THREE.Object3D();
+
+  let ringGeometry = new THREE.RingGeometry(0.07, 0.09, 24, 1);
+  let ringMaterial = new THREE.MeshBasicMaterial({ color: 0xFF6600 });
+  ringGeometry.applyMatrix(new THREE.Matrix4().makeRotationX(THREE.Math.degToRad(-90)));
+  let circle = new THREE.Mesh(ringGeometry, ringMaterial);
+  circle.position.y = 0.03;
+
+  sunObj.position.y = 0.2;
+  sunObj.children[0].material.opacity = 0.2;
+
+  reticle.add(circle);
+  reticle.add(sunObj);
+  reticle.name = 'reticle';
+  scene.add(reticle);
+}
+
+
+/*****************************************************************
+  Animate 3D scene
+******************************************************************
+=> Update position of each solar Obj based upon JSON
+=> Move planet away / towards user when needed
+=> Check if inside an Obj
+******************************************************************/
 function animateScene(){
   if (jsonObj.originReturn){
     returnToOrigin();
@@ -542,67 +618,29 @@ function animateScene(){
 }
 
 
+/*****************************************************************
+  Update Sun Position
+******************************************************************/
 function updateSun(){
   //Sun Rotation
   if (sunObj && jsonObj.sun.moveRotate){
     sunObj.rotateY(jsonObj.sun.rotation / jsonObj.rotationScale);
   }
 
+  //Move Sun towards User
   if (jsonObj.sun.beingViewed && jsonObj.objTranslation.inTransit){
     sunTranslation();
   }
 }
 
-function updatePlanets(){
-  //Planet Rotation (rad/day)
-  for (let i=0; i<jsonObj.numPlanets; i++){
-    if (planets[i] && jsonObj.planets[i].moveRotate){
-      planets[i].rotateY(jsonObj.planets[i].rotation / jsonObj.rotationScale);
-    }
-  }
 
-  //Planet Orbit (rad/day)
-  for (let i=0; i<jsonObj.numPlanets; i++){
-
-    //If planet is being viewed
-    if (jsonObj.planets[i].beingViewed && jsonObj.objTranslation.inTransit){
-      planetTranslation(i);
-
-    } else {
-      //Check for pivot and then rotate pivot
-      if (pivots[i] && jsonObj.planets[i].moveOrbit){
-        pivots[i].rotateY(jsonObj.planets[i].orbit / jsonObj.orbitScale);
-      }
-    }
-  }
-}
-
-
-function updateMoon(){
-  //Moon Rotation
-  if (moonObj && jsonObj.planets[2].moon.moveRotate){
-    moonObj.rotateY(jsonObj.planets[2].moon.rotation / jsonObj.rotationScale);
-  }
-
-  //Check if moon is being viewed
-  if (jsonObj.planets[2].moon.beingViewed){
-    if (jsonObj.objTranslation.inTransit){
-      moonTraslation();
-
-    } else if (!jsonObj.objTranslation.inTransit && sunLight.visible && jsonObj.planets[2].moon.moveOrbit){
-        moonPivot.rotateY(jsonObj.planets[2].moon.orbit / jsonObj.orbitScale);
-    }
-
-  } else {
-
-    //Moon Orbit
-    if (moonPivot && jsonObj.planets[2].moon.moveOrbit){
-      moonPivot.rotateY(jsonObj.planets[2].moon.orbit / jsonObj.orbitScale);
-    }
-  }
-}
-
-
+/*****************************************************************
+  Update SolarSystem
+******************************************************************
+=> scale all solar objs based upon percentage change from the sun
+=> Update planets and moon positions by a scaled factor
+=> Run for 100 Frames
+******************************************************************/
 function sunTranslation(){
   if (jsonObj.objTranslation.timeStep > 0){
 
@@ -718,6 +756,39 @@ function sunTranslation(){
 }
 
 
+/*****************************************************************
+  Update Planet Position
+******************************************************************/
+function updatePlanets(){
+  //Planet Rotation (rad/day)
+  for (let i=0; i<jsonObj.numPlanets; i++){
+    if (planets[i] && jsonObj.planets[i].moveRotate){
+      planets[i].rotateY(jsonObj.planets[i].rotation / jsonObj.rotationScale);
+    }
+  }
+
+  for (let i=0; i<jsonObj.numPlanets; i++){
+    //Move Planet Towards User
+    if (jsonObj.planets[i].beingViewed && jsonObj.objTranslation.inTransit){
+      planetTranslation(i);
+
+    //Planet Orbit
+    } else {
+      if (pivots[i] && jsonObj.planets[i].moveOrbit){
+        pivots[i].rotateY(jsonObj.planets[i].orbit / jsonObj.orbitScale);
+      }
+    }
+  }
+}
+
+
+/*****************************************************************
+  Update SolarSystem
+******************************************************************
+=> scale all solar objs based upon percentage change from the planet
+=> Update planets and moon positions by a scaled factor
+=> Run for 100 Frames
+******************************************************************/
 function planetTranslation(num){
 
   if (jsonObj.objTranslation.timeStep > 0){
@@ -845,6 +916,38 @@ function planetTranslation(num){
 }
 
 
+function updateMoon(){
+  //Moon Rotation
+  if (moonObj && jsonObj.planets[2].moon.moveRotate){
+    moonObj.rotateY(jsonObj.planets[2].moon.rotation / jsonObj.rotationScale);
+  }
+
+  //Move moon towards user
+  if (jsonObj.planets[2].moon.beingViewed){
+    if (jsonObj.objTranslation.inTransit){
+      moonTraslation();
+
+    //Orbit Moon around Earth while viewing Earth
+    } else if (!jsonObj.objTranslation.inTransit && sunLight.visible && jsonObj.planets[2].moon.moveOrbit){
+        moonPivot.rotateY(jsonObj.planets[2].moon.orbit / jsonObj.orbitScale);
+    }
+
+  //Moon Orbit
+  } else {
+    if (moonPivot && jsonObj.planets[2].moon.moveOrbit){
+      moonPivot.rotateY(jsonObj.planets[2].moon.orbit / jsonObj.orbitScale);
+    }
+  }
+}
+
+
+/*****************************************************************
+  Update SolarSystem
+******************************************************************
+=> scale all solar objs based upon percentage change from the moon
+=> Update planets and moon positions by a scaled factor
+=> Run for 100 Frames
+******************************************************************/
 //Note: Designed Only For Earths Moon
 function moonTraslation(){
 
@@ -977,6 +1080,13 @@ function moonTraslation(){
 }
 
 
+/*****************************************************************
+  Update SolarSystem
+******************************************************************
+=> Switch from one obj to another
+=> scale all solar objs based upon percentage change from the targetObj
+=> Run for 100 Frames
+******************************************************************/
 function switchTranslation(target, targetScale, preObj, preObjScale){
 
   let planetNum;
@@ -1094,6 +1204,14 @@ function switchTranslation(target, targetScale, preObj, preObjScale){
 }
 
 
+/*****************************************************************
+  Update SolarSystem
+******************************************************************
+=> Return Everything back to original view
+=> scale all solar objs based upon JSON
+=> Update planets and moon positions by JSON value
+=> Run for 100 Frames
+******************************************************************/
 function returnToOrigin(){
   if (jsonObj.objTranslation.timeStep > 0){
 
@@ -1239,6 +1357,11 @@ function returnToOrigin(){
 }
 
 
+/*****************************************************************
+  Inside Object
+******************************************************************
+=> Check if camera is inside of Obj
+******************************************************************/
 function checkInsideObject(){
   //With in here check the planets, moon, and sun
   let inside = false;
@@ -1272,26 +1395,13 @@ function checkInsideObject(){
   collisionAlert.visible = inside;
 }
 
-
-function renderView(xrView, viewport){
-  renderer.setViewport(viewport.x, viewport.y, viewport.width, viewport.height);
-  const viewMatrix = xrView.transform.inverse.matrix;
-
-  //camera
-  camera.projectionMatrix.fromArray(xrView.projectionMatrix);
-  camera.matrix.fromArray(viewMatrix).getInverse(camera.matrix);
-  camera.updateMatrixWorld(true);
-
-  renderer.render(scene, camera)
-}
-
-
-/**********
-Event Handler
-**********/
+/*****************************************************************
+  Scene Event Handlers
+******************************************************************/
 function touchSelectEvent() {
   if (showSolarSystem){
 
+    //Get ray position and direction based upon where the screen was touched
     let inputPose = event.frame.getPose(event.inputSource.targetRaySpace, xrRefSpace);
     if (inputPose) {
 
@@ -1302,10 +1412,11 @@ function touchSelectEvent() {
       let sceneRaycaster = new THREE.Raycaster();
       sceneRaycaster.set(rayOrigin, rayDirection);
 
+      //Variables that are touchable
       let sceneIntersectsArray = [sunObj, moonObj, planets[0], planets[1], planets[2], planets[3], planets[4], planets[5], planets[6], planets[7], planets[8], planetOrigins[0], planetOrigins[1], planetOrigins[2], planetOrigins[3], planetOrigins[4], planetOrigins[5], planetOrigins[6], planetOrigins[7], planetOrigins[8]];
-
       let menuIntersectsArray = [uiOptions[0], uiOptions[1], uiOptions[2], uiOptions[3], uiOptions[4], uiOptions[5], uiOptions[6], uiOptions[7], uiOptions[8], uiOptions[9], uiOptions[10], planetOptions[0], planetOptions[1], planetOptions[2], planetOptions[3], planetOptions[4], planetOptions[5], planetOptions[6], planetOptions[7], planetOptions[8], planetOptions[9], planetOptions[10], textBox];
 
+      //Check if ray intercepted and touchable objs
       let intersects = sceneRaycaster.intersectObjects(menuIntersectsArray, true);
 
       if (intersects.length > 0){
@@ -1314,8 +1425,6 @@ function touchSelectEvent() {
       } else {
         let intersects = sceneRaycaster.intersectObjects(sceneIntersectsArray, true);
         if (intersects.length > 0){
-
-          // console.log(intersects[0]);
 
           //Check for sun
           if (intersects[0].object.parent.name == "Sun"){
@@ -1357,24 +1466,35 @@ function touchSelectEvent() {
   }
 }
 
+
+/*****************************************************************
+  Scene Object Events
+******************************************************************/
 function sceneEvent(intersects, obj){
-  // if (intersects[0].object.parent.name && !jsonObj.objTranslation.inTransit){
   if (!jsonObj.objTranslation.inTransit){
     switch(obj){
 
       case "Sun":
+        toggleUIOptionsVisibilityOff();
+        togglePlanetsOptionsVisibilityOff();
         sunSelect();
         break;
 
       case "Mercury":
+        toggleUIOptionsVisibilityOff();
+        togglePlanetsOptionsVisibilityOff();
         planetSelect(0);
         break;
 
       case "Venus":
+        toggleUIOptionsVisibilityOff();
+        togglePlanetsOptionsVisibilityOff();
         planetSelect(1);
         break;
 
       case "Earth":
+        toggleUIOptionsVisibilityOff();
+        togglePlanetsOptionsVisibilityOff();
         planetSelect(2);
 
         if (jsonObj.planets[2].beingViewed){
@@ -1384,30 +1504,44 @@ function sceneEvent(intersects, obj){
         break;
 
       case "Moon":
+        toggleUIOptionsVisibilityOff();
+        togglePlanetsOptionsVisibilityOff();
         moonSelect();
         break;
 
       case "Mars":
+        toggleUIOptionsVisibilityOff();
+        togglePlanetsOptionsVisibilityOff();
         planetSelect(3);
         break;
 
       case "Jupiter":
+        toggleUIOptionsVisibilityOff();
+        togglePlanetsOptionsVisibilityOff();
         planetSelect(4);
         break;
 
       case "Saturn":
+        toggleUIOptionsVisibilityOff();
+        togglePlanetsOptionsVisibilityOff();
         planetSelect(5);
         break;
 
       case "Uranus":
+        toggleUIOptionsVisibilityOff();
+        togglePlanetsOptionsVisibilityOff();
         planetSelect(6);
         break;
 
       case "Neptune":
+        toggleUIOptionsVisibilityOff();
+        togglePlanetsOptionsVisibilityOff();
         planetSelect(7);
         break;
 
       case "Pluto":
+        toggleUIOptionsVisibilityOff();
+        togglePlanetsOptionsVisibilityOff();
         planetSelect(8);
         break;
 
@@ -1417,163 +1551,10 @@ function sceneEvent(intersects, obj){
   }
 }
 
-function toggleUIOptionsVisibility(){
-  uiOptionsVisible = !uiOptionsVisible;
 
-  for(let i=1; i<jsonObj.ui_size; i++){
-    if(uiOptionsVisible && i!=6 && i!=7){
-      uiOptions[i].position.x = jsonObj.ui[i].position.x;
-    } else {
-      if (i!=2 && i!=6 && i!=7)
-      uiOptions[i].position.x = 1.0;
-    }
-  }
-
-  uiOptions[6].position.x = (uiOptionsVisible && !atOrigin) ? jsonObj.ui[6].position.x : 1.0;
-}
-
-function toggleUIOptionsVisibilityOff(){
-
-  uiOptionsVisible = false;
-  for(let i=1; i<jsonObj.ui_size; i++){
-    if(i!=2 && i!=7/*&& i!=6*/)
-      uiOptions[i].position.x = 1.0;
-  }
-}
-
-function togglePlanetsOptionsVisibility(){
-  planetOptionsVisible = !planetOptionsVisible;
-
-  for(let i=0; i<jsonObj.ui[uiPlanetIndex].size; i++){
-    if(planetOptionsVisible){
-      planetOptions[i].position.x = 0.05;
-    } else {
-      planetOptions[i].position.x = 1.0;
-    }
-  }
-}
-
-function togglePlanetsOptionsVisibilityOff(){
-  planetOptionsVisible = false;
-  for(let i=0; i<jsonObj.ui[uiPlanetIndex].size; i++){
-    planetOptions[i].position.x = 1.0;
-  }
-}
-
-
-function updateCanvasTexture(obj, fact){
-
-  //Create new canvas
-  let ctx = document.createElement('canvas').getContext('2d');
-
-  ctx.canvas.style.width = 200 + "px";
-  ctx.canvas.style.height = 200 + "px";
-
-  let scale = window.devicePixelRatio;
-
-  if (!scale){
-    scale = 1;
-  }
-
-  ctx.canvas.height = 200 * scale;
-  ctx.canvas.width = 200 * scale;
-
-  ctx.scale(scale, scale);
-
-  //Background
-  ctx.fillStyle = '#FF6600';
-  ctx.fillRect(0, 0, 200, 150);
-
-  ctx.fillStyle = "#000000";
-
-  //Title
-  ctx.font = '18px Bold Arial';
-  ctx.textAlign = "center";
-  ctx.fillText(obj.name, 100, 20);
-
-  ctx.strokeStyle = "#000000";
-  ctx.beginPath();
-  ctx.moveTo(0, 25);
-  ctx.lineTo(200, 25);
-  ctx.stroke();
-
-  ctx.textAlign = "left";
-
-  //Information
-  ctx.font = '10px Arial';
-  if (obj == sunObj){
-
-    ctx.fillText("Mass: " + jsonObj.sun.mass, 7, 40);
-    ctx.fillText("Radius: " + jsonObj.sun.radius + " km", 7, 60);
-    ctx.fillText("Surface Temperature: " + jsonObj.sun.surfaceTemperature + " fahrenheit", 7, 80); //jsonObj.sun.surfaceTemperature fahrenheit
-    ctx.fillText("Core Temperature: " + jsonObj.sun.coreTemperature + " fahrenheit", 7, 100); //jsonObj.sun.coreTemperature + fahrenheit
-
-  } else if (obj == moonObj){
-
-    ctx.fillText("Mass: " + jsonObj.planets[2].moon.mass, 7, 40);
-    ctx.fillText("Radius: " + jsonObj.planets[2].moon.radius + " km", 7, 60);
-    ctx.fillText("Orbital Period Around Earth: " + jsonObj.planets[2].moon.orbitPeriod, 7, 80);
-    ctx.fillText("Distance from Earth: " + jsonObj.planets[2].moon.distanceFromEarth + " km", 7, 100);
-
-  } else if (obj == continentObj){
-      for (let i=0; i<7; i++){
-        if (obj.name == "Continent: " + jsonObj.continents[i].name){
-          ctx.fillText("Area: " + jsonObj.continents[i].area, 7, 40);
-          ctx.fillText("Population: " + jsonObj.continents[i].population, 7, 60);
-          ctx.fillText("Number of Countries: " + jsonObj.continents[i].countries, 7, 80);
-        }
-      }
-
-  } else {
-    for (let i=0; i<jsonObj.numPlanets; i++){
-      if (obj == planets[i]){
-
-        ctx.fillText("Mass: " + jsonObj.planets[i].mass, 7, 40);
-        ctx.fillText("Radius: " + jsonObj.planets[i].radius + " km", 7, 60);
-        ctx.fillText("Orbital Period: " + jsonObj.planets[i].orbitPeriod, 7, 80);
-        ctx.fillText("Distance from Sun: " + jsonObj.planets[i].distanceFromSun + " km", 7, 100);
-      }
-    }
-  }
-
-  wrapText(ctx, "Fun Fact: " + fact, 7, 120, 180, 18);
-
-  let texture = new THREE.CanvasTexture(ctx.canvas);
-  textBox.material.map = texture;
-  textBox.material.needsUpdate = true;
-}
-
-
-//Code credit to: https://www.html5canvastutorials.com/tutorials/html5-canvas-wrap-text-tutorial/
-function wrapText(context, text, x, y, maxWidth, lineHeight){
-  let words = text.split(' ');
-  let line = '';
-
-  for (let i=0; i<words.length; i++){
-    let testLine = line + words[i] + ' ';
-    let metrics = context.measureText(testLine);
-    let testWidth = metrics.width;
-    if (testWidth > maxWidth && i > 0) {
-      context.fillText(line, x, y);
-      line = words[i] + ' ';
-      y += lineHeight;
-    } else {
-      line = testLine;
-    }
-    context.fillText(line, x, y);
-  }
-}
-
-
-function minimizeTextBox(minimize) {
-  if (minimize){
-    textBox.position.y = -0.0855;
-  } else {
-    textBox.position.y = -0.055;
-  }
-}
-
-
+/*****************************************************************
+  UI Object Events
+******************************************************************/
 function menuEvent(intersects){
   if (intersects[0].object.name){
     switch(intersects[0].object.name){
@@ -1753,33 +1734,12 @@ function menuEvent(intersects){
 }
 
 
-function createReticle(){
-  if (reticle){
-    reticle.add(sunObj);
-    sunObj.position.y = 0.2;
-    sunObj.children[0].material.opacity = 0.2;
-    return;
-  }
-
-  reticle = new THREE.Object3D();
-
-  let ringGeometry = new THREE.RingGeometry(0.07, 0.09, 24, 1);
-  let ringMaterial = new THREE.MeshBasicMaterial({ color: 0xFF6600 });
-  ringGeometry.applyMatrix(new THREE.Matrix4().makeRotationX(THREE.Math.degToRad(-90)));
-  let circle = new THREE.Mesh(ringGeometry, ringMaterial);
-  circle.position.y = 0.03;
-
-  sunObj.position.y = 0.2;
-  sunObj.children[0].material.opacity = 0.2;
-
-  reticle.add(circle);
-  reticle.add(sunObj);
-  reticle.name = 'reticle';
-  scene.add(reticle);
-
-}
-
-
+/*****************************************************************
+  Scene Event Helper Functions
+******************************************************************
+=> Grab random fun fact from JSON
+=> Set varibles so appropriate action can be taken to move towards user
+*******************************************************************/
 function sunSelect(){
   //Pick random fact
   let ranNum = Math.floor(Math.random() * 5);
@@ -1842,7 +1802,6 @@ function sunSelect(){
     minimizeTextBox(false);
   }
 }
-
 
 function planetSelect(num){
 
@@ -1980,9 +1939,7 @@ function moonSelect(){
 }
 
 
-/************
-Earth Bounding Boxs
-************/
+//Earth Bounding Boxs
 function checkEarthBoundingBoxs(point){
 
   let antarcticaBox = new THREE.Box3();
@@ -2068,6 +2025,57 @@ function checkEarthBoundingBoxs(point){
   }
 }
 
+
+/*****************************************************************
+  UI Helper Functions
+*****************************************************************/
+//Open Drawer
+function toggleUIOptionsVisibility(){
+  uiOptionsVisible = !uiOptionsVisible;
+
+  for(let i=1; i<jsonObj.ui_size; i++){
+    if(uiOptionsVisible && i!=6 && i!=7){
+      uiOptions[i].position.x = jsonObj.ui[i].position.x;
+    } else {
+      if (i!=2 && i!=6 && i!=7)
+      uiOptions[i].position.x = 1.0;
+    }
+  }
+
+  uiOptions[6].position.x = (uiOptionsVisible && !atOrigin) ? jsonObj.ui[6].position.x : 1.0;
+}
+
+//Close Drawer
+function toggleUIOptionsVisibilityOff(){
+  uiOptionsVisible = false;
+  for(let i=1; i<jsonObj.ui_size; i++){
+    if(i!=2 && i!=7/*&& i!=6*/)
+      uiOptions[i].position.x = 1.0;
+  }
+}
+
+//Open Planet Drawer
+function togglePlanetsOptionsVisibility(){
+  planetOptionsVisible = !planetOptionsVisible;
+
+  for(let i=0; i<jsonObj.ui[uiPlanetIndex].size; i++){
+    if(planetOptionsVisible){
+      planetOptions[i].position.x = 0.05;
+    } else {
+      planetOptions[i].position.x = 1.0;
+    }
+  }
+}
+
+//Close Planet Drawer
+function togglePlanetsOptionsVisibilityOff(){
+  planetOptionsVisible = false;
+  for(let i=0; i<jsonObj.ui[uiPlanetIndex].size; i++){
+    planetOptions[i].position.x = 1.0;
+  }
+}
+
+//Change Light
 function toggleLight(){
   if (cameraLight.visible){
     cameraLight.visible = false;
@@ -2079,6 +2087,7 @@ function toggleLight(){
   }
 }
 
+//Change OrbitLines
 function toggleOrbitLines(){
   if (jsonObj.showPlanetLines){
     jsonObj.showPlanetLines = false;
@@ -2094,7 +2103,7 @@ function toggleOrbitLines(){
   }
 }
 
-
+//Return To Origin
 function toggleReturnToOrigin(){
   //Reset Hierarchy
   scene.attach(originPoint);
@@ -2123,7 +2132,7 @@ function toggleReturnToOrigin(){
   atOrigin = true;
 }
 
-
+//Pause or Unpause
 function togglePause(){
   if (!jsonObj.pause){
     //Pause
@@ -2166,8 +2175,8 @@ function togglePause(){
   }
 }
 
+//Reset SolarSystem
 function resetSolarSystem(){
-
   textBox.visible = false;
 
   if (jsonObj.sun.beingViewed){
@@ -2207,5 +2216,119 @@ function resetSolarSystem(){
 
   showSolarSystem = false;
 }
+
+//Update Textbox
+function updateCanvasTexture(obj, fact){
+
+  //Create new canvas
+  let ctx = document.createElement('canvas').getContext('2d');
+
+  ctx.canvas.style.width = 200 + "px";
+  ctx.canvas.style.height = 200 + "px";
+
+  let scale = window.devicePixelRatio;
+
+  if (!scale){
+    scale = 1;
+  }
+
+  ctx.canvas.height = 200 * scale;
+  ctx.canvas.width = 200 * scale;
+
+  ctx.scale(scale, scale);
+
+  //Background
+  ctx.fillStyle = '#FF6600';
+  ctx.fillRect(0, 0, 200, 150);
+
+  ctx.fillStyle = "#000000";
+
+  //Title
+  ctx.font = '18px Bold Arial';
+  ctx.textAlign = "center";
+  ctx.fillText(obj.name, 100, 20);
+
+  ctx.strokeStyle = "#000000";
+  ctx.beginPath();
+  ctx.moveTo(0, 25);
+  ctx.lineTo(200, 25);
+  ctx.stroke();
+
+  ctx.textAlign = "left";
+
+  //Information
+  ctx.font = '10px Arial';
+  if (obj == sunObj){
+
+    ctx.fillText("Mass: " + jsonObj.sun.mass, 7, 40);
+    ctx.fillText("Radius: " + jsonObj.sun.radius + " km", 7, 60);
+    ctx.fillText("Surface Temperature: " + jsonObj.sun.surfaceTemperature + " fahrenheit", 7, 80); //jsonObj.sun.surfaceTemperature fahrenheit
+    ctx.fillText("Core Temperature: " + jsonObj.sun.coreTemperature + " fahrenheit", 7, 100); //jsonObj.sun.coreTemperature + fahrenheit
+
+  } else if (obj == moonObj){
+
+    ctx.fillText("Mass: " + jsonObj.planets[2].moon.mass, 7, 40);
+    ctx.fillText("Radius: " + jsonObj.planets[2].moon.radius + " km", 7, 60);
+    ctx.fillText("Orbital Period Around Earth: " + jsonObj.planets[2].moon.orbitPeriod, 7, 80);
+    ctx.fillText("Distance from Earth: " + jsonObj.planets[2].moon.distanceFromEarth + " km", 7, 100);
+
+  } else if (obj == continentObj){
+      for (let i=0; i<7; i++){
+        if (obj.name == "Continent: " + jsonObj.continents[i].name){
+          ctx.fillText("Area: " + jsonObj.continents[i].area, 7, 40);
+          ctx.fillText("Population: " + jsonObj.continents[i].population, 7, 60);
+          ctx.fillText("Number of Countries: " + jsonObj.continents[i].countries, 7, 80);
+        }
+      }
+
+  } else {
+    for (let i=0; i<jsonObj.numPlanets; i++){
+      if (obj == planets[i]){
+
+        ctx.fillText("Mass: " + jsonObj.planets[i].mass, 7, 40);
+        ctx.fillText("Radius: " + jsonObj.planets[i].radius + " km", 7, 60);
+        ctx.fillText("Orbital Period: " + jsonObj.planets[i].orbitPeriod, 7, 80);
+        ctx.fillText("Distance from Sun: " + jsonObj.planets[i].distanceFromSun + " km", 7, 100);
+      }
+    }
+  }
+
+  wrapText(ctx, "Fun Fact: " + fact, 7, 120, 180, 18);
+
+  let texture = new THREE.CanvasTexture(ctx.canvas);
+  textBox.material.map = texture;
+  textBox.material.needsUpdate = true;
+}
+
+
+//Code credit to: https://www.html5canvastutorials.com/tutorials/html5-canvas-wrap-text-tutorial/
+function wrapText(context, text, x, y, maxWidth, lineHeight){
+  let words = text.split(' ');
+  let line = '';
+
+  for (let i=0; i<words.length; i++){
+    let testLine = line + words[i] + ' ';
+    let metrics = context.measureText(testLine);
+    let testWidth = metrics.width;
+    if (testWidth > maxWidth && i > 0) {
+      context.fillText(line, x, y);
+      line = words[i] + ' ';
+      y += lineHeight;
+    } else {
+      line = testLine;
+    }
+    context.fillText(line, x, y);
+  }
+}
+
+
+function minimizeTextBox(minimize) {
+  if (minimize){
+    textBox.position.y = -0.0855;
+  } else {
+    textBox.position.y = -0.055;
+  }
+}
+
 
 init();

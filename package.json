@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "rollup-plugin-copy-glob": "^0.3.1",
-    "three": "^0.112.1",
+    "three": "^0.125.0",
     "workbox-build": "^4.3.1",
     "workbox-sw": "^4.3.1"
   },
